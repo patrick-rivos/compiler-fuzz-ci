@@ -1,0 +1,58 @@
+name: Build-Random
+
+# Build a random riscv config
+
+on:
+  schedule:
+    # Run every hour
+    - cron: 0 * * * *
+  workflow_dispatch:
+    branches:
+      - main
+
+jobs:
+  init-submodules:
+    uses: ./.github/workflows/init-submodules.yaml
+
+  build-random:
+    runs-on: ubuntu-20.04
+    needs: [init-submodules]
+    defaults:
+      run:
+        working-directory: riscv-gnu-toolchain
+
+    steps:
+      - name: 'Cleanup build folder'
+        working-directory: ./
+        run: |
+          ls -la ./
+          rm -rf ./* || true
+          rm -rf ./.??* || true
+          ls -la ./
+
+      - uses: actions/checkout@v3
+
+      - name: Setup env
+        uses: ./.github/actions/common/setup-env
+        with:
+          free_up_space: true
+
+      - name: Restore submodules from cache
+        uses: actions/download-artifact@v3
+        with:
+          name: gcc-sources-${{ inputs.gcchash }}
+          path: riscv-gnu-toolchain
+
+      - name: Restore submodules
+        run: |
+          rm -rf .git binutils dejagnu gcc gdb glibc newlib qemu
+          unzip cache.zip
+          rm -rf cache.zip
+
+      - name: Build random config
+        run: |
+          ../build-random.sh
+
+      - name: If failed, report with a new github issue
+        run: |
+          echo "TODO"

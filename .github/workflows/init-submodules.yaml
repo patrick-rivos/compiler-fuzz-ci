@@ -1,0 +1,99 @@
+name: "Intialize submodules"
+
+# Upload the sources as an artifact for other steps to use
+# This centralizes the process and reduces overall compute time
+
+on:
+  workflow_call:
+    outputs:
+        gcchash:
+          value: ${{ jobs.init-submodules.outputs.gcchash }}
+
+jobs:
+  init-submodules:
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: riscv-gnu-toolchain
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup env
+        uses: ./.github/actions/common/setup-env
+        with:
+          free_up_space: false
+
+      - name: Retrieve cache
+        id: retrieve-cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            riscv-gnu-toolchain/.git
+            riscv-gnu-toolchain/binutils
+            riscv-gnu-toolchain/dejagnu
+            riscv-gnu-toolchain/gcc
+            riscv-gnu-toolchain/gdb
+            riscv-gnu-toolchain/glibc
+            riscv-gnu-toolchain/newlib
+            riscv-gnu-toolchain/qemu
+          key: submodules-archive-5 # Numbered archive to allow for easy transition when bumping submodules
+
+      - name: Initalize submodules cache
+        if: steps.retrieve-cache.outputs.cache-hit != 'true'
+        run: |
+          git submodule update --init --recursive --depth 1 binutils
+          git submodule update --init --recursive --depth 1 dejagnu
+          git submodule update --init --recursive --depth 1 gdb
+          git submodule update --init --recursive --depth 1 glibc
+          git submodule update --init --recursive --depth 1 newlib
+          git submodule update --init --recursive --depth 1 qemu
+          rm -rf gcc
+          git clone git://gcc.gnu.org/git/gcc.git
+
+      - name: Get GCC hash
+        working-directory: riscv-gnu-toolchain/gcc
+        id: gcc-hash
+        run: |
+          git checkout master
+          git pull
+          if [ "${{ github.event.inputs.gcchash }}" == "" ]; then
+            export GCCHASH=$(git rev-parse HEAD)
+          else
+            export GCCHASH=${{ github.event.inputs.gcchash }}
+          fi
+          echo $GCCHASH
+          echo "gcchash=$GCCHASH" >> "$GITHUB_OUTPUT"
+
+      - name: Cache submodules
+        if: steps.retrieve-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v3
+        with:
+          path: |
+            riscv-gnu-toolchain/.git
+            riscv-gnu-toolchain/binutils
+            riscv-gnu-toolchain/dejagnu
+            riscv-gnu-toolchain/gcc
+            riscv-gnu-toolchain/gdb
+            riscv-gnu-toolchain/glibc
+            riscv-gnu-toolchain/newlib
+            riscv-gnu-toolchain/qemu
+          key: submodules-archive-5
+
+      - name: Make cache zip
+        run: |
+          zip -r cache.zip .git binutils dejagnu gcc gdb glibc newlib qemu
+
+      # Use artifact rather than cache since cache downloads are flaky/hang.
+      # Artifacts are reliable but ~30 min slower to set up.
+      # Setup is done on one runner, so this isn't a show stopper.
+      - name: Upload git cache
+        uses: actions/upload-artifact@v3
+        with:
+          name: gcc-sources-${{ steps.gcc-hash.outputs.gcchash }}
+          path: |
+            riscv-gnu-toolchain/cache.zip
+          retention-days: 5
+
+    outputs:
+      gcchash: ${{ steps.gcc-hash.outputs.gcchash }}
