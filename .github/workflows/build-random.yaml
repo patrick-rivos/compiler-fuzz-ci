@@ -4,8 +4,8 @@ name: Build-Random
 
 on:
   schedule:
-    # Run every hour
-    - cron: 0 * * * *
+    # Run once a week
+    - cron: 0 * * * 1
   workflow_dispatch:
     branches:
       - main
