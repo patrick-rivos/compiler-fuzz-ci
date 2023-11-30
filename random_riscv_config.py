@@ -11,7 +11,7 @@ def main():
         ["", "_zvl128b", "_zvl256b", "_zvl512b", "_zvl1028b", "_zicond"]
     )
 
-    print(f"rv{xlen}{extensions}{add_ons}")
+    print(f"rv{xlen}{extensions}{add_ons}-{'i' if xlen == 32 else ''}lp{xlen}d")
 
 
 if __name__ == "__main__":
