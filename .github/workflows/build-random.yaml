@@ -51,7 +51,7 @@ jobs:
 
       - name: Build random config
         run: |
-          ../build-random.sh
+          nice -n 15 ../build-random.sh
 
       - name: If failed, report with a new github issue
         run: |
