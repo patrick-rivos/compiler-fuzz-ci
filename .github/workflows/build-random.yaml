@@ -3,9 +3,9 @@ name: Build-Random
 # Build a random riscv config
 
 on:
-  schedule:
-    # Run once a week
-    - cron: 0 * * * 1
+  # schedule:
+  #   # Run once a week
+  #   - cron: 0 * * * 1
   workflow_dispatch:
     branches:
       - main
