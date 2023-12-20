@@ -1,3 +1,6 @@
 [submodule "riscv-gnu-toolchain"]
 	path = riscv-gnu-toolchain
 	url = https://github.com/riscv-collab/riscv-gnu-toolchain
+[submodule "csmith"]
+	path = csmith
+	url = https://github.com/csmith-project/csmith.git
