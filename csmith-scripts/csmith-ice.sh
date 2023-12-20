@@ -31,10 +31,17 @@ csmith_tmp=$invocation_location/csmith-tmp/$1
 COUNTER=0
 while true
 do
+  # Remove temp files
+  rm -f $csmith_tmp/rv64gc-ex.log $csmith_tmp/user-config-ex.log $csmith_tmp/rv64gc-qemu.log $csmith_tmp/user-config-qemu.log
+
   let COUNTER++
   echo $COUNTER-$1
+
+  # Generate a random c program
   $(cat $script_location/csmith.path)/bin/csmith > $csmith_tmp/out.c
-  if $(cat $script_location/compiler.path) -I$(cat $script_location/csmith.path)/include $2 -S $csmith_tmp/out.c 2>&1 | grep "internal compiler error";
+
+  # Compile to check for ICEs
+  if $(cat $script_location/compiler.path) -I$(cat $script_location/csmith.path)/include $2 -S $csmith_tmp/out.c -o $csmith_tmp/out.s 2>&1 | grep "internal compiler error";
   then
     echo "! FAILURE FOUND"
     cp $csmith_tmp/out.c $invocation_location/csmith-discoveries/$1-$COUNTER.c
