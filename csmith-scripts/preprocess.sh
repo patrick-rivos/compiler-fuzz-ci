@@ -7,7 +7,7 @@
 # ../csmith-scripts/preprocess.sh '<compiler opts>'
 
 if [ "$#" -ne 1 ]; then
-    echo "Illegal number of parameters"
+    echo "Illegal number of parameters. Usage: ../csmith-scripts/preprocess.sh '<compiler opts>'"
     exit 1
 fi
 
@@ -25,3 +25,4 @@ fi
 
 echo $(cat $script_location/compiler.path) -I$(cat $script_location/csmith.path)/include $1 raw.c -E -o red.c
 $(cat $script_location/compiler.path) -I$(cat $script_location/csmith.path)/include $1 raw.c -E -o red.c
+echo $1 > compiler-opts.txt

@@ -13,6 +13,7 @@
 program=${1:-red.c}
 
 script_location=$(dirname "$0")
+invocation_location=$(pwd)
 
 # Relies on compiler.path qemu.path scripts.path and csmith.path
 if [ ! -f "$(cat $script_location/compiler.path)" ]; then
@@ -32,10 +33,16 @@ if [ ! -d "$(cat $script_location/csmith.path)" ]; then
   exit 1
 fi
 
+# Make sure compiler-opts.txt is set
+if [ ! -f "$invocation_location/compiler-opts.txt" ]; then
+  echo "compiler opts file: $invocation_location/compiler-opts.txt does not exist."
+  exit 1
+fi
+
 TIMEOUT_ERROR=${TIMEOUT_ERROR:-false}
 SCRIPTS=$(cat $script_location/scripts.path)
 COMPILER=$(cat $script_location/compiler.path)
-COMPILER_1_OPTS="-march=rv64gcv -mabi=lp64d -O3 $program -o user-config.out"
+COMPILER_1_OPTS="$(cat $invocation_location/compiler-opts.txt) $program -o user-config.out"
 COMPILER_2_OPTS="-march=rv64gc -mabi=lp64d -O3 $program -o rv64gc.out"
 # These warnings help prevent creduce from introducing undefined behavior.
 # Creduce will gladly read beyond the bounds of an array or lots of other stuff.
@@ -44,22 +51,22 @@ WARNING_OPTS="-Wformat -Wno-compare-distinct-pointer-types -Wno-overflow -Wunini
 QEMU=$(cat $script_location/qemu.path)
 
 LOCK_IN_EXIT_CODES=${LOCK_IN_EXIT_CODES:-true}
-EXIT_CODE_user-config=0
+EXIT_CODE_USER_CONFIG=0
 EXIT_CODE_RV64GC=0
 
 echo $COMPILER $COMPILER_1_OPTS $WARNING_OPTS
-$COMPILER $COMPILER_1_OPTS $WARNING_OPTS 2> comp_output.log
-cat comp_output.log
-if [[ $(cat comp_output.log | grep "warning" | wc -l) -ne 0 ]];
+$COMPILER $COMPILER_1_OPTS $WARNING_OPTS 2> compile-user-opts.log
+cat compile-user-opts.log
+if [[ $(cat compile-user-opts.log | grep "warning" | wc -l) -ne 0 ]];
 then
   echo "Warning detected"
   exit 1
 fi
 
 echo $COMPILER $COMPILER_2_OPTS $WARNING_OPTS
-$COMPILER $COMPILER_2_OPTS $WARNING_OPTS 2> comp_output.log
-cat comp_output.log
-if [[ $(cat comp_output.log | grep "warning" | wc -l) -ne 0 ]];
+$COMPILER $COMPILER_2_OPTS $WARNING_OPTS 2> compile-rv64gc.log
+cat compile-rv64gc.log
+if [[ $(cat compile-rv64gc.log | grep "warning" | wc -l) -ne 0 ]];
 then
   echo "Warning detected"
   exit 1
@@ -87,7 +94,7 @@ then
     exit 1
   fi
 
-  if [[ $(cat user-config-ex.log) -ne $EXIT_CODE_user-config ]];
+  if [[ $(cat user-config-ex.log) -ne $EXIT_CODE_USER_CONFIG ]];
   then
     echo "Weird exit code for user-config"
     exit 1

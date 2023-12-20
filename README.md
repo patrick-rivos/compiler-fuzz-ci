@@ -90,28 +90,28 @@ This will hold the initial testcase (rename it to raw.c) and the reduced testcas
 3. `cd` into the triage folder
 4. Preprocess the initial testcase (raw.c)
 
-`../csmith-scripts/preprocess.sh`
+`../csmith-scripts/preprocess.sh '<gcc-opts>'`
 
 5. Edit `cred-ice.sh` or `cred-qemu.sh` to use the correct compilation options
 
 Ensure the behavior is present by running the script:
 `../csmith-scripts/cred-ice.sh` or `../csmith-scripts/cred-ice.sh`
 
-This is a great time to try to reduce the command line args/ISA string. See if removing some extensions still causes the issue to show up.
+This is a great time to try to reduce the command line args/ISA string. Edit compiler-opts.txt and see if removing some extensions still causes the issue to show up.
 
 6. Reduce!
 
 You can use creduce or cvise for this. I prefer creduce so that's what I'll use for the examples, but I use them interchangebly. I think the cli/options are the same for both.
 
-`creduce ../csmith-scripts/cred-ice.sh red.c`
+`creduce ../csmith-scripts/cred-ice.sh red.c compiler-opts.txt`
 
 and let it reduce!
 
 Some helpful options:
 
-`creduce ../csmith-scripts/cred-ice.sh red.c --n 12` - Use 12 cores instead of the default 4
+`creduce ../csmith-scripts/cred-ice.sh red.c compiler-opts.txt --n 12` - Use 12 cores instead of the default 4
 
-`creduce ../csmith-scripts/cred-ice.sh red.c --sllooww` - Try harder to reduce the testcase. Typically takes longer to reduce so I'll reduce it without `--sllooww` and then use `--sllooww` after the initial reduction is done.
+`creduce ../csmith-scripts/cred-ice.sh red.c compiler-opts.txt --sllooww` - Try harder to reduce the testcase. Typically takes longer to reduce so I'll reduce it without `--sllooww` and then use `--sllooww` after the initial reduction is done.
 
 # Bug trophy case:
 PRs welcome!

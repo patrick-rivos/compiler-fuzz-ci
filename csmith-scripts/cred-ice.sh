@@ -13,6 +13,7 @@
 program=${1:-red.c}
 
 script_location=$(dirname "$0")
+invocation_location=$(pwd)
 
 # Relies on compiler.path
 if [ ! -f "$(cat $script_location/compiler.path)" ]; then
@@ -20,8 +21,14 @@ if [ ! -f "$(cat $script_location/compiler.path)" ]; then
   exit 1
 fi
 
+# Make sure compiler-opts.txt is set
+if [ ! -f "$invocation_location/compiler-opts.txt" ]; then
+  echo "compiler opts file: $invocation_location/compiler-opts.txt does not exist."
+  exit 1
+fi
+
 COMPILER=$(cat $script_location/compiler.path)
-COMPILER_OPTS="-march=rv64gcv -mabi=lp64d -O3 $program -o rv64gcv.out"
+COMPILER_OPTS="$(cat $invocation_location/compiler-opts.txt)  $program -o rv64gcv.out"
 # These warnings help prevent creduce from introducing undefined behavior.
 # Creduce will gladly read beyond the bounds of an array or lots of other stuff.
 # Rejecting programs that fail these warnings keep it in check.
