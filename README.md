@@ -38,6 +38,8 @@ cd ..
 mkdir build-riscv-gnu-toolchain
 cd build-riscv-gnu-toolchain
 ../riscv-gnu-toolchain/configure --prefix=$(pwd) --with-arch=rv64gcv --with-abi=lp64d
+make linux -j32
+make qemu -j32
 ```
 
 ## Start fuzzing:
