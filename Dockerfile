@@ -28,14 +28,14 @@ RUN make build-qemu -j $(nproc)
 RUN echo /gcc-fuzz-ci/riscv-gnu-toolchain/scripts > /gcc-fuzz-ci/csmith-scripts/scripts.path
 RUN echo /gcc-fuzz-ci/riscv-gnu-toolchain/build/bin/qemu-riscv64 > /gcc-fuzz-ci/csmith-scripts/qemu.path
 # Build compiler
-# WORKDIR /gcc-fuzz-ci/riscv-gnu-toolchain
-# RUN git submodule update --depth 1 --init gcc binutils
-# WORKDIR /gcc-fuzz-ci/riscv-gnu-toolchain/gcc
-# RUN git checkout master
-# WORKDIR /gcc-fuzz-ci/riscv-gnu-toolchain/build
-# RUN apt install libgmp-dev texinfo bison flex -y
-# RUN make linux -j $(nproc)
-# RUN echo /gcc-fuzz-ci/riscv-gnu-toolchain/build/bin/riscv64-unknown-linux-gnu-gcc > /gcc-fuzz-ci/csmith-scripts/compiler.path
+WORKDIR /gcc-fuzz-ci/riscv-gnu-toolchain
+RUN git submodule update --depth 1 --init gcc binutils
+WORKDIR /gcc-fuzz-ci/riscv-gnu-toolchain/gcc
+RUN git checkout master
+WORKDIR /gcc-fuzz-ci/riscv-gnu-toolchain/build
+RUN apt install libgmp-dev texinfo bison flex -y
+RUN make linux -j $(nproc)
+RUN echo /gcc-fuzz-ci/riscv-gnu-toolchain/build/bin/riscv64-unknown-linux-gnu-gcc > /gcc-fuzz-ci/csmith-scripts/compiler.path
 # We're ready to fuzz!
 WORKDIR /gcc-fuzz-ci
 RUN pip install pyelftools
