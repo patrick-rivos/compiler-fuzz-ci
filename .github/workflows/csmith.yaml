@@ -32,7 +32,7 @@ jobs:
 
       - name: Build docker image
         run: |
-          nice -n 15 docker build . --build-arg gh_token=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 -q > docker_img.txt
+          nice -n 15 docker build . -q > docker_img.txt
 
       - name: Run fuzzer on rv64gcv
         run: |
