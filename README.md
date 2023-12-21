@@ -44,7 +44,7 @@ cd build-riscv-gnu-toolchain
 Update csmith-scripts compiler.path qemu.path scripts.path with the absolute paths to each of those components.
 
 ```
-./csmith-scripts/csmith-ice csmith-tmp-1 "-march=rv64gcv -mabi=lp64d -ftree-vectorize -O3"
+./csmith-scripts/csmith-ice.sh csmith-tmp-1 "-march=rv64gcv -mabi=lp64d -ftree-vectorize -O3"
 ```
 
 ### Fuzz faster (& nicely!):
