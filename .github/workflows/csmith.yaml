@@ -1,0 +1,66 @@
+name: csmith
+
+# Build a random riscv config
+
+on:
+  schedule:
+    # Run every day
+    - cron: 0 0 * * *
+  workflow_dispatch:
+    branches:
+      - main
+
+jobs:
+  csmith:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: 'Cleanup build folder'
+        working-directory: ./
+        run: |
+          ls -la ./
+          rm -rf ./* || true
+          rm -rf ./.??* || true
+          ls -la ./
+
+      - uses: actions/checkout@v3
+
+      - name: Setup env
+        uses: ./.github/actions/common/setup-env
+        with:
+          free_up_space: true
+
+      - name: Build docker image
+        run: |
+          nice -n 15 docker build . --build-arg gh_token=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 -q > docker_img.txt
+
+      - name: Run fuzzer on rv64gcv
+        run: |
+          chmod -R 777 out
+          docker run -v $(pwd)/out:/gcc-fuzz-ci/csmith-discoveries -it $(cat docker_img.txt) sh -c "echo hi && zip -r discoveries.zip ./csmith-discoveries && cp discoveries.zip out"
+
+      - name: Zip results
+        run: |
+          zip -r interesting.zip out
+
+      - name: Upload results
+        uses: actions/upload-artifact@v3
+        with:
+          name: interesting.zip
+          path: |
+            interesting.zip
+          retention-days: 90
+
+      - name: Create issue
+        run: |
+          printf "## GCC Fuzz CI Run information\n" > issue.md
+          printf "Logs and results can be found in the associated Github Actions run: https://github.com/ewlu/gcc-precommit-ci/actions/runs/${{ github.run_id }}\n" >> issue.md
+
+      - name: Create issue
+        uses: peter-evans/create-issue-from-file@v4
+        id: create-issue
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          content-filepath: issue.md
+          title: 'Fuzzer run'
