@@ -38,7 +38,7 @@ jobs:
         run: |
           mkdir out
           chmod -R 777 out
-          docker run -v $(pwd)/out:/gcc-fuzz-ci/csmith-discoveries -it $(cat docker_img.txt) sh -c "echo hi && zip -r discoveries.zip ./csmith-discoveries && cp discoveries.zip out"
+          docker run -v $(pwd)/out:/gcc-fuzz-ci/csmith-discoveries $(cat docker_img.txt) sh -c "echo hi && zip -r discoveries.zip ./csmith-discoveries && cp discoveries.zip out"
 
       - name: Zip results
         run: |
