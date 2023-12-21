@@ -39,4 +39,4 @@ RUN echo /gcc-fuzz-ci/riscv-gnu-toolchain/build/bin/riscv64-unknown-linux-gnu-gc
 # We're ready to fuzz!
 WORKDIR /gcc-fuzz-ci
 RUN pip install pyelftools
-RUN apt install zip -y
+RUN apt install zip parallel -y

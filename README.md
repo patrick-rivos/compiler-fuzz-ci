@@ -52,7 +52,7 @@ Update csmith-scripts compiler.path qemu.path scripts.path with the absolute pat
 ### Fuzz faster (& nicely!):
 Running a single script is good, but if you have multiple cores (you probably do!) you can use them all!
 ```
-parallel --lb "nice -n 15 ./csmith-qemu.sh csmith-tmp-{} '-march=rv64gcv -mabi=lp64d -ftree-vectorize -O3'" ::: 1 2 3 4 5 6 7 8
+parallel --lb "nice -n 15 ./csmith-qemu.sh csmith-tmp-{} '-march=rv64gcv -mabi=lp64d -ftree-vectorize -O3'" ::: {0..$(nproc)}
 ```
 [gnu parallel](https://www.gnu.org/software/parallel/) makes running multiple copies of a script easy.
 
