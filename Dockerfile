@@ -5,6 +5,7 @@
 FROM ubuntu:22.04 as run-csmith
 RUN apt update
 # Need to update git to use --depth
+RUN apt install software-properties-common
 RUN add-apt-repository ppa:git-core/ppa -y
 RUN apt-key adv --recv-keys --keyserver keyserver.ubuntu.com A1715D88E1DF1F24 40976EAF437D05B5 3B4FE6ACC0B21F32 A6616109451BBBF2
 RUN apt-get update
