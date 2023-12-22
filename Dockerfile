@@ -28,9 +28,6 @@ RUN nice -n 15 make build-qemu -j $(nproc)
 RUN echo /gcc-fuzz-ci/riscv-gnu-toolchain/scripts > /gcc-fuzz-ci/csmith-scripts/scripts.path
 RUN echo /gcc-fuzz-ci/riscv-gnu-toolchain/build/bin/qemu-riscv64 > /gcc-fuzz-ci/csmith-scripts/qemu.path
 # Build compiler
-WORKDIR /gcc-fuzz-ci/riscv-gnu-toolchain
-RUN git submodule update --depth 1 --init gcc
-RUN git submodule update --depth 1 --init binutils
 WORKDIR /gcc-fuzz-ci/riscv-gnu-toolchain/gcc
 RUN git checkout master
 WORKDIR /gcc-fuzz-ci/riscv-gnu-toolchain/build
