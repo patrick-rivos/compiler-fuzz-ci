@@ -43,12 +43,13 @@ jobs:
           docker build .
           docker build . -q > docker_img.txt
 
-      # 24 hr timeout
+      # 24 hr timeout 86400
+      # 2 min timeout 120
       - name: Run fuzzer on rv64gcv
         run: |
           mkdir out
           chmod -R 777 out
-          nice -n 15 docker run -v $(pwd)/out:/gcc-fuzz-ci/csmith-discoveries $(cat docker_img.txt) sh -c "timeout 86400 parallel \"./csmith-scripts/csmith-qemu.sh tmp-{} '-march=rv64gcv -ftree-vectorize -O3'\" ::: {1..$(nproc)} || true && zip -r discoveries.zip ./csmith-discoveries && cp discoveries.zip out"
+          nice -n 15 docker run -v $(pwd)/out:/gcc-fuzz-ci/csmith-discoveries $(cat docker_img.txt) sh -c "timeout 120 parallel \"./csmith-scripts/csmith-qemu.sh tmp-{} '-march=rv64gcv -ftree-vectorize -O3'\" ::: {1..$(nproc)} || true && zip -r discoveries.zip ./csmith-discoveries && cp discoveries.zip out"
 
       - name: Zip results
         run: |
