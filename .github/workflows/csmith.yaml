@@ -5,7 +5,7 @@ name: csmith
 on:
   schedule:
     # Run every day
-    - cron: 0 0 * * *
+    - cron: 0 0/12 * * *
   workflow_dispatch:
     branches:
       - main
@@ -32,9 +32,9 @@ jobs:
           free_up_space: true
 
       # Clear docker cache so we get tip-of-tree gcc
-      # - name: Clear docker cache
-      #   run: |
-      #     docker system prune -af
+      - name: Clear docker cache
+        run: |
+          docker system prune -af
 
       # Verbose logs during the first build and then rely on cache to get the
       # built image's id.
@@ -43,8 +43,7 @@ jobs:
           docker build .
           docker build . -q > docker_img.txt
 
-      # 24 hr timeout 86400
-      # 2 min timeout 120
+      # 24 hr timeout 86400 seconds
       - name: Run fuzzer on rv64gcv
         run: |
           mkdir out
