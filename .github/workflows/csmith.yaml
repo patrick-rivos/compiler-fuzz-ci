@@ -32,9 +32,9 @@ jobs:
           free_up_space: true
 
       # Clear docker cache so we get tip-of-tree gcc
-      - name: Clear docker cache
-        run: |
-          docker system prune -af
+      # - name: Clear docker cache
+      #   run: |
+      #     docker system prune -af
 
       # Verbose logs during the first build and then rely on cache to get the
       # built image's id.
@@ -48,7 +48,7 @@ jobs:
         run: |
           mkdir out
           chmod -R 777 out
-          nice -n 15 docker run -v $(pwd)/out:/gcc-fuzz-ci/csmith-discoveries $(cat docker_img.txt) sh -c "timeout 86400 parallel "./csmith-scripts/csmith-qemu.sh tmp-{} '-march=rv64gcv -ftree-vectorize -O3'" ::: {1..$(nproc)} || true && zip -r discoveries.zip ./csmith-discoveries && cp discoveries.zip out"
+          nice -n 15 docker run -v $(pwd)/out:/gcc-fuzz-ci/csmith-discoveries $(cat docker_img.txt) sh -c "timeout 86400 parallel \"./csmith-scripts/csmith-qemu.sh tmp-{} '-march=rv64gcv -ftree-vectorize -O3'\" ::: {1..$(nproc)} || true && zip -r discoveries.zip ./csmith-discoveries && cp discoveries.zip out"
 
       - name: Zip results
         run: |
