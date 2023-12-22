@@ -4,15 +4,13 @@
 
 FROM ubuntu:22.04 as run-csmith
 RUN apt update
-RUN apt install git -y
-RUN git clone https://github.com/patrick-rivos/gcc-fuzz-ci
 # Need to update git to use --depth
-RUN apt-get install python-software-properties
-RUN apt-get install software-properties-common
 RUN add-apt-repository ppa:git-core/ppa -y
+RUN apt-key adv --recv-keys --keyserver keyserver.ubuntu.com A1715D88E1DF1F24 40976EAF437D05B5 3B4FE6ACC0B21F32 A6616109451BBBF2
 RUN apt-get update
-RUN apt-get upgrade
 RUN apt-get install git -y
+# Clone repo
+RUN git clone https://github.com/patrick-rivos/gcc-fuzz-ci
 # Build csmith
 WORKDIR /gcc-fuzz-ci
 RUN git submodule update --depth 1 --init csmith
