@@ -31,6 +31,11 @@ jobs:
         with:
           free_up_space: true
 
+      # Clear docker cache so we get tip-of-tree gcc
+      - name: Clear docker cache
+        run: |
+          docker system prune -af
+
       # Verbose logs during the first build and then rely on cache to get the
       # built image's id.
       - name: Build docker image
