@@ -49,7 +49,7 @@ jobs:
         run: |
           mkdir out
           chmod -R 777 out
-          nice -n 15 docker run -v $(pwd)/out:/gcc-fuzz-ci/csmith-discoveries $(cat docker_img.txt) sh -c "timeout 120 parallel \"./csmith-scripts/csmith-qemu.sh tmp-{} '-march=rv64gcv -ftree-vectorize -O3'\" ::: {1..$(nproc)} || true && zip -r discoveries.zip ./csmith-discoveries && cp discoveries.zip out"
+          docker run -v $(pwd)/out:/gcc-fuzz-ci/csmith-discoveries $(cat docker_img.txt) sh -c "nice -n 15 timeout 86400 parallel \"./csmith-scripts/csmith-qemu.sh tmp-{} '-march=rv64gcv -ftree-vectorize -O3'\" ::: $(seq 1 $(nproc) | tr '\n' ' ') || true && zip -r discoveries.zip ./csmith-discoveries && cp discoveries.zip out"
 
       - name: Zip results
         run: |
