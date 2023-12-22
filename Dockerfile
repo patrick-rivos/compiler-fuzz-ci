@@ -6,9 +6,16 @@ FROM ubuntu:22.04 as run-csmith
 RUN apt update
 RUN apt install git -y
 RUN git clone https://github.com/patrick-rivos/gcc-fuzz-ci
+# Need to update git to use --depth
+RUN apt-get install python-software-properties
+RUN apt-get install software-properties-common
+RUN add-apt-repository ppa:git-core/ppa -y
+RUN apt-get update
+RUN apt-get upgrade
+RUN apt-get install git -y
 # Build csmith
 WORKDIR /gcc-fuzz-ci
-RUN git submodule update --init csmith
+RUN git submodule update --depth 1 --init csmith
 RUN apt install -y g++ cmake m4 -y
 RUN mkdir csmith-build
 WORKDIR /gcc-fuzz-ci/csmith
@@ -19,7 +26,7 @@ RUN echo /gcc-fuzz-ci/csmith-build > /gcc-fuzz-ci/csmith-scripts/csmith.path
 WORKDIR /gcc-fuzz-ci
 RUN git submodule update --init riscv-gnu-toolchain
 WORKDIR /gcc-fuzz-ci/riscv-gnu-toolchain
-RUN git submodule update --init qemu
+RUN git submodule update --depth 1 --init qemu
 RUN mkdir build
 WORKDIR /gcc-fuzz-ci/riscv-gnu-toolchain/build
 RUN apt install curl gawk build-essential python3 python3-pip ninja-build meson pkg-config libglib2.0-dev -y
@@ -28,6 +35,9 @@ RUN nice -n 15 make build-qemu -j $(nproc)
 RUN echo /gcc-fuzz-ci/riscv-gnu-toolchain/scripts > /gcc-fuzz-ci/csmith-scripts/scripts.path
 RUN echo /gcc-fuzz-ci/riscv-gnu-toolchain/build/bin/qemu-riscv64 > /gcc-fuzz-ci/csmith-scripts/qemu.path
 # Build compiler
+WORKDIR /gcc-fuzz-ci/riscv-gnu-toolchain
+RUN git submodule update --depth 1 --init gcc
+RUN git submodule update --depth 1 --init binutils
 WORKDIR /gcc-fuzz-ci/riscv-gnu-toolchain/gcc
 RUN git checkout master
 WORKDIR /gcc-fuzz-ci/riscv-gnu-toolchain/build

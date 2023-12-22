@@ -31,9 +31,12 @@ jobs:
         with:
           free_up_space: true
 
+      # Verbose logs during the first build and then rely on cache to get the
+      # built image's id.
       - name: Build docker image
         run: |
-          nice -n 15 docker build . -q > docker_img.txt
+          docker build .
+          docker build . -q > docker_img.txt
 
       # 24 hr timeout
       - name: Run fuzzer on rv64gcv
