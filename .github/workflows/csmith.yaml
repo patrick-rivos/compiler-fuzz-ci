@@ -65,7 +65,7 @@ jobs:
       - name: Create issue
         run: |
           printf "## GCC Fuzz CI Run information\n" > issue.md
-          printf "Logs and results can be found in the associated Github Actions run: https://github.com/ewlu/gcc-precommit-ci/actions/runs/${{ github.run_id }}\n" >> issue.md
+          printf "Logs and results can be found in the associated Github Actions run: https://github.com/patrick-rivos/gcc-fuzz-ci/actions/runs/${{ github.run_id }}\n" >> issue.md
 
       - name: Create issue
         uses: peter-evans/create-issue-from-file@v4
