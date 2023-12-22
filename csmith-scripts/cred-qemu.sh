@@ -61,8 +61,9 @@ then
   exit 1
 fi
 
-echo $COMPILER $COMPILER_2_OPTS $WARNING_OPTS
-gcc $COMPILER_2_OPTS $WARNING_OPTS 2> compile-native.log
+# Ignore warnings from the native compiler
+echo gcc $COMPILER_2_OPTS -w
+gcc $COMPILER_2_OPTS -w 2> compile-native.log
 cat compile-native.log
 if [[ $(cat compile-native.log | grep "warning" | wc -l) -ne 0 ]];
 then
@@ -74,8 +75,8 @@ echo "Running QEMU"
 echo "QEMU_CPU="$($SCRIPTS/march-to-cpu-opt --get-riscv-tag user-config.out)" timeout --verbose -k 0.1 1 $QEMU user-config.out"
 QEMU_CPU="$($SCRIPTS/march-to-cpu-opt --get-riscv-tag user-config.out)" timeout --verbose -k 0.1 1 $QEMU user-config.out 2>&1 > user-config-qemu.log
 echo $? > user-config-ex.log
-echo timeout --verbose -k 0.1 1 $QEMU native.out
-timeout --verbose -k 0.1 1 native.out 2>&1 > native.log
+echo timeout --verbose -k 0.1 1 ./native.out
+timeout --verbose -k 0.1 1 ./native.out 2>&1 > native.log
 echo $? > native-ex.log
 
 echo "user-config qemu exit code:"
@@ -130,7 +131,7 @@ then
    echo "Confirming diff with generous runtime"
    QEMU_CPU="$($SCRIPTS/march-to-cpu-opt --get-riscv-tag user-config.out)" timeout --verbose -k 0.1 10 $QEMU user-config.out 2>&1 > user-config-qemu.log
    echo $? > user-config-ex.log
-   QEMU_CPU="$($SCRIPTS/march-to-cpu-opt --get-riscv-tag native.out)" timeout --verbose -k 0.1 10 $QEMU native.out 2>&1 > native.log
+   timeout --verbose -k 0.1 10 ./native.out 2>&1 > native.log
    echo $? > native-ex.log
   fi
 else
