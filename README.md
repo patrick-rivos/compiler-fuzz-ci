@@ -116,7 +116,6 @@ Some helpful options:
 `creduce ../csmith-scripts/cred-ice.sh red.c compiler-opts.txt --sllooww` - Try harder to reduce the testcase. Typically takes longer to reduce so I'll reduce it without `--sllooww` and then use `--sllooww` after the initial reduction is done.
 
 # Bug trophy case:
-PRs welcome!
 ## Runtime fails:
 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112855
 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112801
@@ -125,6 +124,8 @@ https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113087
 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112929
 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112988
 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112932
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113206
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113209
 ## ICEs:
 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112481
 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112535
@@ -141,6 +142,8 @@ https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112872
 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112469
 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112971
 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113001
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113210
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113228
 
 # Contribute
 Have an improvement? PRs are welcome!
