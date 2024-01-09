@@ -37,20 +37,37 @@ if [ ! -f "$invocation_location/compiler-opts.txt" ]; then
   exit 1
 fi
 
+CLANG_WARNING_CHECK=${CLANG_WARNING_CHECK:-false}
 TIMEOUT_ERROR=${TIMEOUT_ERROR:-false}
 SCRIPTS=$(cat $script_location/scripts.path)
 COMPILER=$(cat $script_location/compiler.path)
-COMPILER_1_OPTS="$(cat $invocation_location/compiler-opts.txt) $program -o user-config.out"
+COMPILER_1_OPTS="$(cat $invocation_location/compiler-opts.txt) $program -o user-config.out -fsigned-char"
 COMPILER_2_OPTS="-O1 $program -o native.out"
 # These warnings help prevent creduce from introducing undefined behavior.
 # Creduce will gladly read beyond the bounds of an array or lots of other stuff.
 # Rejecting programs that fail these warnings keep it in check.
-WARNING_OPTS="-Wformat -Wno-compare-distinct-pointer-types -Wno-overflow -Wuninitialized -Warray-bounds -Wreturn-type -Wno-incompatible-pointer-types"
+WARNING_OPTS="-Wformat -Wno-compare-distinct-pointer-types -Wno-overflow -Wuninitialized -Warray-bounds -Wreturn-type"
 QEMU=$(cat $script_location/qemu.path)
 
 LOCK_IN_EXIT_CODES=${LOCK_IN_EXIT_CODES:-true}
 EXIT_CODE_USER_CONFIG=0
 EXIT_CODE_NATIVE=0
+
+if [[ "$CLANG_WARNING_CHECK" = true ]];
+then
+  echo Checking for warnings with clang.
+
+  CLANG_IGNORE="-Wno-constant-conversion -Wno-unused-value -Wno-tautological-constant-out-of-range-compare -Wno-constant-logical-operand -Wno-tautological-compare -Wno-parentheses-equality -Wno-pointer-sign"
+
+  echo clang $program $WARNING_OPTS $CLANG_IGNORE
+  clang $program $WARNING_OPTS $CLANG_IGNORE 2> clang-compile.log
+  cat clang-compile.log
+  if [[ $(cat clang-compile.log | grep "warning" | wc -l) -ne 0 ]];
+  then
+    echo "Clang Warning detected"
+    exit 1
+  fi
+fi
 
 echo $COMPILER $COMPILER_1_OPTS $WARNING_OPTS
 $COMPILER $COMPILER_1_OPTS $WARNING_OPTS 2> compile-user-opts.log
