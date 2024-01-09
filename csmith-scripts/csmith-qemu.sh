@@ -37,12 +37,17 @@ mkdir -p $invocation_location/csmith-tmp/$1
 csmith_tmp=$invocation_location/csmith-tmp/$1
 
 COUNTER=0
+INVALID_NATIVE_BINARY_COUNTER=0
+INVALID_QEMU_BINARY_COUNTER=0
 while true
 do
   # Remove temp files
   rm -f $csmith_tmp/rv64gc-ex.log $csmith_tmp/user-config-ex.log $csmith_tmp/rv64gc-qemu.log $csmith_tmp/user-config-qemu.log
 
   let COUNTER++
+
+  # Record stats
+  echo "{\"programs_evaluated\":\"$COUNTER\",\"invalid_native_counter\":\"$INVALID_NATIVE_BINARY_COUNTER\",\"invalid_qemu_counter\":\"$INVALID_QEMU_BINARY_COUNTER\"}" > csmith-discoveries/$1-stats.json
 
   # Generate a random c program
   $(cat $script_location/csmith.path)/bin/csmith > $csmith_tmp/out.c
@@ -86,7 +91,11 @@ do
         cp $csmith_tmp/user-config-qemu.log $invocation_location/csmith-discoveries/$1-$COUNTER-qemu-diff-gcv.c
         cp $csmith_tmp/native.log $invocation_location/csmith-discoveries/$1-$COUNTER-native-diff-gc.c
       fi
+    else
+      let INVALID_QEMU_BINARY_COUNTER++
     fi
+  else
+    let INVALID_NATIVE_BINARY_COUNTER++
   fi
 
 done
