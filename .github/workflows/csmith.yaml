@@ -40,8 +40,19 @@ jobs:
       # built image's id.
       - name: Build docker image
         run: |
-          docker build .
-          docker build . -q > docker_img.txt
+          docker build . --tag ghcr.io/patrick-rivos/gcc-fuzz-ci:latest
+          docker build . --tag ghcr.io/patrick-rivos/gcc-fuzz-ci:latest -q > docker_img.txt
+
+      - name: Login to registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Push image
+        run: |
+          docker push ghcr.io/patrick-rivos/gcc-fuzz-ci:latest
 
       # 24 hr timeout 86400 seconds
       # Odd tmp-{} is rv64gcv
