@@ -2,7 +2,7 @@
 # docker build . -q > docker_img.txt
 # docker run
 
-FROM ubuntu:22.04 as run-csmith
+FROM ubuntu:22.04 as build
 RUN apt update
 # Need to update git to use --depth
 RUN apt install software-properties-common -y
@@ -26,24 +26,46 @@ WORKDIR /gcc-fuzz-ci
 RUN git submodule update --init riscv-gnu-toolchain
 WORKDIR /gcc-fuzz-ci/riscv-gnu-toolchain
 RUN git submodule update --depth 1 --init qemu
-RUN mkdir build
-WORKDIR /gcc-fuzz-ci/riscv-gnu-toolchain/build
+WORKDIR /
+RUN mkdir riscv-gnu-toolchain-build
+WORKDIR /riscv-gnu-toolchain-build
 RUN apt install curl gawk build-essential python3 python3-pip ninja-build meson pkg-config libglib2.0-dev -y
-RUN ../configure --prefix=$(pwd)
+RUN /gcc-fuzz-ci/riscv-gnu-toolchain/configure --prefix=$(pwd)
 RUN nice -n 15 make build-qemu -j $(nproc)
 RUN echo /gcc-fuzz-ci/riscv-gnu-toolchain/scripts > /gcc-fuzz-ci/csmith-scripts/scripts.path
-RUN echo /gcc-fuzz-ci/riscv-gnu-toolchain/build/bin/qemu-riscv64 > /gcc-fuzz-ci/csmith-scripts/qemu.path
+RUN echo /riscv-gnu-toolchain-build/bin/qemu-riscv64 > /gcc-fuzz-ci/csmith-scripts/qemu.path
 # Build compiler
 WORKDIR /gcc-fuzz-ci/riscv-gnu-toolchain
 RUN git submodule update --depth 1 --init gcc
 RUN git submodule update --depth 1 --init binutils
 WORKDIR /gcc-fuzz-ci/riscv-gnu-toolchain/gcc
 RUN git checkout master
-WORKDIR /gcc-fuzz-ci/riscv-gnu-toolchain/build
+WORKDIR /riscv-gnu-toolchain-build
 RUN apt install libgmp-dev texinfo bison flex -y
 RUN nice -n 15 make linux -j $(nproc)
-RUN echo /gcc-fuzz-ci/riscv-gnu-toolchain/build/bin/riscv64-unknown-linux-gnu-gcc > /gcc-fuzz-ci/csmith-scripts/compiler.path
-# We're ready to fuzz!
-WORKDIR /gcc-fuzz-ci
+RUN echo /riscv-gnu-toolchain-build/bin/riscv64-unknown-linux-gnu-gcc > /gcc-fuzz-ci/csmith-scripts/compiler.path
+
+# Release stage
+FROM ubuntu:22.04 as runner
+COPY --from=build /riscv-gnu-toolchain-build/bin /riscv-gnu-toolchain-build/bin
+COPY --from=build /riscv-gnu-toolchain-build/build-glibc-linux-headers /riscv-gnu-toolchain-build/build-glibc-linux-headers
+COPY --from=build /riscv-gnu-toolchain-build/build-gdb-linux /riscv-gnu-toolchain-build/build-gdb-linux
+COPY --from=build /riscv-gnu-toolchain-build/include /riscv-gnu-toolchain-build/include
+COPY --from=build /riscv-gnu-toolchain-build/lib /riscv-gnu-toolchain-build/lib
+COPY --from=build /riscv-gnu-toolchain-build/libexec /riscv-gnu-toolchain-build/libexec
+COPY --from=build /riscv-gnu-toolchain-build/riscv64-unknown-linux-gnu /riscv-gnu-toolchain-build/riscv64-unknown-linux-gnu
+COPY --from=build /riscv-gnu-toolchain-build/scripts /riscv-gnu-toolchain-build/scripts
+COPY --from=build /riscv-gnu-toolchain-build/share /riscv-gnu-toolchain-build/share
+COPY --from=build /riscv-gnu-toolchain-build/sysroot /riscv-gnu-toolchain-build/sysroot
+COPY --from=build /gcc-fuzz-ci/csmith-scripts /gcc-fuzz-ci/csmith-scripts
+COPY --from=build /gcc-fuzz-ci/riscv-gnu-toolchain/scripts /gcc-fuzz-ci/riscv-gnu-toolchain/scripts
+COPY --from=build /gcc-fuzz-ci/csmith-build /gcc-fuzz-ci/csmith-build
+# Install packages
+RUN apt update
+RUN apt install software-properties-common -y
+RUN add-apt-repository ppa:git-core/ppa -y
+RUN apt install python3 python3-pip -y
 RUN pip install pyelftools
 RUN apt install zip parallel -y
+# We're ready to fuzz!
+WORKDIR /gcc-fuzz-ci
