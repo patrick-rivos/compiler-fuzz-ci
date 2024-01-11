@@ -35,12 +35,15 @@ jobs:
         run: |
           docker system prune -af
 
-      # Verbose logs during the first build and then rely on cache to get the
-      # built image's id.
+      - name: install buildx
+        id: buildx
+        uses: crazy-max/ghaction-docker-buildx@v1
+        with:
+          version: latest
+
       - name: Build docker image
         run: |
-          docker build . --tag ghcr.io/patrick-rivos/gcc-fuzz-ci:latest
-          docker build . --tag ghcr.io/patrick-rivos/gcc-fuzz-ci:latest -q > docker_img.txt
+          docker buildx build . --tag ghcr.io/patrick-rivos/gcc-fuzz-ci:latest --platform linux/amd64,linux/arm64/v8
 
       - name: Login to registry
         uses: docker/login-action@v1
