@@ -39,6 +39,11 @@ csmith_tmp=$invocation_location/csmith-tmp/$1
 COUNTER=0
 INVALID_NATIVE_BINARY_COUNTER=0
 INVALID_QEMU_BINARY_COUNTER=0
+TIMEOUT_NATIVE_BINARY_COUNTER=0
+TIMEOUT_QEMU_BINARY_COUNTER=0
+SEGFAULT_NATIVE_BINARY_COUNTER=0
+SEGFAULT_QEMU_BINARY_COUNTER=0
+INTERESTING_BINARY_COUNTER=0
 while true
 do
   # Remove temp files
@@ -47,7 +52,7 @@ do
   let COUNTER++
 
   # Record stats
-  echo "{\"programs_evaluated\":\"$COUNTER\",\"invalid_native_counter\":\"$INVALID_NATIVE_BINARY_COUNTER\",\"invalid_qemu_counter\":\"$INVALID_QEMU_BINARY_COUNTER\"}" > csmith-discoveries/$1-stats.json
+  echo "{\"programs_evaluated\":\"$COUNTER\",\"interesting_counter\":\"$INTERESTING_BINARY_COUNTER\",\"invalid_native\":{\"total\":\"$INVALID_NATIVE_BINARY_COUNTER\",\"timeouts\":\"$TIMEOUT_NATIVE_BINARY_COUNTER\",\"segfaults\":\"$SEGFAULT_NATIVE_BINARY_COUNTER\"},\"invalid_qemu\":{\"total\":\"$INVALID_QEMU_BINARY_COUNTER\",\"timeouts\":\"$TIMEOUT_QEMU_BINARY_COUNTER\",\"segfaults\":\"$SEGFAULT_QEMU_BINARY_COUNTER\"}}" > csmith-discoveries/$1-stats.json
 
   # Generate a random c program
   $(cat $script_location/csmith.path)/bin/csmith > $csmith_tmp/out.c
@@ -87,13 +92,30 @@ do
       if [[ $(diff $csmith_tmp/native.log $csmith_tmp/user-config-qemu.log | wc -l) -ne 0 ]];
       then
         echo "! DIFF CONFIRMED. Logged in csmith-discoveries/$1-$COUNTER-qemu.c"
+	let INTERESTING_BINARY_COUNTER++
         cp $csmith_tmp/out.c $invocation_location/csmith-discoveries/$1-$COUNTER-qemu.c
         cp $csmith_tmp/user-config-qemu.log $invocation_location/csmith-discoveries/$1-$COUNTER-qemu-diff-gcv.c
         cp $csmith_tmp/native.log $invocation_location/csmith-discoveries/$1-$COUNTER-native-diff-gc.c
       fi
+    elif [[ $(cat $csmith_tmp/user-config-ex.log) -eq 124 ]];
+    then
+      let TIMEOUT_QEMU_BINARY_COUNTER++
+      let INVALID_QEMU_BINARY_COUNTER++
+    elif [[ $(cat $csmith_tmp/user-config-ex.log) -eq 139 ]];
+    then
+      let SEGFAULT_QEMU_BINARY_COUNTER++
+      let INVALID_QEMU_BINARY_COUNTER++
     else
       let INVALID_QEMU_BINARY_COUNTER++
     fi
+  elif [[ $(cat $csmith_tmp/native-ex.log) -eq 124 ]];
+  then
+    let TIMEOUT_NATIVE_BINARY_COUNTER++
+    let INVALID_NATIVE_BINARY_COUNTER++
+  elif [[ $(cat $csmith_tmp/native-ex.log) -eq 139 ]];
+  then
+    let SEGFAULT_NATIVE_BINARY_COUNTER++
+    let INVALID_NATIVE_BINARY_COUNTER++
   else
     let INVALID_NATIVE_BINARY_COUNTER++
   fi
