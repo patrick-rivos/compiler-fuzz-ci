@@ -5,7 +5,7 @@ name: csmith
 on:
   schedule:
     # Run every day
-    - cron: 0 0,8,16 * * *
+    - cron: 0 0,4,8,12,16,20 * * *
   workflow_dispatch:
     branches:
       - main
@@ -36,32 +36,14 @@ jobs:
         run: |
           docker system prune -af
 
-      # Verbose logs during the first build and then rely on cache to get the
-      # built image's id.
-      - name: Build docker image
-        run: |
-          docker build . --tag ghcr.io/patrick-rivos/gcc-fuzz-ci:latest
-          docker build . --tag ghcr.io/patrick-rivos/gcc-fuzz-ci:latest -q > docker_img.txt
-
-      - name: Login to registry
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{github.actor}}
-          password: ${{secrets.GITHUB_TOKEN}}
-
-      - name: Push image
-        run: |
-          docker push ghcr.io/patrick-rivos/gcc-fuzz-ci:latest
-
-      # 24 hr timeout 86400 seconds
+      # 12 hr timeout 43200 seconds
       # Odd tmp-{} is rv64gcv
       # Even tmp-{} is rv64gcv_zvl256b
       - name: Run fuzzer on rv64gcv
         run: |
           mkdir out
           chmod -R 777 out
-          docker run -v $(pwd)/out:/gcc-fuzz-ci/csmith-discoveries $(cat docker_img.txt) sh -c "nice -n 15 timeout 86400 parallel --link \"./csmith-scripts/csmith-qemu.sh tmp-{1} {2}\" ::: $(seq 1 $(nproc) | tr '\n' ' ') ::: '-march=rv64gcv -ftree-vectorize -O3' '-march=rv64gcv_zvl256b -ftree-vectorize -O3' '-march=rv64gcv -O3' '-march=rv64gcv_zvl256b -O3' '-march=rv64gcv -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -O3 -mtune=generic-ooo' || true && zip -r discoveries.zip ./csmith-discoveries && cp discoveries.zip out"
+          docker run -v $(pwd)/out:/gcc-fuzz-ci/csmith-discoveries ghcr.io/patrick-rivos/gcc-fuzz-ci:latest sh -c "nice -n 15 timeout 43200 parallel --link \"./csmith-scripts/csmith-qemu.sh tmp-{1} {2}\" ::: $(seq 1 $(nproc) | tr '\n' ' ') ::: '-march=rv64gcv -ftree-vectorize -O3' '-march=rv64gcv_zvl256b -ftree-vectorize -O3' '-march=rv64gcv -O3' '-march=rv64gcv_zvl256b -O3' '-march=rv64gcv -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -O3 -mtune=generic-ooo' || true && zip -r discoveries.zip ./csmith-discoveries && cp discoveries.zip out"
 
       - name: Zip results
         run: |
@@ -74,17 +56,3 @@ jobs:
           path: |
             discoveries.zip
           retention-days: 90
-
-      - name: Create issue
-        run: |
-          printf "## GCC Fuzz CI Run information\n" > issue.md
-          printf "Logs and results can be found in the associated Github Actions run: https://github.com/patrick-rivos/gcc-fuzz-ci/actions/runs/${{ github.run_id }}\n" >> issue.md
-
-      - name: Create issue
-        uses: peter-evans/create-issue-from-file@v4
-        id: create-issue
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          content-filepath: issue.md
-          title: 'Fuzzer run'
