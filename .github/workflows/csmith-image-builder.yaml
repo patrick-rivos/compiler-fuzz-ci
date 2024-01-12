@@ -4,8 +4,8 @@ name: csmith-image-builder
 
 on:
   schedule:
-    # Run twice a day
-    - cron: 0 0,16 * * *
+    # Run once a day
+    - cron: 0 0 * * *
   workflow_dispatch:
     branches:
       - main
