@@ -12,7 +12,7 @@ on:
 
 jobs:
   csmith:
-    runs-on: [self-hosted]
+    runs-on: [self-hosted, fuzz]
     timeout-minutes: 2880 # 48 hours
 
     steps:
