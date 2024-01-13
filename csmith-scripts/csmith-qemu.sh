@@ -32,6 +32,7 @@ if [ ! -d "$(cat $script_location/csmith.path)" ]; then
 fi
 
 mkdir -p $invocation_location/csmith-discoveries
+mkdir -p $invocation_location/csmith-discoveries/stats
 mkdir -p $invocation_location/csmith-tmp/$1
 
 csmith_tmp=$invocation_location/csmith-tmp/$1
@@ -52,7 +53,7 @@ do
   let COUNTER++
 
   # Record stats
-  echo "{\"programs_evaluated\":\"$COUNTER\",\"interesting_counter\":\"$INTERESTING_BINARY_COUNTER\",\"invalid_native\":{\"total\":\"$INVALID_NATIVE_BINARY_COUNTER\",\"timeouts\":\"$TIMEOUT_NATIVE_BINARY_COUNTER\",\"segfaults\":\"$SEGFAULT_NATIVE_BINARY_COUNTER\"},\"invalid_qemu\":{\"total\":\"$INVALID_QEMU_BINARY_COUNTER\",\"timeouts\":\"$TIMEOUT_QEMU_BINARY_COUNTER\",\"segfaults\":\"$SEGFAULT_QEMU_BINARY_COUNTER\"}}" > csmith-discoveries/$1-stats.json
+  echo "{\"programs_evaluated\":\"$COUNTER\",\"interesting_counter\":\"$INTERESTING_BINARY_COUNTER\",\"invalid_native\":{\"total\":\"$INVALID_NATIVE_BINARY_COUNTER\",\"timeouts\":\"$TIMEOUT_NATIVE_BINARY_COUNTER\",\"segfaults\":\"$SEGFAULT_NATIVE_BINARY_COUNTER\"},\"invalid_qemu\":{\"total\":\"$INVALID_QEMU_BINARY_COUNTER\",\"timeouts\":\"$TIMEOUT_QEMU_BINARY_COUNTER\",\"segfaults\":\"$SEGFAULT_QEMU_BINARY_COUNTER\"}}" > csmith-discoveries/stats/$1-stats.json
 
   # Generate a random c program
   $(cat $script_location/csmith.path)/bin/csmith > $csmith_tmp/out.c
