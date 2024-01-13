@@ -12,7 +12,7 @@ on:
 
 jobs:
   csmith:
-    runs-on: [self-hosted]
+    runs-on: [self-hosted, buildx]
 
     steps:
       - name: 'Cleanup build folder'
@@ -34,12 +34,6 @@ jobs:
       - name: Clear docker cache
         run: |
           docker system prune -af
-
-      - name: install buildx
-        id: buildx
-        uses: crazy-max/ghaction-docker-buildx@v1
-        with:
-          version: latest
 
       - name: Build docker image
         run: |
