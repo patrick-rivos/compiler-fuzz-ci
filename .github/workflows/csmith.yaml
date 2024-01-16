@@ -36,6 +36,10 @@ jobs:
         run: |
           docker system prune -af
 
+      - name: Pull latest image
+        run: |
+          docker pull ghcr.io/patrick-rivos/gcc-fuzz-ci:latest
+
       # 12 hr timeout 43200 seconds
       # Odd tmp-{} is rv64gcv
       # Even tmp-{} is rv64gcv_zvl256b
