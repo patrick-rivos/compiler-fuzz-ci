@@ -38,6 +38,8 @@ mkdir -p $invocation_location/csmith-tmp/$1
 csmith_tmp=$invocation_location/csmith-tmp/$1
 
 COUNTER=0
+INVALID_NATIVE_COMPILE_COUNTER=0
+INVALID_QEMU_COMPILE_COUNTER=0
 INVALID_NATIVE_BINARY_COUNTER=0
 INVALID_QEMU_BINARY_COUNTER=0
 TIMEOUT_NATIVE_BINARY_COUNTER=0
@@ -53,17 +55,28 @@ do
   let COUNTER++
 
   # Record stats
-  echo "{\"programs_evaluated\":\"$COUNTER\",\"interesting_counter\":\"$INTERESTING_BINARY_COUNTER\",\"invalid_native\":{\"total\":\"$INVALID_NATIVE_BINARY_COUNTER\",\"timeouts\":\"$TIMEOUT_NATIVE_BINARY_COUNTER\",\"segfaults\":\"$SEGFAULT_NATIVE_BINARY_COUNTER\"},\"invalid_qemu\":{\"total\":\"$INVALID_QEMU_BINARY_COUNTER\",\"timeouts\":\"$TIMEOUT_QEMU_BINARY_COUNTER\",\"segfaults\":\"$SEGFAULT_QEMU_BINARY_COUNTER\"}}" > csmith-discoveries/stats/$1-stats.json
+  echo "{\"programs_evaluated\":\"$COUNTER\",\"interesting_counter\":\"$INTERESTING_BINARY_COUNTER\",\"invalid_native\":{\"total\":\"$INVALID_NATIVE_BINARY_COUNTER\",\"timeouts\":\"$TIMEOUT_NATIVE_BINARY_COUNTER\",\"segfaults\":\"$SEGFAULT_NATIVE_BINARY_COUNTER\",\"compilations\":\"$INVALID_NATIVE_COMPILE_COUNTER\"},\"invalid_qemu\":{\"total\":\"$INVALID_QEMU_BINARY_COUNTER\",\"timeouts\":\"$TIMEOUT_QEMU_BINARY_COUNTER\",\"segfaults\":\"$SEGFAULT_QEMU_BINARY_COUNTER\",\"compilations\":\"$INVALID_NATIVE_COMPILE_COUNTER\"}}" > csmith-discoveries/stats/$1-stats.json
 
   # Generate a random c program
   $(cat $script_location/csmith.path)/bin/csmith > $csmith_tmp/out.c
 
   # Compile for native target
-  if gcc -I$(cat $script_location/csmith.path)/include -O1 $csmith_tmp/out.c -o $csmith_tmp/native.out 2>&1 | grep "internal compiler error";
+  gcc -I$(cat $script_location/csmith.path)/include -O1 $csmith_tmp/out.c -o $csmith_tmp/native.out 2>&1 > native-compile-log.txt
+  echo $? > $csmith_tmp/native-compile-exit-code.txt
+  if cat $csmith_tmp/native-compile-log.txt | grep "internal compiler error";
   then
     echo "! NATIVE ICE FOUND"
     cp $csmith_tmp/out.c $invocation_location/csmith-discoveries/$1-$COUNTER-native-ice.c
     continue
+  fi
+
+  if [[ $(cat $csmith_tmp/native-compile-exit-code.txt) -ne 0 ]];
+  then
+    echo "! FAILURE TO COMPILE"
+    let INVALID_NATIVE_COMPILE_COUNTER++
+    cp $csmith_tmp/native-compile-exit-code.txt $invocation_location/csmith-discoveries/$1-$COUNTER-native-compile-exit-code.txt
+    cp $csmith_tmp/native-compile-log.txt $invocation_location/csmith-discoveries/$1-$COUNTER-native-compile-log.txt
+    cp $csmith_tmp/out.c $invocation_location/csmith-discoveries/$1-$COUNTER-native-compile-err.c
   fi
 
   # Run the binary with a 1 second timeout
@@ -75,11 +88,22 @@ do
   if [[ $(cat $csmith_tmp/native-ex.log) -eq 0 ]];
   then
     # Compile for the user's config
-    if $(cat $script_location/compiler.path) -I$(cat $script_location/csmith.path)/include $2 $csmith_tmp/out.c -o $csmith_tmp/user-config.out 2>&1 | grep "internal compiler error";
+    $(cat $script_location/compiler.path) -I$(cat $script_location/csmith.path)/include $2 $csmith_tmp/out.c -o $csmith_tmp/user-config.out 2>&1 > $csmith_tmp/user-config-compile-log.txt
+    echo $? > $csmith_tmp/user-config-compile-exit-code.txt
+    if cat $csmith_tmp/user-config-compile-log.txt | grep "internal compiler error";
     then
       echo "! CONFIG ICE FOUND"
       cp $csmith_tmp/out.c $invocation_location/csmith-discoveries/$1-$COUNTER-user-config-ice.c
       continue
+    fi
+
+    if [[ $(cat $csmith_tmp/user-config-compile-exit-code.txt) -ne 0 ]];
+    then
+      echo "! FAILURE TO COMPILE"
+      let INVALID_QEMU_COMPILE_COUNTER++
+      cp $csmith_tmp/user-config-compile-exit-code.txt $invocation_location/csmith-discoveries/$1-$COUNTER-qemu-compile-exit-code.txt
+      cp $csmith_tmp/user-config-compile-log.txt $invocation_location/csmith-discoveries/$1-$COUNTER-qemu-compile-log.txt
+      cp $csmith_tmp/out.c $invocation_location/csmith-discoveries/$1-$COUNTER-qemu-compile-err.c
     fi
 
     # Run the binary with a 1 second timeout
