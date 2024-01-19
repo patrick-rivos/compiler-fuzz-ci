@@ -104,6 +104,7 @@ do
       cp $csmith_tmp/user-config-compile-exit-code.txt $invocation_location/csmith-discoveries/$1-$COUNTER-qemu-compile-exit-code.txt
       cp $csmith_tmp/user-config-compile-log.txt $invocation_location/csmith-discoveries/$1-$COUNTER-qemu-compile-log.txt
       cp $csmith_tmp/out.c $invocation_location/csmith-discoveries/$1-$COUNTER-qemu-compile-err.c
+      continue
     fi
 
     # Run the binary with a 1 second timeout
@@ -121,6 +122,7 @@ do
         cp $csmith_tmp/out.c $invocation_location/csmith-discoveries/$1-$COUNTER-qemu.c
         cp $csmith_tmp/user-config-qemu.log $invocation_location/csmith-discoveries/$1-$COUNTER-qemu-diff-gcv.c
         cp $csmith_tmp/native.log $invocation_location/csmith-discoveries/$1-$COUNTER-native-diff-gc.c
+	continue
       fi
     elif [[ $(cat $csmith_tmp/user-config-ex.log) -eq 124 ]];
     then
