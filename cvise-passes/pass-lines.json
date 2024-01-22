@@ -1,0 +1,23 @@
+{"first": [
+    {"pass": "indent", "arg": "regular"},
+    {"pass": "lines", "arg": "0"},
+    {"pass": "lines", "arg": "1"},
+    {"pass": "lines", "arg": "2"},
+    {"pass": "lines", "arg": "3"},
+    {"pass": "lines", "arg": "4"},
+    {"pass": "lines", "arg": "6"},
+    {"pass": "lines", "arg": "8"},
+    {"pass": "lines", "arg": "10"}
+],
+"main": [
+	{"pass": "lines", "arg": "0"},
+	{"pass": "lines", "arg": "1"},
+	{"pass": "lines", "arg": "2"},
+	{"pass": "lines", "arg": "3"},
+	{"pass": "lines", "arg": "4"},
+	{"pass": "lines", "arg": "6"},
+	{"pass": "lines", "arg": "8"},
+	{"pass": "lines", "arg": "10"}],
+"last": [
+	{"pass": "indent", "arg": "regular"}]
+}

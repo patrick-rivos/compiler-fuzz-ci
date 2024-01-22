@@ -115,6 +115,9 @@ Some helpful options:
 
 `creduce ../csmith-scripts/cred-ice.sh red.c compiler-opts.txt --sllooww` - Try harder to reduce the testcase. Typically takes longer to reduce so I'll reduce it without `--sllooww` and then use `--sllooww` after the initial reduction is done.
 
+cvise can be run with a subset of passes. This is helpful for testcases that tend to reduce to undefined behavior.
+More info can be found in [/cvise-passes](/cvise-passes/README)
+
 # Bug trophy case:
 ## GCC
 ### Runtime fails:

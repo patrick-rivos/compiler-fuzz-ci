@@ -1,0 +1,11 @@
+{"first": [
+    {"pass": "indent", "arg": "regular"},
+    {"pass": "clang", "arg": "simple-inliner", "c": true }
+],
+"main": [
+	{"pass": "clang", "arg": "simple-inliner", "c": true },
+	{"pass": "indent", "arg": "regular"}],
+"last": [
+	{"pass": "indent", "arg": "regular"}
+]
+}

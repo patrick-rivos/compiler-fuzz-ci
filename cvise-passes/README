@@ -1,0 +1,6 @@
+# cvise custom passes
+
+These are helpful for particularly stubborn testcases that tend to reduce down to undefined behavior.
+
+Use these custom pass groups using --pass-group-file {filename}.
+
