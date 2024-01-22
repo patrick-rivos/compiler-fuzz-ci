@@ -21,7 +21,7 @@ def parse_arguments():
     )
     parser.add_argument(
         "-repo", type=str, help="Github repo to search/download in",
-        default="patrick-rivos/gcc-fuzz-ci"
+        default="patrick-rivos/compiler-fuzz-ci"
     )
     parser.add_argument(
         "-token",
