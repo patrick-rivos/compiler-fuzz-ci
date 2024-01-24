@@ -40,6 +40,10 @@ RUN git submodule update --depth 1 --init gcc
 RUN git submodule update --depth 1 --init binutils
 WORKDIR /gcc-fuzz-ci/riscv-gnu-toolchain/gcc
 RUN git checkout master
+RUN curl https://patchwork.sourceware.org/project/gcc/patch/20240116221914.267015-1-gkm@rivosinc.com/mbox/ > comma_op_fix.patch
+RUN git config --global user.email "patrick@rivosinc.com"
+RUN git config --global user.name "Patrick O'Neill"
+RUN git am comma_op_fix.patch
 WORKDIR /riscv-gnu-toolchain-build
 RUN apt install libgmp-dev texinfo bison flex -y
 RUN nice -n 15 make linux -j $(nproc)
