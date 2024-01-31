@@ -1,10 +1,4 @@
 # GCC Fuzz
-Fuzzing for GCC. Currently 2 main approaches are planned:
-
-# Building random configs
-RISC-V has a large state space of extensions.
-Using a script similar to the linux kernel's randconfig we should be able to choose a random config and ensure it builds with tip-of-tree.
-This is a WIP/still getting set up.
 
 # Fuzzing "stable" configs
 Using csmith (a random valid c program generator) we can stress the compiler with random programs.
@@ -15,6 +9,30 @@ I (Patrick) have been doing this with success for a bit now and it has helped fi
 I recommend focusing on ISA strings with "clean" testsuites (no ICEs or execution fails) since that means every new failure will be novel.
 
 ## Getting started
+### Quickstart
+There is a docker image if you just want to start fuzzing riscv-gcc.
+
+Example command:
+```
+export RUNNER_NAME="local"
+sudo docker pull ghcr.io/patrick-rivos/gcc-fuzz-ci:latest && sudo docker run -v ~/csmith-discoveries:/gcc-fuzz-ci/csmith-discoveries ghcr.io/patrick-rivos/gcc-fuzz-ci:latest sh -c "date > /gcc-fuzz-ci/csmith-discoveries/$RUNNER_NAME && nice -n 15 parallel --link \"./csmith-scripts/csmith-qemu.sh $RUNNER_NAME-{1} {2}\" ::: $(seq 1 $(nproc) | tr '\n' ' ') ::: '-march=rv64gcv -ftree-vectorize -O3' '-march=rv64gcv_zvl256b -ftree-vectorize -O3' '-march=rv64gcv -O3' '-march=rv64gcv_zvl256b -O3' '-march=rv64gcv -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -O3 -mtune=generic-ooo'"
+```
+
+Command structure:
+```
+sudo docker pull ghcr.io/patrick-rivos/gcc-fuzz-ci:latest \   # Clone most recent container
+&& sudo docker run \ 
+-v ~/csmith-discoveries:/gcc-fuzz-ci/csmith-discoveries \     # Map the container's output directory with the user's desired output. Follows the format -v <SELECTED DIR>:<CONTAINER OUTPUT DIR>
+ghcr.io/patrick-rivos/gcc-fuzz-ci:latest \                    # Run this container
+sh -c "date > /gcc-fuzz-ci/csmith-discoveries/$RUNNER_NAME \  # Record the start time
+&& nice -n 15 \                                               # Run at a low priority so other tasks preempt the fuzzer
+parallel --link \                                             # Gnu parallel. Link the args so they get mapped to the core enumeration
+\"./csmith-scripts/csmith-qemu.sh $RUNNER_NAME-{1} {2}\" \    # For each core provide a set of args
+::: $(seq 1 $(nproc) | tr '\n' ' ') \                         # Enumerate cores
+::: '-march=rv64gcv -ftree-vectorize -O3' '-march=rv64gcv_zvl256b -ftree-vectorize -O3' '-march=rv64gcv -O3' '-march=rv64gcv_zvl256b -O3' '-march=rv64gcv -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -O3 -mtune=generic-ooo'"
+# ^ All the compiler flags we're interested in
+```
+
 ### Build csmith:
 ```
 git submodule update --init csmith
@@ -132,6 +150,7 @@ https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113206
 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113209
 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113281
 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113431
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113607
 ### ICEs:
 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112481
 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112535
@@ -150,12 +169,18 @@ https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112971
 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113001
 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113210
 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113228
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113603
 
 ## LLVM
 ### Runtime fails:
 https://github.com/llvm/llvm-project/issues/78783
+https://github.com/llvm/llvm-project/issues/80052
 ### Internal errors:
 https://github.com/llvm/llvm-project/issues/78679
 
 # Contribute
 Have an improvement? PRs are welcome!
+
+# TODO:
+- Building random configs
+  - RISC-V has a large state space of extensions. Using a script similar to the linux kernel's randconfig we should be able to choose a random config and ensure it builds with tip-of-tree.
