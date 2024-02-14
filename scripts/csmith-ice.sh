@@ -2,11 +2,11 @@
 
 # Searches for internal compiler errors (ICEs) for the given config
 
-# Invoked using ./scripts/csmith-ice.sh <temp folder name> '<gcc-args>'
+# Invoked using ./scripts/csmith-ice.sh <temp folder name> '<compiler-args>'
 # Places interesting testcases in the csmith-discoveries folder
 
 if [ "$#" -ne 2 ]; then
-    echo "Illegal number of parameters. Should be ./scripts/csmith-ice.sh <temp folder name> '<gcc-args>'"
+    echo "Illegal number of parameters. Should be ./scripts/csmith-ice.sh <temp folder name> '<compiler-args>'"
     exit 1
 fi
 
@@ -41,9 +41,18 @@ do
   $(cat $script_location/tools/csmith.path)/bin/csmith > $csmith_tmp/out.c
 
   # Compile to check for ICEs
-  if $(cat $script_location/tools/compiler.path) -I$(cat $script_location/tools/csmith.path)/include $2 -S $csmith_tmp/out.c -o $csmith_tmp/out.s 2>&1 | grep "internal compiler error";
+  $(cat $script_location/tools/compiler.path) -I$(cat $script_location/tools/csmith.path)/include $2 $csmith_tmp/out.c -o $csmith_tmp/user-config.out 2>&1 > $csmith_tmp/user-config-compile-log.txt
+  echo $? > $csmith_tmp/user-config-compile-exit-code.txt
+  if [[ $(cat $csmith_tmp/user-config-compile-exit-code.txt) -ne 0 ]];
   then
-    echo "! FAILURE FOUND"
-    cp $csmith_tmp/out.c $invocation_location/csmith-discoveries/$1-$COUNTER.c
+    echo "! FAILURE TO COMPILE"
+    mkdir -p $invocation_location/csmith-discoveries/$1-$COUNTER
+    cp $csmith_tmp/out.c $invocation_location/csmith-discoveries/$1-$COUNTER/raw.c
+    cp $csmith_tmp/user-config-compile-exit-code.txt $invocation_location/csmith-discoveries/$1-$COUNTER/qemu-compile-exit-code.txt
+    cp $csmith_tmp/user-config-compile-log.txt $invocation_location/csmith-discoveries/$1-$COUNTER/qemu-compile-log.txt
+    echo "$2" > $invocation_location/csmith-discoveries/$1-$COUNTER/compiler-opts.txt
+    cat $script_location/tools/compiler.path > $invocation_location/csmith-discoveries/$1-$COUNTER/compiler.txt
+    echo "user-config compiler error" > $invocation_location/csmith-discoveries/$1-$COUNTER/error-type.txt
+    continue
   fi
 done

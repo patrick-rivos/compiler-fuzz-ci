@@ -2,7 +2,7 @@
 
 # Searches for runtime mismatches between the given config and rv64gc
 
-# Invoked using ./scripts/csmith-qemu.sh <temp folder name> '<gcc-args>'
+# Invoked using ./scripts/csmith-qemu.sh <temp folder name> '<compiler-args>'
 # Places interesting testcases in the csmith-discoveries folder
 
 if [ "$#" -ne 2 ]; then
@@ -61,22 +61,20 @@ do
   $(cat $script_location/tools/csmith.path)/bin/csmith > $csmith_tmp/out.c
 
   # Compile for native target
-  gcc -I$(cat $script_location/tools/csmith.path)/include -O1 $csmith_tmp/out.c -o $csmith_tmp/native.out 2>&1 > native-compile-log.txt
+  gcc -I$(cat $script_location/tools/csmith.path)/include -O1 $csmith_tmp/out.c -o $csmith_tmp/native.out > $csmith_tmp/native-compile-log.txt 2>&1
   echo $? > $csmith_tmp/native-compile-exit-code.txt
-  if cat $csmith_tmp/native-compile-log.txt | grep "internal compiler error";
-  then
-    echo "! NATIVE ICE FOUND"
-    cp $csmith_tmp/out.c $invocation_location/csmith-discoveries/$1-$COUNTER-native-ice.c
-    continue
-  fi
-
   if [[ $(cat $csmith_tmp/native-compile-exit-code.txt) -ne 0 ]];
   then
     echo "! FAILURE TO COMPILE"
     let INVALID_NATIVE_COMPILE_COUNTER++
-    cp $csmith_tmp/native-compile-exit-code.txt $invocation_location/csmith-discoveries/$1-$COUNTER-native-compile-exit-code.txt
-    cp $csmith_tmp/native-compile-log.txt $invocation_location/csmith-discoveries/$1-$COUNTER-native-compile-log.txt
-    cp $csmith_tmp/out.c $invocation_location/csmith-discoveries/$1-$COUNTER-native-compile-err.c
+    mkdir -p $invocation_location/csmith-discoveries/$1-$COUNTER
+    cp $csmith_tmp/out.c $invocation_location/csmith-discoveries/$1-$COUNTER/raw.c
+    cp $csmith_tmp/native-compile-exit-code.txt $invocation_location/csmith-discoveries/$1-$COUNTER/native-compile-exit-code.txt
+    cp $csmith_tmp/native-compile-log.txt $invocation_location/csmith-discoveries/$1-$COUNTER/native-compile-log.txt
+    echo "-O1" > $invocation_location/csmith-discoveries/$1-$COUNTER/compiler-opts.txt
+    echo "gcc" > $invocation_location/csmith-discoveries/$1-$COUNTER/compiler.txt
+    echo "native compiler error" > $invocation_location/csmith-discoveries/$1-$COUNTER/error-type.txt
+    continue
   fi
 
   # Run the binary with a 1 second timeout
@@ -90,20 +88,17 @@ do
     # Compile for the user's config
     $(cat $script_location/tools/compiler.path) -I$(cat $script_location/tools/csmith.path)/include $2 $csmith_tmp/out.c -o $csmith_tmp/user-config.out 2>&1 > $csmith_tmp/user-config-compile-log.txt
     echo $? > $csmith_tmp/user-config-compile-exit-code.txt
-    if cat $csmith_tmp/user-config-compile-log.txt | grep "internal compiler error";
-    then
-      echo "! CONFIG ICE FOUND"
-      cp $csmith_tmp/out.c $invocation_location/csmith-discoveries/$1-$COUNTER-user-config-ice.c
-      continue
-    fi
-
     if [[ $(cat $csmith_tmp/user-config-compile-exit-code.txt) -ne 0 ]];
     then
       echo "! FAILURE TO COMPILE"
       let INVALID_QEMU_COMPILE_COUNTER++
-      cp $csmith_tmp/user-config-compile-exit-code.txt $invocation_location/csmith-discoveries/$1-$COUNTER-qemu-compile-exit-code.txt
-      cp $csmith_tmp/user-config-compile-log.txt $invocation_location/csmith-discoveries/$1-$COUNTER-qemu-compile-log.txt
-      cp $csmith_tmp/out.c $invocation_location/csmith-discoveries/$1-$COUNTER-qemu-compile-err.c
+      mkdir -p $invocation_location/csmith-discoveries/$1-$COUNTER
+      cp $csmith_tmp/out.c $invocation_location/csmith-discoveries/$1-$COUNTER/raw.c
+      cp $csmith_tmp/user-config-compile-exit-code.txt $invocation_location/csmith-discoveries/$1-$COUNTER/qemu-compile-exit-code.txt
+      cp $csmith_tmp/user-config-compile-log.txt $invocation_location/csmith-discoveries/$1-$COUNTER/qemu-compile-log.txt
+      echo "$2" > $invocation_location/csmith-discoveries/$1-$COUNTER/compiler-opts.txt
+      cat $script_location/tools/compiler.path > $invocation_location/csmith-discoveries/$1-$COUNTER/compiler.txt
+      echo "user-config compiler error" > $invocation_location/csmith-discoveries/$1-$COUNTER/error-type.txt
       continue
     fi
 
@@ -117,12 +112,16 @@ do
       # Check to see if the runtime hash differs
       if [[ $(diff $csmith_tmp/native.log $csmith_tmp/user-config-qemu.log | wc -l) -ne 0 ]];
       then
-        echo "! DIFF CONFIRMED. Logged in csmith-discoveries/$1-$COUNTER-qemu.c"
+        echo "! DIFF CONFIRMED. Logged in csmith-discoveries/$1-$COUNTER/raw.c"
 	let INTERESTING_BINARY_COUNTER++
-        cp $csmith_tmp/out.c $invocation_location/csmith-discoveries/$1-$COUNTER-qemu.c
-        cp $csmith_tmp/user-config-qemu.log $invocation_location/csmith-discoveries/$1-$COUNTER-qemu-diff-gcv.c
-        cp $csmith_tmp/native.log $invocation_location/csmith-discoveries/$1-$COUNTER-native-diff-gc.c
-	continue
+        mkdir -p $invocation_location/csmith-discoveries/$1-$COUNTER
+        cp $csmith_tmp/out.c $invocation_location/csmith-discoveries/$1-$COUNTER/raw.c
+        cp $csmith_tmp/user-config-qemu.log $invocation_location/csmith-discoveries/$1-$COUNTER/qemu-diff-gcv.c
+        cp $csmith_tmp/native.log $invocation_location/csmith-discoveries/$1-$COUNTER/native-diff-gc.c
+        echo "$2" > $invocation_location/csmith-discoveries/$1-$COUNTER/compiler-opts.txt
+        cat $script_location/tools/compiler.path > $invocation_location/csmith-discoveries/$1-$COUNTER/compiler.txt
+        echo "user-config runtime diff" > $invocation_location/csmith-discoveries/$1-$COUNTER/error-type.txt
+        continue
       fi
     elif [[ $(cat $csmith_tmp/user-config-ex.log) -eq 124 ]];
     then
@@ -145,6 +144,7 @@ do
     let INVALID_NATIVE_BINARY_COUNTER++
   else
     let INVALID_NATIVE_BINARY_COUNTER++
+    echo "INVALID WITH UNKNOWN EXIT CODE: $(cat $csmith_tmp/native-ex.log)"
   fi
 
 done
