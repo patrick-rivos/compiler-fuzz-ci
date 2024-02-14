@@ -20,7 +20,7 @@ RUN mkdir csmith-build
 WORKDIR /gcc-fuzz-ci/csmith
 RUN cmake -DCMAKE_INSTALL_PREFIX=../csmith-build .
 RUN nice -n 15 make -j $(nproc) && make install
-RUN echo /gcc-fuzz-ci/csmith-build > /gcc-fuzz-ci/csmith-scripts/csmith.path
+RUN echo /gcc-fuzz-ci/csmith-build > /gcc-fuzz-ci/scripts/tools/csmith.path
 # Build QEMU
 WORKDIR /gcc-fuzz-ci
 RUN git submodule update --init riscv-gnu-toolchain
@@ -32,8 +32,8 @@ WORKDIR /riscv-gnu-toolchain-build
 RUN apt install curl gawk build-essential python3 python3-pip ninja-build meson pkg-config libglib2.0-dev -y
 RUN /gcc-fuzz-ci/riscv-gnu-toolchain/configure --prefix=$(pwd)
 RUN nice -n 15 make build-qemu -j $(nproc)
-RUN echo /gcc-fuzz-ci/riscv-gnu-toolchain/scripts > /gcc-fuzz-ci/csmith-scripts/scripts.path
-RUN echo /riscv-gnu-toolchain-build/bin/qemu-riscv64 > /gcc-fuzz-ci/csmith-scripts/qemu.path
+RUN echo /gcc-fuzz-ci/riscv-gnu-toolchain/scripts > /gcc-fuzz-ci/scripts/tools/scripts.path
+RUN echo /riscv-gnu-toolchain-build/bin/qemu-riscv64 > /gcc-fuzz-ci/scripts/tools/qemu.path
 # Build compiler
 WORKDIR /gcc-fuzz-ci/riscv-gnu-toolchain
 RUN git submodule update --depth 1 --init gcc
@@ -47,7 +47,7 @@ RUN git am comma_op_fix.patch
 WORKDIR /riscv-gnu-toolchain-build
 RUN apt install libgmp-dev texinfo bison flex -y
 RUN nice -n 15 make linux -j $(nproc)
-RUN echo /riscv-gnu-toolchain-build/bin/riscv64-unknown-linux-gnu-gcc > /gcc-fuzz-ci/csmith-scripts/compiler.path
+RUN echo /riscv-gnu-toolchain-build/bin/riscv64-unknown-linux-gnu-gcc > /gcc-fuzz-ci/scripts/tools/compiler.path
 
 # Release stage
 FROM ubuntu:22.04 as runner
@@ -61,7 +61,7 @@ COPY --from=build /riscv-gnu-toolchain-build/riscv64-unknown-linux-gnu /riscv-gn
 COPY --from=build /riscv-gnu-toolchain-build/scripts /riscv-gnu-toolchain-build/scripts
 COPY --from=build /riscv-gnu-toolchain-build/share /riscv-gnu-toolchain-build/share
 COPY --from=build /riscv-gnu-toolchain-build/sysroot /riscv-gnu-toolchain-build/sysroot
-COPY --from=build /gcc-fuzz-ci/csmith-scripts /gcc-fuzz-ci/csmith-scripts
+COPY --from=build /gcc-fuzz-ci/scripts /gcc-fuzz-ci/scripts
 COPY --from=build /gcc-fuzz-ci/riscv-gnu-toolchain/scripts /gcc-fuzz-ci/riscv-gnu-toolchain/scripts
 COPY --from=build /gcc-fuzz-ci/csmith-build /gcc-fuzz-ci/csmith-build
 # Install packages

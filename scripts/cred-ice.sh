@@ -6,9 +6,9 @@
 # Since AFAIK creduce does not let you pass args in, you need to manually set the COMPILER_OPTS before running
 
 # First run a sanity-check
-# ../csmith-scripts/cred-ice.sh
+# ../scripts/cred-ice.sh
 # Then reduce
-# creduce ../csmith-scripts/cred-ice.sh red.c
+# creduce ../scripts/cred-ice.sh red.c
 
 program=${1:-red.c}
 
@@ -16,8 +16,8 @@ script_location=$(dirname "$0")
 invocation_location=$(pwd)
 
 # Relies on compiler.path
-if [ ! -f "$(cat $script_location/compiler.path)" ]; then
-  echo "compiler path: $(cat $script_location/compiler.path) does not exist."
+if [ ! -f "$(cat $script_location/tools/compiler.path)" ]; then
+  echo "compiler path: $(cat $script_location/tools/compiler.path) does not exist."
   exit 1
 fi
 
@@ -27,7 +27,7 @@ if [ ! -f "$invocation_location/compiler-opts.txt" ]; then
   exit 1
 fi
 
-COMPILER=$(cat $script_location/compiler.path)
+COMPILER=$(cat $script_location/tools/compiler.path)
 COMPILER_OPTS="$(cat $invocation_location/compiler-opts.txt)  $program -o rv64gcv.out"
 # These warnings help prevent creduce from introducing undefined behavior.
 # Creduce will gladly read beyond the bounds of an array or lots of other stuff.

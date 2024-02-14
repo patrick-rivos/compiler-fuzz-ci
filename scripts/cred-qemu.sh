@@ -4,9 +4,9 @@
 # Invoke it from a triage directory (eg. triage-6-120) after running preprocess.sh
 
 # First run a sanity-check
-# ../csmith-scripts/cred-qemu.sh
+# ../scripts/cred-qemu.sh
 # Then reduce
-# creduce ../csmith-scripts/cred-qemu.sh red.c
+# creduce ../scripts/cred-qemu.sh red.c
 
 program=${1:-red.c}
 
@@ -14,20 +14,20 @@ script_location=$(dirname "$0")
 invocation_location=$(pwd)
 
 # Relies on compiler.path qemu.path scripts.path and csmith.path
-if [ ! -f "$(cat $script_location/compiler.path)" ]; then
-  echo "compiler path: $(cat $script_location/compiler.path) does not exist."
+if [ ! -f "$(cat $script_location/tools/compiler.path)" ]; then
+  echo "compiler path: $(cat $script_location/tools/compiler.path) does not exist."
   exit 1
 fi
-if [ ! -f "$(cat $script_location/qemu.path)" ]; then
-  echo "qemu path: $(cat $script_location/qemu.path) does not exist."
+if [ ! -f "$(cat $script_location/tools/qemu.path)" ]; then
+  echo "qemu path: $(cat $script_location/tools/qemu.path) does not exist."
   exit 1
 fi
-if [ ! -d "$(cat $script_location/scripts.path)" ]; then
-  echo "scripts path: $(cat $script_location/scripts.path) does not exist."
+if [ ! -d "$(cat $script_location/tools/scripts.path)" ]; then
+  echo "scripts path: $(cat $script_location/tools/scripts.path) does not exist."
   exit 1
 fi
-if [ ! -d "$(cat $script_location/csmith.path)" ]; then
-  echo "csmith path: $(cat $script_location/csmith.path) does not exist."
+if [ ! -d "$(cat $script_location/tools/csmith.path)" ]; then
+  echo "csmith path: $(cat $script_location/tools/csmith.path) does not exist."
   exit 1
 fi
 
@@ -39,15 +39,15 @@ fi
 
 CLANG_WARNING_CHECK=${CLANG_WARNING_CHECK:-false}
 TIMEOUT_ERROR=${TIMEOUT_ERROR:-false}
-SCRIPTS=$(cat $script_location/scripts.path)
-COMPILER=$(cat $script_location/compiler.path)
+SCRIPTS=$(cat $script_location/tools/scripts.path)
+COMPILER=$(cat $script_location/tools/compiler.path)
 COMPILER_1_OPTS="$(cat $invocation_location/compiler-opts.txt) $program -o user-config.out -fsigned-char"
 COMPILER_2_OPTS="-O1 $program -o native.out"
 # These warnings help prevent creduce from introducing undefined behavior.
 # Creduce will gladly read beyond the bounds of an array or lots of other stuff.
 # Rejecting programs that fail these warnings keep it in check.
 WARNING_OPTS="-Wformat -Wno-compare-distinct-pointer-types -Wno-overflow -Wuninitialized -Warray-bounds -Wreturn-type"
-QEMU=$(cat $script_location/qemu.path)
+QEMU=$(cat $script_location/tools/qemu.path)
 
 LOCK_IN_EXIT_CODES=${LOCK_IN_EXIT_CODES:-true}
 EXIT_CODE_USER_CONFIG=0

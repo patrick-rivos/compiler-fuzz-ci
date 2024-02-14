@@ -2,11 +2,11 @@
 
 # Searches for runtime mismatches between the given config and rv64gc
 
-# Invoked using ./csmith-scripts/csmith-qemu.sh <temp folder name> '<gcc-args>'
+# Invoked using ./scripts/csmith-qemu.sh <temp folder name> '<gcc-args>'
 # Places interesting testcases in the csmith-discoveries folder
 
 if [ "$#" -ne 2 ]; then
-    echo "Illegal number of parameters. Should be ./csmith-scripts/csmith-qemu.sh <temp folder name> '<gcc-args>'"
+    echo "Illegal number of parameters. Should be ./scripts/csmith-qemu.sh <temp folder name> '<gcc-args>'"
     exit 1
 fi
 
@@ -14,20 +14,20 @@ script_location=$(dirname "$0")
 invocation_location=$(pwd)
 
 # Relies on compiler.path qemu.path scripts.path and csmith.path
-if [ ! -f "$(cat $script_location/compiler.path)" ]; then
-  echo "compiler path: $(cat $script_location/compiler.path) does not exist."
+if [ ! -f "$(cat $script_location/tools/compiler.path)" ]; then
+  echo "compiler path: $(cat $script_location/tools/compiler.path) does not exist."
   exit 1
 fi
-if [ ! -f "$(cat $script_location/qemu.path)" ]; then
-  echo "qemu path: $(cat $script_location/qemu.path) does not exist."
+if [ ! -f "$(cat $script_location/tools/qemu.path)" ]; then
+  echo "qemu path: $(cat $script_location/tools/qemu.path) does not exist."
   exit 1
 fi
-if [ ! -d "$(cat $script_location/scripts.path)" ]; then
-  echo "scripts path: $(cat $script_location/scripts.path) does not exist."
+if [ ! -d "$(cat $script_location/tools/scripts.path)" ]; then
+  echo "scripts path: $(cat $script_location/tools/scripts.path) does not exist."
   exit 1
 fi
-if [ ! -d "$(cat $script_location/csmith.path)" ]; then
-  echo "csmith path: $(cat $script_location/csmith.path) does not exist."
+if [ ! -d "$(cat $script_location/tools/csmith.path)" ]; then
+  echo "csmith path: $(cat $script_location/tools/csmith.path) does not exist."
   exit 1
 fi
 
@@ -58,10 +58,10 @@ do
   echo "{\"programs_evaluated\":\"$COUNTER\",\"interesting_counter\":\"$INTERESTING_BINARY_COUNTER\",\"invalid_native\":{\"total\":\"$INVALID_NATIVE_BINARY_COUNTER\",\"timeouts\":\"$TIMEOUT_NATIVE_BINARY_COUNTER\",\"segfaults\":\"$SEGFAULT_NATIVE_BINARY_COUNTER\",\"compilations\":\"$INVALID_NATIVE_COMPILE_COUNTER\"},\"invalid_qemu\":{\"total\":\"$INVALID_QEMU_BINARY_COUNTER\",\"timeouts\":\"$TIMEOUT_QEMU_BINARY_COUNTER\",\"segfaults\":\"$SEGFAULT_QEMU_BINARY_COUNTER\",\"compilations\":\"$INVALID_NATIVE_COMPILE_COUNTER\"}}" > csmith-discoveries/stats/$1-stats.json
 
   # Generate a random c program
-  $(cat $script_location/csmith.path)/bin/csmith > $csmith_tmp/out.c
+  $(cat $script_location/tools/csmith.path)/bin/csmith > $csmith_tmp/out.c
 
   # Compile for native target
-  gcc -I$(cat $script_location/csmith.path)/include -O1 $csmith_tmp/out.c -o $csmith_tmp/native.out 2>&1 > native-compile-log.txt
+  gcc -I$(cat $script_location/tools/csmith.path)/include -O1 $csmith_tmp/out.c -o $csmith_tmp/native.out 2>&1 > native-compile-log.txt
   echo $? > $csmith_tmp/native-compile-exit-code.txt
   if cat $csmith_tmp/native-compile-log.txt | grep "internal compiler error";
   then
@@ -88,7 +88,7 @@ do
   if [[ $(cat $csmith_tmp/native-ex.log) -eq 0 ]];
   then
     # Compile for the user's config
-    $(cat $script_location/compiler.path) -I$(cat $script_location/csmith.path)/include $2 $csmith_tmp/out.c -o $csmith_tmp/user-config.out 2>&1 > $csmith_tmp/user-config-compile-log.txt
+    $(cat $script_location/tools/compiler.path) -I$(cat $script_location/tools/csmith.path)/include $2 $csmith_tmp/out.c -o $csmith_tmp/user-config.out 2>&1 > $csmith_tmp/user-config-compile-log.txt
     echo $? > $csmith_tmp/user-config-compile-exit-code.txt
     if cat $csmith_tmp/user-config-compile-log.txt | grep "internal compiler error";
     then
@@ -108,7 +108,7 @@ do
     fi
 
     # Run the binary with a 1 second timeout
-    QEMU_CPU="$($(cat $script_location/scripts.path)/march-to-cpu-opt --get-riscv-tag $csmith_tmp/user-config.out)" timeout -k 0.1 1 $(cat $script_location/qemu.path) $csmith_tmp/user-config.out > $csmith_tmp/user-config-qemu.log
+    QEMU_CPU="$($(cat $script_location/tools/scripts.path)/march-to-cpu-opt --get-riscv-tag $csmith_tmp/user-config.out)" timeout -k 0.1 1 $(cat $script_location/tools/qemu.path) $csmith_tmp/user-config.out > $csmith_tmp/user-config-qemu.log
     echo $? > $csmith_tmp/user-config-ex.log
 
     # Ensure both finished executing successfully (no timeouts/segfaults/etc)

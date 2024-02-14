@@ -15,19 +15,19 @@ There is a docker image if you just want to start fuzzing riscv-gcc.
 Example command:
 ```
 export RUNNER_NAME="local"
-sudo docker pull ghcr.io/patrick-rivos/gcc-fuzz-ci:latest && sudo docker run -v ~/csmith-discoveries:/gcc-fuzz-ci/csmith-discoveries ghcr.io/patrick-rivos/gcc-fuzz-ci:latest sh -c "date > /gcc-fuzz-ci/csmith-discoveries/$RUNNER_NAME && nice -n 15 parallel --link \"./csmith-scripts/csmith-qemu.sh $RUNNER_NAME-{1} {2}\" ::: $(seq 1 $(nproc) | tr '\n' ' ') ::: '-march=rv64gcv -ftree-vectorize -O3' '-march=rv64gcv_zvl256b -ftree-vectorize -O3' '-march=rv64gcv -O3' '-march=rv64gcv_zvl256b -O3' '-march=rv64gcv -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -O3 -mtune=generic-ooo'"
+sudo docker pull ghcr.io/patrick-rivos/gcc-fuzz-ci:latest && sudo docker run -v ~/csmith-discoveries:/gcc-fuzz-ci/csmith-discoveries ghcr.io/patrick-rivos/gcc-fuzz-ci:latest sh -c "date > /gcc-fuzz-ci/csmith-discoveries/$RUNNER_NAME && nice -n 15 parallel --link \"./scripts/csmith-qemu.sh $RUNNER_NAME-{1} {2}\" ::: $(seq 1 $(nproc) | tr '\n' ' ') ::: '-march=rv64gcv -ftree-vectorize -O3' '-march=rv64gcv_zvl256b -ftree-vectorize -O3' '-march=rv64gcv -O3' '-march=rv64gcv_zvl256b -O3' '-march=rv64gcv -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -O3 -mtune=generic-ooo'"
 ```
 
 Command structure:
 ```
 sudo docker pull ghcr.io/patrick-rivos/gcc-fuzz-ci:latest \   # Clone most recent container
-&& sudo docker run \ 
+&& sudo docker run \
 -v ~/csmith-discoveries:/gcc-fuzz-ci/csmith-discoveries \     # Map the container's output directory with the user's desired output. Follows the format -v <SELECTED DIR>:<CONTAINER OUTPUT DIR>
 ghcr.io/patrick-rivos/gcc-fuzz-ci:latest \                    # Run this container
 sh -c "date > /gcc-fuzz-ci/csmith-discoveries/$RUNNER_NAME \  # Record the start time
 && nice -n 15 \                                               # Run at a low priority so other tasks preempt the fuzzer
 parallel --link \                                             # Gnu parallel. Link the args so they get mapped to the core enumeration
-\"./csmith-scripts/csmith-qemu.sh $RUNNER_NAME-{1} {2}\" \    # For each core provide a set of args
+\"./scripts/csmith-qemu.sh $RUNNER_NAME-{1} {2}\" \	      # For each core provide a set of args
 ::: $(seq 1 $(nproc) | tr '\n' ' ') \                         # Enumerate cores
 ::: '-march=rv64gcv -ftree-vectorize -O3' '-march=rv64gcv_zvl256b -ftree-vectorize -O3' '-march=rv64gcv -O3' '-march=rv64gcv_zvl256b -O3' '-march=rv64gcv -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -O3 -mtune=generic-ooo'"
 # ^ All the compiler flags we're interested in
@@ -61,10 +61,10 @@ make build-qemu -j32
 ```
 
 ## Start fuzzing:
-Update csmith-scripts compiler.path qemu.path scripts.path with the absolute paths to each of those components.
+Update scripts compiler.path qemu.path scripts.path with the absolute paths to each of those components.
 
 ```
-./csmith-scripts/csmith-ice.sh csmith-tmp-1 "-march=rv64gcv -mabi=lp64d -ftree-vectorize -O3"
+./scripts/csmith-ice.sh csmith-tmp-1 "-march=rv64gcv -mabi=lp64d -ftree-vectorize -O3"
 ```
 
 ### Fuzz faster (& nicely!):
@@ -98,10 +98,10 @@ void main() {
 
 ## Reduction steps:
 
-1. Set up csmith-scripts directory
+1. Set up scripts directory
 
 Fill out compiler.path, csmith.path, qemu.path, and scripts.path
-[More info](./csmith-scripts/README.md).
+[More info](./scripts/README.md).
 
 2. Create triage directory & copy over the testcase
 
@@ -110,12 +110,12 @@ This will hold the initial testcase (rename it to raw.c) and the reduced testcas
 3. `cd` into the triage folder
 4. Preprocess the initial testcase (raw.c)
 
-`../csmith-scripts/preprocess.sh '<gcc-opts>'`
+`../scripts/preprocess.sh '<gcc-opts>'`
 
 5. Edit `cred-ice.sh` or `cred-qemu.sh` to use the correct compilation options
 
 Ensure the behavior is present by running the script:
-`../csmith-scripts/cred-ice.sh` or `../csmith-scripts/cred-ice.sh`
+`../scripts/cred-ice.sh` or `../scripts/cred-ice.sh`
 
 This is a great time to try to reduce the command line args/ISA string. Edit compiler-opts.txt and see if removing some extensions still causes the issue to show up.
 
@@ -123,15 +123,15 @@ This is a great time to try to reduce the command line args/ISA string. Edit com
 
 You can use creduce or cvise for this. I prefer creduce so that's what I'll use for the examples, but I use them interchangebly. I think the cli/options are the same for both.
 
-`creduce ../csmith-scripts/cred-ice.sh red.c compiler-opts.txt`
+`creduce ../scripts/cred-ice.sh red.c compiler-opts.txt`
 
 and let it reduce!
 
 Some helpful options:
 
-`creduce ../csmith-scripts/cred-ice.sh red.c compiler-opts.txt --n 12` - Use 12 cores instead of the default 4
+`creduce ../scripts/cred-ice.sh red.c compiler-opts.txt --n 12` - Use 12 cores instead of the default 4
 
-`creduce ../csmith-scripts/cred-ice.sh red.c compiler-opts.txt --sllooww` - Try harder to reduce the testcase. Typically takes longer to reduce so I'll reduce it without `--sllooww` and then use `--sllooww` after the initial reduction is done.
+`creduce ../scripts/cred-ice.sh red.c compiler-opts.txt --sllooww` - Try harder to reduce the testcase. Typically takes longer to reduce so I'll reduce it without `--sllooww` and then use `--sllooww` after the initial reduction is done.
 
 cvise can be run with a subset of passes. This is helpful for testcases that tend to reduce to undefined behavior.
 More info can be found in [/cvise-passes](/cvise-passes/README)
