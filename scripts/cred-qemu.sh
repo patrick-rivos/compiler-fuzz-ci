@@ -90,10 +90,10 @@ fi
 
 echo "Running QEMU"
 echo "QEMU_CPU="$($SCRIPTS/march-to-cpu-opt --get-riscv-tag user-config.out)" timeout --verbose -k 0.1 1 $QEMU user-config.out"
-QEMU_CPU="$($SCRIPTS/march-to-cpu-opt --get-riscv-tag user-config.out)" timeout --verbose -k 0.1 1 $QEMU user-config.out 2>&1 > user-config-qemu.log
+QEMU_CPU="$($SCRIPTS/march-to-cpu-opt --get-riscv-tag user-config.out)" timeout --verbose -k 0.1 1 $QEMU user-config.out > user-config-qemu.log 2>&1
 echo $? > user-config-ex.log
 echo timeout --verbose -k 0.1 1 ./native.out
-timeout --verbose -k 0.1 1 ./native.out 2>&1 > native.log
+timeout --verbose -k 0.1 1 ./native.out > native.log 2>&1
 echo $? > native-ex.log
 
 echo "user-config qemu exit code:"

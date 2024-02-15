@@ -41,7 +41,7 @@ do
   $(cat $script_location/tools/csmith.path)/bin/csmith > $csmith_tmp/out.c
 
   # Compile to check for ICEs
-  $(cat $script_location/tools/compiler.path) -I$(cat $script_location/tools/csmith.path)/include $2 $csmith_tmp/out.c -o $csmith_tmp/user-config.out 2>&1 > $csmith_tmp/user-config-compile-log.txt
+  $(cat $script_location/tools/compiler.path) -I$(cat $script_location/tools/csmith.path)/include $2 $csmith_tmp/out.c -o $csmith_tmp/user-config.out > $csmith_tmp/user-config-compile-log.txt 2>&1
   echo $? > $csmith_tmp/user-config-compile-exit-code.txt
   if [[ $(cat $csmith_tmp/user-config-compile-exit-code.txt) -ne 0 ]];
   then

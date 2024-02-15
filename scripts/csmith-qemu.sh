@@ -86,7 +86,7 @@ do
   if [[ $(cat $csmith_tmp/native-ex.log) -eq 0 ]];
   then
     # Compile for the user's config
-    $(cat $script_location/tools/compiler.path) -I$(cat $script_location/tools/csmith.path)/include $2 $csmith_tmp/out.c -o $csmith_tmp/user-config.out 2>&1 > $csmith_tmp/user-config-compile-log.txt
+    $(cat $script_location/tools/compiler.path) -I$(cat $script_location/tools/csmith.path)/include $2 $csmith_tmp/out.c -o $csmith_tmp/user-config.out > $csmith_tmp/user-config-compile-log.txt 2>&1
     echo $? > $csmith_tmp/user-config-compile-exit-code.txt
     if [[ $(cat $csmith_tmp/user-config-compile-exit-code.txt) -ne 0 ]];
     then
