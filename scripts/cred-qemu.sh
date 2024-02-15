@@ -41,8 +41,8 @@ CLANG_WARNING_CHECK=${CLANG_WARNING_CHECK:-false}
 TIMEOUT_ERROR=${TIMEOUT_ERROR:-false}
 SCRIPTS=$(cat $script_location/tools/scripts.path)
 COMPILER=$(cat $script_location/tools/compiler.path)
-COMPILER_1_OPTS="$(cat $invocation_location/compiler-opts.txt) $program -o user-config.out -fsigned-char"
-COMPILER_2_OPTS="-O1 $program -o native.out"
+COMPILER_1_OPTS="$(cat $invocation_location/compiler-opts.txt) $program -o user-config.out -fsigned-char -fno-strict-aliasing"
+COMPILER_2_OPTS="-O1 $program -o native.out -fno-strict-aliasing"
 # These warnings help prevent creduce from introducing undefined behavior.
 # Creduce will gladly read beyond the bounds of an array or lots of other stuff.
 # Rejecting programs that fail these warnings keep it in check.
