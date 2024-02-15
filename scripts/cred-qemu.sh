@@ -37,8 +37,9 @@ if [ ! -f "$invocation_location/compiler-opts.txt" ]; then
   exit 1
 fi
 
+EXIT_CODE_USER_CONFIG=0
+EXIT_CODE_NATIVE=0
 CLANG_WARNING_CHECK=${CLANG_WARNING_CHECK:-false}
-TIMEOUT_ERROR=${TIMEOUT_ERROR:-false}
 SCRIPTS=$(cat $script_location/tools/scripts.path)
 COMPILER=$(cat $script_location/tools/compiler.path)
 COMPILER_1_OPTS="$(cat $invocation_location/compiler-opts.txt) $program -o user-config.out -fsigned-char -fno-strict-aliasing"
@@ -48,10 +49,6 @@ COMPILER_2_OPTS="-O1 $program -o native.out -fno-strict-aliasing"
 # Rejecting programs that fail these warnings keep it in check.
 WARNING_OPTS="-Wformat -Wno-compare-distinct-pointer-types -Wno-overflow -Wuninitialized -Warray-bounds -Wreturn-type"
 QEMU=$(cat $script_location/tools/qemu.path)
-
-LOCK_IN_EXIT_CODES=${LOCK_IN_EXIT_CODES:-true}
-EXIT_CODE_USER_CONFIG=0
-EXIT_CODE_NATIVE=0
 
 if [[ "$CLANG_WARNING_CHECK" = true ]];
 then
@@ -101,69 +98,17 @@ cat user-config-ex.log
 echo "native exit code:"
 cat native-ex.log
 
-if [[ "$LOCK_IN_EXIT_CODES" = true ]];
+echo "Exit codes have been locked in, ensuring they match."
+if [[ $(cat native-ex.log) -ne $EXIT_CODE_NATIVE ]];
 then
-  echo "Exit codes have been locked in, ensuring they match."
-  if [[ $(cat native-ex.log) -ne $EXIT_CODE_NATIVE ]];
-  then
-    echo "Weird exit code for native"
-    exit 1
-  fi
-
-  if [[ $(cat user-config-ex.log) -ne $EXIT_CODE_USER_CONFIG ]];
-  then
-    echo "Weird exit code for user-config"
-    exit 1
-  fi
-else
-  if [[ $(cat native-ex.log) -eq 124 ]];
-  then
-    if [[ $(cat user-config-ex.log) -eq 124 ]];
-    then
-      echo "both killed"
-      exit 1
-    fi
-  fi
-
-  if [[ $(cat native-ex.log) -eq 139 ]];
-  then
-    echo "native segfaulted"
-    exit 1
-  fi
-
-  if [[ $(cat user-config-ex.log) -eq 139 ]];
-  then
-    echo "user_config segfaulted"
-    exit 1
-  fi
+echo "Weird exit code for native"
+exit 1
 fi
 
-
-
-if [[ "$TIMEOUT_ERROR" = true ]];
+if [[ $(cat user-config-ex.log) -ne $EXIT_CODE_USER_CONFIG ]];
 then
-  echo "Checking for qemu timeout"
-  if [[ $(diff native.log user-config-qemu.log | wc -l) -ne 0 ]];
-  then
-   echo "Confirming diff with generous runtime"
-   QEMU_CPU="$($SCRIPTS/march-to-cpu-opt --get-riscv-tag user-config.out)" timeout --verbose -k 0.1 10 $QEMU user-config.out 2>&1 > user-config-qemu.log
-   echo $? > user-config-ex.log
-   timeout --verbose -k 0.1 10 ./native.out 2>&1 > native.log
-   echo $? > native-ex.log
-  fi
-else
-  echo "Rejecting timeouts or other weird exit codes"
-  if [[ $(cat native-ex.log) -ne 0 ]];
-  then
-    echo "Weird exit code for native"
-    exit 1
-  fi
-
-  if [[ $(cat user-config-ex.log) -ne 0 ]];
-  then
-    echo "Weird exit code for user-config"
-    exit 1
-  fi
+echo "Weird exit code for user-config"
+exit 1
 fi
 
 if [[ $(diff native.log user-config-qemu.log | wc -l) -ne 0 ]];
