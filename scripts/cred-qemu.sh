@@ -63,6 +63,23 @@ then
   fi
 fi
 
+if [[ "$CLANG_RUN_CHECK" = true ]];
+then
+  echo Checking for warnings with clang.
+
+  echo clang -fsanitize=undefined -fsanitize=memory $program -w -o clang-sanitize.out
+  clang -fsanitize=undefined -fsanitize=memory $program -w -o clang-sanitize.out 2> clang-compile.log
+  cat clang-compile.log
+
+  echo timeout --verbose -k 0.1 5 ./clang-sanitize.out
+  timeout --verbose -k 0.1 5 ./clang-sanitize.out > clang-sanitizer.log 2>&1
+  if [[ "$?" -ne 0 || $(cat clang-sanitizer.log | grep "runtime error" | wc -l) -ne 0 ]];
+  then
+    echo "Runtime error for sanitizer"
+    exit 1
+  fi
+fi
+
 echo $COMPILER $COMPILER_1_OPTS $WARNING_OPTS
 $COMPILER $COMPILER_1_OPTS $WARNING_OPTS 2> compile-user-opts.log
 cat compile-user-opts.log
