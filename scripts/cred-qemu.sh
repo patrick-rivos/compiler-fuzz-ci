@@ -66,9 +66,9 @@ fi
 echo $COMPILER $COMPILER_1_OPTS $WARNING_OPTS
 $COMPILER $COMPILER_1_OPTS $WARNING_OPTS 2> compile-user-opts.log
 cat compile-user-opts.log
-if [[ $(cat compile-user-opts.log | grep "warning" | wc -l) -ne 0 ]];
+if [[ $(cat compile-user-opts.log | grep "error" | wc -l) -ne 0 ]];
 then
-  echo "Warning detected"
+  echo "Error detected (with -Werror and -Wfatal-errors)"
   exit 1
 fi
 
