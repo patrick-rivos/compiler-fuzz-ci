@@ -47,21 +47,18 @@ COMPILER_2_OPTS="-O1 $program -o native.out -fno-strict-aliasing"
 # These warnings help prevent creduce from introducing undefined behavior.
 # Creduce will gladly read beyond the bounds of an array or lots of other stuff.
 # Rejecting programs that fail these warnings keep it in check.
-WARNING_OPTS="-Wformat -Wno-compare-distinct-pointer-types -Wno-overflow -Wuninitialized -Warray-bounds -Wreturn-type"
+WARNING_OPTS="-Wno-unknown-warning-option -Werror -Wfatal-errors -Wall -Wformat -Wno-compare-distinct-pointer-types -Wno-overflow -Wuninitialized -Warray-bounds -Wreturn-type -Wno-unused-function -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-value -Wno-address -Wno-bool-compare -Wno-pointer-sign -Wno-bool-operation -Wno-tautological-compare -Wno-self-assign -Wno-implicit-const-int-float-conversion -Wno-constant-conversion -Wno-unused-value -Wno-tautological-constant-out-of-range-compare -Wno-constant-logical-operand -Wno-parentheses-equality -Wno-pointer-sign"
 QEMU=$(cat $script_location/tools/qemu.path)
 
 if [[ "$CLANG_WARNING_CHECK" = true ]];
 then
   echo Checking for warnings with clang.
-
-  CLANG_IGNORE="-Wno-constant-conversion -Wno-unused-value -Wno-tautological-constant-out-of-range-compare -Wno-constant-logical-operand -Wno-tautological-compare -Wno-parentheses-equality -Wno-pointer-sign"
-
   echo clang $program $WARNING_OPTS $CLANG_IGNORE
   clang $program $WARNING_OPTS $CLANG_IGNORE 2> clang-compile.log
   cat clang-compile.log
-  if [[ $(cat clang-compile.log | grep "warning" | wc -l) -ne 0 ]];
+  if [[ $(cat clang-compile.log | grep "error" | wc -l) -ne 0 ]];
   then
-    echo "Clang Warning detected"
+    echo "Clang error detected (with -Werror and -Wfatal-errors)"
     exit 1
   fi
 fi
@@ -79,11 +76,6 @@ fi
 echo gcc $COMPILER_2_OPTS -w
 gcc $COMPILER_2_OPTS -w 2> compile-native.log
 cat compile-native.log
-if [[ $(cat compile-native.log | grep "warning" | wc -l) -ne 0 ]];
-then
-  echo "Warning detected"
-  exit 1
-fi
 
 echo "Running QEMU"
 echo "QEMU_CPU="$($SCRIPTS/march-to-cpu-opt --get-riscv-tag user-config.out)" timeout --verbose -k 0.1 1 $QEMU user-config.out"

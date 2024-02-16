@@ -25,4 +25,9 @@ fi
 
 echo $(cat $script_location/tools/compiler.path) -I$(cat $script_location/tools/csmith.path)/include $1 raw.c -E -o red.c
 $(cat $script_location/tools/compiler.path) -I$(cat $script_location/tools/csmith.path)/include $1 raw.c -E -o red.c
+# Remove __attribute__ ((__malloc__ (* lines since clang doesn't like them https://github.com/llvm/llvm-project/issues/53152
+cat red.c | tac | sed '/__attribute__ ((__malloc__ (/{N;N;d;}' | tac > temp.c && mv temp.c red.c
+# Remove typedef double _Float64 since GCC doesn't like it
+cat red.c | sed -E '/typedef.+_Float/d' > temp.c && mv temp.c red.c
+
 echo $1 > compiler-opts.txt
