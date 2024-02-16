@@ -32,14 +32,24 @@ COMPILER_OPTS="$(cat $invocation_location/compiler-opts.txt)  $program -o rv64gc
 # These warnings help prevent creduce from introducing undefined behavior.
 # Creduce will gladly read beyond the bounds of an array or lots of other stuff.
 # Rejecting programs that fail these warnings keep it in check.
-WARNING_OPTS="-Wformat -Wno-compare-distinct-pointer-types -Wno-overflow -Wuninitialized -Warray-bounds -Wmissing-braces -Wreturn-type -Wempty-body"
+WARNING_OPTS="-Werror -Wfatal-errors -Wall -Wformat -Wno-constant-conversion -Wno-pointer-compare -Wno-implicit-const-int-float-conversion -Wno-compare-distinct-pointer-types -Wno-constant-logical-operand -Wno-pointer-sign -Wno-self-assign -Wno-bool-operation -Wno-unused-function -Wno-unused-variable -Wno-address -Wno-unused-value -Wno-tautological-compare -Wno-unused-but-set-variable -Wno-pointer-compare"
 
-echo $COMPILER $COMPILER_OPTS $WARNING_OPTS
-$COMPILER $COMPILER_OPTS $WARNING_OPTS 2>&1 | tee compile.log
-if [[ $(cat compile.log | grep "warning" | wc -l) -ne 0 ]];
+echo clang $WARNING_OPTS $program
+clang $WARNING_OPTS $program 2>&1 | tee native.log
+if [[ $(cat native.log | grep "error" | wc -l) -ne 0 ]];
 then
-  echo "Warning detected"
+  echo "Error detected (with -Werror -Wfatal-errors)"
   exit 1
 fi
 
-cat compile.log | grep "internal compiler error"
+$COMPILER $COMPILER_OPTS -w 2>&1 | tee compile.log
+
+if [[ "$(echo $COMPILER | grep "clang" | wc -l)" -ne 0 ]]; then
+  # LLVM
+  cat compile.log | grep "PLEASE submit a bug report"
+  exit $?
+else
+  # GCC
+  cat compile.log | grep "internal compiler error"
+  exit $?
+fi
