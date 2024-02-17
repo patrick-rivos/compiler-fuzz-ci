@@ -21,6 +21,13 @@ WORKDIR /gcc-fuzz-ci/csmith
 RUN cmake -DCMAKE_INSTALL_PREFIX=../csmith-build .
 RUN nice -n 15 make -j $(nproc) && make install
 RUN echo /gcc-fuzz-ci/csmith-build > /gcc-fuzz-ci/scripts/tools/csmith.path
+# Build yarpgen
+WORKDIR /gcc-fuzz-ci
+RUN git submodule update --depth 1 --init yarpgen
+RUN mkdir yarpgen-build
+WORKDIR /gcc-fuzz-ci/yarpgen
+RUN cmake -DCMAKE_INSTALL_PREFIX=../yarpgen-build .
+RUN nice -n 15 make -j $(nproc)
 # Build QEMU
 WORKDIR /gcc-fuzz-ci
 RUN git submodule update --init riscv-gnu-toolchain
@@ -64,6 +71,7 @@ COPY --from=build /riscv-gnu-toolchain-build/sysroot /riscv-gnu-toolchain-build/
 COPY --from=build /gcc-fuzz-ci/scripts /gcc-fuzz-ci/scripts
 COPY --from=build /gcc-fuzz-ci/riscv-gnu-toolchain/scripts /gcc-fuzz-ci/riscv-gnu-toolchain/scripts
 COPY --from=build /gcc-fuzz-ci/csmith-build /gcc-fuzz-ci/csmith-build
+COPY --from=build /gcc-fuzz-ci/yarpgen-build /gcc-fuzz-ci/yarpgen-build
 # Install packages
 RUN apt update
 RUN apt install software-properties-common -y
