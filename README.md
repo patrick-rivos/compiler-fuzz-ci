@@ -175,8 +175,10 @@ https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113603
 ### Runtime fails:
 https://github.com/llvm/llvm-project/issues/78783
 https://github.com/llvm/llvm-project/issues/80052
+https://github.com/llvm/llvm-project/issues/80910
 ### Internal errors:
 https://github.com/llvm/llvm-project/issues/78679
+https://github.com/llvm/llvm-project/issues/80744
 
 # Contribute
 Have an improvement? PRs are welcome!
