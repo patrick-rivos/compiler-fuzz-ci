@@ -41,7 +41,7 @@ RUN /gcc-fuzz-ci/riscv-gnu-toolchain/configure --prefix=$(pwd)
 RUN nice -n 15 make build-qemu -j $(nproc)
 RUN echo /gcc-fuzz-ci/riscv-gnu-toolchain/scripts > /gcc-fuzz-ci/scripts/tools/scripts.path
 RUN echo /riscv-gnu-toolchain-build/bin/qemu-riscv64 > /gcc-fuzz-ci/scripts/tools/qemu.path
-# Build compiler
+# Build gcc
 WORKDIR /gcc-fuzz-ci/riscv-gnu-toolchain
 RUN git submodule update --depth 1 --init gcc
 RUN git submodule update --depth 1 --init binutils
@@ -54,7 +54,17 @@ RUN git am comma_op_fix.patch
 WORKDIR /riscv-gnu-toolchain-build
 RUN apt install libgmp-dev texinfo bison flex -y
 RUN nice -n 15 make linux -j $(nproc)
-RUN echo /riscv-gnu-toolchain-build/bin/riscv64-unknown-linux-gnu-gcc > /gcc-fuzz-ci/scripts/tools/compiler.path
+RUN echo /riscv-gnu-toolchain-build/bin/riscv64-unknown-linux-gnu-gcc > /gcc-fuzz-ci/scripts/tools/gcc.path
+# Build llvm
+WORKDIR /gcc-fuzz-ci/riscv-gnu-toolchain
+RUN git submodule update --depth 1 --init llvm
+WORKDIR /gcc-fuzz-ci/riscv-gnu-toolchain/llvm
+RUN git checkout main
+WORKDIR /riscv-gnu-toolchain-build
+RUN nice -n 15 make stamps/build-llvm-linux -j $(nproc)
+RUN echo /riscv-gnu-toolchain-build/bin/clang > /gcc-fuzz-ci/scripts/tools/llvm.path
+# Default to gcc
+RUN cat /gcc-fuzz-ci/scripts/tools/gcc.path > /gcc-fuzz-ci/scripts/tools/compiler.path
 
 # Release stage
 FROM ubuntu:22.04 as runner
