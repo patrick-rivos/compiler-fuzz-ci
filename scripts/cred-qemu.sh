@@ -47,7 +47,7 @@ COMPILER_2_OPTS="-O1 $program -o native.out -fno-strict-aliasing"
 # These warnings help prevent creduce from introducing undefined behavior.
 # Creduce will gladly read beyond the bounds of an array or lots of other stuff.
 # Rejecting programs that fail these warnings keep it in check.
-WARNING_OPTS="-Wno-unknown-warning-option -Werror -Wfatal-errors -Wall -Wformat -Wno-compare-distinct-pointer-types -Wno-overflow -Wuninitialized -Warray-bounds -Wreturn-type -Wno-unused-function -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-value -Wno-address -Wno-bool-compare -Wno-pointer-sign -Wno-bool-operation -Wno-tautological-compare -Wno-self-assign -Wno-implicit-const-int-float-conversion -Wno-constant-conversion -Wno-unused-value -Wno-tautological-constant-out-of-range-compare -Wno-constant-logical-operand -Wno-parentheses-equality -Wno-pointer-sign"
+WARNING_OPTS="-Wno-unknown-warning-option -Werror -Wfatal-errors -Wall -Wformat -Wno-dangling-pointer -Wno-compare-distinct-pointer-types -Wno-overflow -Wuninitialized -Warray-bounds -Wreturn-type -Wno-unused-function -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-value -Wno-address -Wno-bool-compare -Wno-pointer-sign -Wno-bool-operation -Wno-tautological-compare -Wno-self-assign -Wno-implicit-const-int-float-conversion -Wno-constant-conversion -Wno-unused-value -Wno-tautological-constant-out-of-range-compare -Wno-constant-logical-operand -Wno-parentheses-equality -Wno-pointer-sign"
 QEMU=$(cat $script_location/tools/qemu.path)
 
 if [[ "$CLANG_WARNING_CHECK" = true ]];
