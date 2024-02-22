@@ -15,20 +15,20 @@ There is a docker image if you just want to start fuzzing riscv-gcc.
 Example command:
 ```
 export RUNNER_NAME="local"
-sudo docker pull ghcr.io/patrick-rivos/gcc-fuzz-ci:latest && sudo docker run -v ~/csmith-discoveries:/gcc-fuzz-ci/csmith-discoveries ghcr.io/patrick-rivos/gcc-fuzz-ci:latest sh -c "date > /gcc-fuzz-ci/csmith-discoveries/$RUNNER_NAME && nice -n 15 parallel --link \"./scripts/csmith-qemu.sh $RUNNER_NAME-{1} {2}\" ::: $(seq 1 $(nproc) | tr '\n' ' ') ::: '-march=rv64gcv -ftree-vectorize -O3' '-march=rv64gcv_zvl256b -ftree-vectorize -O3' '-march=rv64gcv -O3' '-march=rv64gcv_zvl256b -O3' '-march=rv64gcv -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -O3 -mtune=generic-ooo'"
+sudo docker pull ghcr.io/patrick-rivos/compiler-fuzz-ci:latest && sudo docker run -v ~/csmith-discoveries:/compiler-fuzz-ci/csmith-discoveries ghcr.io/patrick-rivos/compiler-fuzz-ci:latest sh -c "date > /compiler-fuzz-ci/csmith-discoveries/$RUNNER_NAME && nice -n 15 parallel --link \"./scripts/csmith-qemu.sh $RUNNER_NAME-{1} {2}\" ::: $(seq 1 $(nproc) | tr '\n' ' ') ::: '-march=rv64gcv -ftree-vectorize -O3' '-march=rv64gcv_zvl256b -ftree-vectorize -O3' '-march=rv64gcv -O3' '-march=rv64gcv_zvl256b -O3' '-march=rv64gcv -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -O3 -mtune=generic-ooo'"
 ```
 
 Command structure:
 ```
-sudo docker pull ghcr.io/patrick-rivos/gcc-fuzz-ci:latest \   # Clone most recent container
+sudo docker pull ghcr.io/patrick-rivos/compiler-fuzz-ci:latest \   # Clone most recent container
 && sudo docker run \
--v ~/csmith-discoveries:/gcc-fuzz-ci/csmith-discoveries \     # Map the container's output directory with the user's desired output. Follows the format -v <SELECTED DIR>:<CONTAINER OUTPUT DIR>
-ghcr.io/patrick-rivos/gcc-fuzz-ci:latest \                    # Run this container
-sh -c "date > /gcc-fuzz-ci/csmith-discoveries/$RUNNER_NAME \  # Record the start time
-&& nice -n 15 \                                               # Run at a low priority so other tasks preempt the fuzzer
-parallel --link \                                             # Gnu parallel. Link the args so they get mapped to the core enumeration
-\"./scripts/csmith-qemu.sh $RUNNER_NAME-{1} {2}\" \	      # For each core provide a set of args
-::: $(seq 1 $(nproc) | tr '\n' ' ') \                         # Enumerate cores
+-v ~/csmith-discoveries:/compiler-fuzz-ci/csmith-discoveries \     # Map the container's output directory with the user's desired output. Follows the format -v <SELECTED DIR>:<CONTAINER OUTPUT DIR>
+ghcr.io/patrick-rivos/compiler-fuzz-ci:latest \                    # Run this container
+sh -c "date > /compiler-fuzz-ci/csmith-discoveries/$RUNNER_NAME \  # Record the start time
+&& nice -n 15 \                                                    # Run at a low priority so other tasks preempt the fuzzer
+parallel --link \                                                  # Gnu parallel. Link the args so they get mapped to the core enumeration
+\"./scripts/csmith-qemu.sh $RUNNER_NAME-{1} {2}\" \                # For each core provide a set of args
+::: $(seq 1 $(nproc) | tr '\n' ' ') \                              # Enumerate cores
 ::: '-march=rv64gcv -ftree-vectorize -O3' '-march=rv64gcv_zvl256b -ftree-vectorize -O3' '-march=rv64gcv -O3' '-march=rv64gcv_zvl256b -O3' '-march=rv64gcv -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -O3 -mtune=generic-ooo'"
 # ^ All the compiler flags we're interested in
 ```

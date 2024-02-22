@@ -40,4 +40,4 @@ jobs:
 
       - name: Build docker image
         run: |
-          docker buildx build . --tag ghcr.io/patrick-rivos/gcc-fuzz-ci:latest --platform linux/amd64,linux/arm64/v8 --push --no-cache
+          docker buildx build . --tag ghcr.io/patrick-rivos/compiler-fuzz-ci:latest --platform linux/amd64,linux/arm64/v8 --push --no-cache
