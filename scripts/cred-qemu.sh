@@ -71,8 +71,10 @@ then
   clang -fsanitize=undefined -fsanitize=memory $program -w -o clang-sanitize.out 2> clang-compile.log
   cat clang-compile.log
 
-  echo timeout --verbose -k 0.1 5 ./clang-sanitize.out
-  timeout --verbose -k 0.1 5 ./clang-sanitize.out > clang-sanitizer.log 2>&1
+  echo timeout --verbose -k 0.1 2 ./clang-sanitize.out
+  # Ignore misaligned accesses since csmith still generates those.
+  # I haven't had a reduction rely on misaligned for its diff yet.
+  UBSAN_OPTIONS=suppressions=$script_location/ub-ignore.supp timeout --verbose -k 0.1 2 ./clang-sanitize.out > clang-sanitizer.log 2>&1
   if [[ "$?" -ne 0 || $(cat clang-sanitizer.log | grep "runtime error" | wc -l) -ne 0 ]];
   then
     echo "Runtime error for sanitizer"
