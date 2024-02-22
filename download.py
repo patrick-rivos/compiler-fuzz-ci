@@ -1,3 +1,4 @@
+#! /bin/python3
 # Download the Fuzzer's output artifacts from CI
 
 import argparse
