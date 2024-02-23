@@ -151,6 +151,9 @@ https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113209
 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113281
 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113431
 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113607
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113796
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114027
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114028
 ### ICEs:
 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112481
 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112535
@@ -176,6 +179,7 @@ https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113603
 https://github.com/llvm/llvm-project/issues/78783
 https://github.com/llvm/llvm-project/issues/80052
 https://github.com/llvm/llvm-project/issues/80910
+https://github.com/llvm/llvm-project/issues/82430
 ### Internal errors:
 https://github.com/llvm/llvm-project/issues/78679
 https://github.com/llvm/llvm-project/issues/80744
