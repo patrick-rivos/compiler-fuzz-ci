@@ -1,17 +1,17 @@
-name: csmith
+name: csmith-gcc
 
 # Build a random riscv config
 
 on:
   schedule:
     # Run every day
-    - cron: 0 0,3,6,9,12,15,18,21 * * *
+    - cron: 0 0,4,8,12,16,20 * * *
   workflow_dispatch:
     branches:
       - main
 
 jobs:
-  csmith:
+  csmith-gcc:
     runs-on: [self-hosted, fuzz]
     timeout-minutes: 2880 # 48 hours
 

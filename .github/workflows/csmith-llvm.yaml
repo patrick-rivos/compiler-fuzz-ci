@@ -1,0 +1,62 @@
+name: csmith-llvm
+
+# Build a random riscv config
+
+on:
+  schedule:
+    # Run every day
+    - cron: 0 0,12 * * *
+  workflow_dispatch:
+    branches:
+      - main
+
+jobs:
+  csmith-llvm:
+    runs-on: [self-hosted, fuzz]
+    timeout-minutes: 2880 # 48 hours
+
+    steps:
+      - name: 'Cleanup build folder'
+        working-directory: ./
+        run: |
+          ls -la ./
+          sudo rm -rf ./* || true
+          sudo rm -rf ./.??* || true
+          ls -la ./
+
+      - uses: actions/checkout@v3
+
+      - name: Setup env
+        uses: ./.github/actions/common/setup-env
+        with:
+          free_up_space: true
+
+      # Clear docker cache so we get tip-of-tree gcc
+      - name: Clear docker cache
+        run: |
+          docker system prune -af
+
+      - name: Pull latest image
+        run: |
+          docker pull ghcr.io/patrick-rivos/compiler-fuzz-ci:latest
+
+      # 12 hr timeout 43200 seconds
+      # Odd tmp-{} is rv64gcv
+      # Even tmp-{} is rv64gcv_zvl256b
+      - name: Run fuzzer on rv64gcv
+        run: |
+          mkdir out
+          chmod -R 777 out
+          docker run -v $(pwd)/out:/compiler-fuzz-ci/csmith-discoveries ghcr.io/patrick-rivos/compiler-fuzz-ci:latest sh -c "cat ./scripts/tools/llvm.path > ./scripts/tools/compiler.path && nice -n 15 timeout 43200 parallel --link \"./scripts/csmith-qemu.sh tmp-{1} {2}\" ::: $(seq 1 $(nproc) | tr '\n' ' ') ::: '-march=rv64gcv -flto -ftree-vectorize -O3' '-march=rv64gcv_zvl256b -flto -ftree-vectorize -O3' '-march=rv64gcv -flto -O3' '-march=rv64gcv_zvl256b -flto -O3' '-march=rv64gcv -flto -ftree-vectorize -O3 -fuse-ld=lld' '-march=rv64gcv_zvl256b -flto -ftree-vectorize -O3 -fuse-ld=lld' '-march=rv64gcv -flto -O3 -fuse-ld=lld' '-march=rv64gcv_zvl256b -flto -O3 -fuse-ld=lld' '-march=rv64gcv -flto -ftree-vectorize -O3 --param=riscv-autovec-preference=fixed-vlmax ' '-march=rv64gcv_zvl256b -flto -ftree-vectorize -O3 --param=riscv-autovec-preference=fixed-vlmax ' '-march=rv64gcv -flto -O3 --param=riscv-autovec-preference=fixed-vlmax ' '-march=rv64gcv_zvl256b -flto -O3 --param=riscv-autovec-preference=fixed-vlmax ' '-march=rv64gcv -flto -ftree-vectorize -O3 -fuse-ld=lld --param=riscv-autovec-preference=fixed-vlmax ' '-march=rv64gcv_zvl256b -flto -ftree-vectorize -O3 -fuse-ld=lld --param=riscv-autovec-preference=fixed-vlmax ' '-march=rv64gcv -flto -O3 -fuse-ld=lld --param=riscv-autovec-preference=fixed-vlmax ' '-march=rv64gcv_zvl256b -flto -O3 -fuse-ld=lld --param=riscv-autovec-preference=fixed-vlmax' || true && zip -r discoveries.zip ./csmith-discoveries && cp discoveries.zip out"
+
+      - name: Zip results
+        run: |
+          zip -r discoveries.zip out
+
+      - name: Upload results
+        uses: actions/upload-artifact@v3
+        with:
+          name: discoveries.zip
+          path: |
+            discoveries.zip
+          retention-days: 90
