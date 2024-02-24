@@ -36,6 +36,9 @@ jobs:
         run: |
           docker system prune -af
 
+      - name: Install zip
+        run: sudo apt install zip
+
       - name: Pull latest image
         run: |
           docker pull ghcr.io/patrick-rivos/compiler-fuzz-ci:latest
