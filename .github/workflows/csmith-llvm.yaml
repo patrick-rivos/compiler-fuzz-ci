@@ -37,7 +37,7 @@ jobs:
           docker system prune -af
 
       - name: Install zip
-        run: sudo apt install zip
+        run: sudo apt install zip -y
 
       - name: Pull latest image
         run: |
