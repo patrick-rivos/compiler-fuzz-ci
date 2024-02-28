@@ -1,0 +1,62 @@
+name: csmith-gcc-arm
+
+# Fuzz aarch64
+# A large amount of GCC vectorizer bugs are shared with aarch64. This gives us
+# another avenue to hit middle-end bugs.
+
+on:
+  schedule:
+    # Run every day
+    - cron: 0 0,12 * * *
+  workflow_dispatch:
+    branches:
+      - main
+
+jobs:
+  csmith-gcc:
+    runs-on: [self-hosted, fuzz, x64]
+    timeout-minutes: 2880 # 48 hours
+
+    steps:
+      - name: 'Cleanup build folder'
+        working-directory: ./
+        run: |
+          ls -la ./
+          sudo rm -rf ./* || true
+          sudo rm -rf ./.??* || true
+          ls -la ./
+
+      - uses: actions/checkout@v3
+
+      - name: Setup env
+        uses: ./.github/actions/common/setup-env
+        with:
+          free_up_space: true
+
+      # Clear docker cache so we get tip-of-tree gcc
+      - name: Clear docker cache
+        run: |
+          docker system prune -af
+
+      - name: Pull latest image
+        run: |
+          docker pull ghcr.io/patrick-rivos/compiler-fuzz-ci:latest-arm
+
+      # 12 hr timeout 43200 seconds
+      - name: Run fuzzer on rv64gcv
+        run: |
+          mkdir out
+          chmod -R 777 out
+          docker run -v $(pwd)/out:/compiler-fuzz-ci/csmith-discoveries ghcr.io/patrick-rivos/compiler-fuzz-ci:latest-arm sh -c "echo 'echo max' > ./basic-scripts/march-to-cpu-opt && nice -n 15 timeout 43200 parallel --link \"./scripts/csmith-qemu.sh tmp-{1} {2}\" ::: $(seq 1 $(nproc) | tr '\n' ' ') ::: '-O3 -static -march=armv9-a+sve2 -fno-vect-cost-model' '-O3 -static -march=armv9-a+sve2' '-O3 -static -march=armv9-a+sve2 -fno-vect-cost-model -msve-vector-bits=512' '-O3 -static -march=armv9-a+sve2 -msve-vector-bits=512'  || true && zip -r discoveries.zip ./csmith-discoveries && cp discoveries.zip out"
+
+      - name: Zip results
+        run: |
+          zip -r discoveries.zip out
+
+      - name: Upload results
+        uses: actions/upload-artifact@v3
+        with:
+          name: discoveries.zip
+          path: |
+            discoveries.zip
+          retention-days: 90
