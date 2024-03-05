@@ -177,6 +177,7 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113603
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114195
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114196
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114197
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114198
 
 ## LLVM
