@@ -47,7 +47,7 @@ jobs:
         run: |
           mkdir out
           chmod -R 777 out
-          docker run -v $(pwd)/out:/compiler-fuzz-ci/csmith-discoveries ghcr.io/patrick-rivos/compiler-fuzz-ci:latest-arm sh -c "echo 'echo max' > ./basic-scripts/march-to-cpu-opt && nice -n 15 timeout 43200 parallel --link \"./scripts/fuzz-qemu.sh tmp-{1} {2}\" ::: $(seq 1 $(nproc) | tr '\n' ' ') ::: '-O3 -static -march=armv9-a+sve2 -fno-vect-cost-model' '-O3 -static -march=armv9-a+sve2' '-O3 -static -march=armv9-a+sve2 -fno-vect-cost-model -msve-vector-bits=512' '-O3 -static -march=armv9-a+sve2 -msve-vector-bits=512'  || true && zip -r discoveries.zip ./csmith-discoveries && cp discoveries.zip out"
+          docker run -v $(pwd)/out:/compiler-fuzz-ci/csmith-discoveries ghcr.io/patrick-rivos/compiler-fuzz-ci:latest-arm sh -c "echo 'echo max' > ./basic-scripts/march-to-cpu-opt && nice -n 15 timeout 43200 parallel --ungroup --link \"./scripts/fuzz-qemu.sh tmp-{1} {2}\" ::: $(seq 1 $(nproc) | tr '\n' ' ') ::: '-O3 -static -march=armv9-a+sve2 -fno-vect-cost-model' '-O3 -static -march=armv9-a+sve2' '-O3 -static -march=armv9-a+sve2 -fno-vect-cost-model -msve-vector-bits=512' '-O3 -static -march=armv9-a+sve2 -msve-vector-bits=512'  || true && zip -r discoveries.zip ./csmith-discoveries && cp discoveries.zip out"
 
       - name: Zip results
         run: |
