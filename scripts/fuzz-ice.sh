@@ -2,11 +2,11 @@
 
 # Searches for internal compiler errors (ICEs) for the given config
 
-# Invoked using ./scripts/csmith-ice.sh <temp folder name> '<compiler-args>'
+# Invoked using ./scripts/fuzz-ice.sh <temp folder name> '<compiler-args>'
 # Places interesting testcases in the csmith-discoveries folder
 
 if [ "$#" -ne 2 ]; then
-    echo "Illegal number of parameters. Should be ./scripts/csmith-ice.sh <temp folder name> '<compiler-args>'"
+    echo "Illegal number of parameters. Should be ./scripts/fuzz-ice.sh <temp folder name> '<compiler-args>'"
     exit 1
 fi
 

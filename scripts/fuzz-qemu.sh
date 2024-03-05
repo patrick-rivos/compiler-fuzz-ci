@@ -2,16 +2,18 @@
 
 # Searches for runtime mismatches between the given config and rv64gc
 
-# Invoked using ./scripts/csmith-qemu.sh <temp folder name> '<compiler-args>'
+# Invoked using ./scripts/fuzz-qemu.sh <temp folder name> '<compiler-args>'
 # Places interesting testcases in the csmith-discoveries folder
 
 if [ "$#" -ne 2 ]; then
-    echo "Illegal number of parameters. Should be ./scripts/csmith-qemu.sh <temp folder name> '<gcc-args>'"
+    echo "Illegal number of parameters. Should be ./scripts/fuzz-qemu.sh <temp folder name> '<gcc-args>'"
     exit 1
 fi
 
 script_location=$(dirname "$0")
 invocation_location=$(pwd)
+
+RANDOM_GENERATOR=${RANDOM_GENERATOR:-csmith}
 
 # Relies on compiler.path qemu.path scripts.path and csmith.path
 if [ ! -f "$(cat $script_location/tools/compiler.path)" ]; then
@@ -30,6 +32,12 @@ if [ ! -d "$(cat $script_location/tools/csmith.path)" ]; then
   echo "csmith path: $(cat $script_location/tools/csmith.path) does not exist."
   exit 1
 fi
+if [ ! -d "$(cat $script_location/tools/yarpgen.path)" ]; then
+  echo "yarpgen path: $(cat $script_location/tools/yarpgen.path) does not exist."
+  exit 1
+fi
+
+echo "Fuzzing with $RANDOM_GENERATOR"
 
 mkdir -p $invocation_location/csmith-discoveries
 mkdir -p $invocation_location/csmith-discoveries/stats
@@ -52,21 +60,35 @@ do
   # Remove temp files
   rm -f $csmith_tmp/rv64gc-ex.log $csmith_tmp/user-config-ex.log $csmith_tmp/rv64gc-qemu.log $csmith_tmp/user-config-qemu.log
 
+  # If more than 10% of testcases are interesting, something is horribly wrong. Exit.
+  if [ "$COUNTER" -gt "50" ]; then
+    if [ "$COUNTER" -lt "$(( $INTERESTING_BINARY_COUNTER * 100 ))" ]; then
+      echo "Abnormally high interesting testcase ratio. Exiting."
+      exit 1
+    fi
+  fi
+
   let COUNTER++
 
   # Record stats
   echo "{\"programs_evaluated\":\"$COUNTER\",\"interesting_counter\":\"$INTERESTING_BINARY_COUNTER\",\"invalid_native\":{\"total\":\"$INVALID_NATIVE_BINARY_COUNTER\",\"timeouts\":\"$TIMEOUT_NATIVE_BINARY_COUNTER\",\"segfaults\":\"$SEGFAULT_NATIVE_BINARY_COUNTER\",\"compilations\":\"$INVALID_NATIVE_COMPILE_COUNTER\"},\"invalid_qemu\":{\"total\":\"$INVALID_QEMU_BINARY_COUNTER\",\"timeouts\":\"$TIMEOUT_QEMU_BINARY_COUNTER\",\"segfaults\":\"$SEGFAULT_QEMU_BINARY_COUNTER\",\"compilations\":\"$INVALID_NATIVE_COMPILE_COUNTER\"}}" > csmith-discoveries/stats/$1-stats.json
 
   # Generate a random c program
-  $(cat $script_location/tools/csmith.path)/bin/csmith > $csmith_tmp/out.c
+  if [ "$RANDOM_GENERATOR" == "csmith" ]; then
+    $(cat $script_location/tools/csmith.path)/bin/csmith > $csmith_tmp/out.c
+  else
+    $(cat $script_location/tools/yarpgen.path)/yarpgen --std=c -o $csmith_tmp > /dev/null
+    cat $csmith_tmp/init.h $csmith_tmp/func.c $csmith_tmp/driver.c > $csmith_tmp/out.c
+  fi
 
   # Compile for native target
-  timeout -k 1 600 gcc -I$(cat $script_location/tools/csmith.path)/include -O1 -fno-strict-aliasing $csmith_tmp/out.c -o $csmith_tmp/native.out > $csmith_tmp/native-compile-log.txt 2>&1
+  timeout 600 gcc -I$(cat $script_location/tools/csmith.path)/include -mcmodel=medium -w -fpermissive -O1 -fno-strict-aliasing -fwrapv $csmith_tmp/out.c -o $csmith_tmp/native.out > $csmith_tmp/native-compile-log.txt 2>&1
   echo $? > $csmith_tmp/native-compile-exit-code.txt
   if [[ $(cat $csmith_tmp/native-compile-exit-code.txt) -ne 0 ]];
   then
     echo "! FAILURE TO COMPILE"
     let INVALID_NATIVE_COMPILE_COUNTER++
+    let INTERESTING_BINARY_COUNTER++
     mkdir -p $invocation_location/csmith-discoveries/$1-$COUNTER
     cp $csmith_tmp/out.c $invocation_location/csmith-discoveries/$1-$COUNTER/raw.c
     cp $csmith_tmp/native-compile-exit-code.txt $invocation_location/csmith-discoveries/$1-$COUNTER/native-compile-exit-code.txt
@@ -86,12 +108,13 @@ do
   if [[ $(cat $csmith_tmp/native-ex.log) -eq 0 ]];
   then
     # Compile for the user's config (ignore warnings)
-    timeout -k 1 600 $(cat $script_location/tools/compiler.path) -I$(cat $script_location/tools/csmith.path)/include -fno-strict-aliasing $2 $csmith_tmp/out.c -o $csmith_tmp/user-config.out -w > $csmith_tmp/user-config-compile-log.txt 2>&1
+    timeout -k 1 600 $(cat $script_location/tools/compiler.path) -I$(cat $script_location/tools/csmith.path)/include -mcmodel=medany -w -fpermissive -fno-strict-aliasing -fwrapv $2 $csmith_tmp/out.c -o $csmith_tmp/user-config.out -w > $csmith_tmp/user-config-compile-log.txt 2>&1
     echo $? > $csmith_tmp/user-config-compile-exit-code.txt
     if [[ $(cat $csmith_tmp/user-config-compile-exit-code.txt) -ne 0 ]];
     then
       echo "! FAILURE TO COMPILE"
       let INVALID_QEMU_COMPILE_COUNTER++
+      let INTERESTING_BINARY_COUNTER++
       mkdir -p $invocation_location/csmith-discoveries/$1-$COUNTER
       cp $csmith_tmp/out.c $invocation_location/csmith-discoveries/$1-$COUNTER/raw.c
       cp $csmith_tmp/user-config-compile-exit-code.txt $invocation_location/csmith-discoveries/$1-$COUNTER/qemu-compile-exit-code.txt

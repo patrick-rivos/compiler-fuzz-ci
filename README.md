@@ -15,7 +15,7 @@ There is a docker image if you just want to start fuzzing riscv-gcc.
 Example command:
 ```
 export RUNNER_NAME="local"
-sudo docker pull ghcr.io/patrick-rivos/compiler-fuzz-ci:latest && sudo docker run -v ~/csmith-discoveries:/compiler-fuzz-ci/csmith-discoveries ghcr.io/patrick-rivos/compiler-fuzz-ci:latest sh -c "date > /compiler-fuzz-ci/csmith-discoveries/$RUNNER_NAME && nice -n 15 parallel --link \"./scripts/csmith-qemu.sh $RUNNER_NAME-{1} {2}\" ::: $(seq 1 $(nproc) | tr '\n' ' ') ::: '-march=rv64gcv -ftree-vectorize -O3' '-march=rv64gcv_zvl256b -ftree-vectorize -O3' '-march=rv64gcv -O3' '-march=rv64gcv_zvl256b -O3' '-march=rv64gcv -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -O3 -mtune=generic-ooo'"
+sudo docker pull ghcr.io/patrick-rivos/compiler-fuzz-ci:latest && sudo docker run -v ~/csmith-discoveries:/compiler-fuzz-ci/csmith-discoveries ghcr.io/patrick-rivos/compiler-fuzz-ci:latest sh -c "date > /compiler-fuzz-ci/csmith-discoveries/$RUNNER_NAME && nice -n 15 parallel --link \"./scripts/fuzz-qemu.sh $RUNNER_NAME-{1} {2}\" ::: $(seq 1 $(nproc) | tr '\n' ' ') ::: '-march=rv64gcv -ftree-vectorize -O3' '-march=rv64gcv_zvl256b -ftree-vectorize -O3' '-march=rv64gcv -O3' '-march=rv64gcv_zvl256b -O3' '-march=rv64gcv -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -O3 -mtune=generic-ooo'"
 ```
 
 Command structure:
@@ -27,7 +27,7 @@ ghcr.io/patrick-rivos/compiler-fuzz-ci:latest \                    # Run this co
 sh -c "date > /compiler-fuzz-ci/csmith-discoveries/$RUNNER_NAME \  # Record the start time
 && nice -n 15 \                                                    # Run at a low priority so other tasks preempt the fuzzer
 parallel --link \                                                  # Gnu parallel. Link the args so they get mapped to the core enumeration
-\"./scripts/csmith-qemu.sh $RUNNER_NAME-{1} {2}\" \                # For each core provide a set of args
+\"./scripts/fuzz-qemu.sh $RUNNER_NAME-{1} {2}\" \                  # For each core provide a set of args
 ::: $(seq 1 $(nproc) | tr '\n' ' ') \                              # Enumerate cores
 ::: '-march=rv64gcv -ftree-vectorize -O3' '-march=rv64gcv_zvl256b -ftree-vectorize -O3' '-march=rv64gcv -O3' '-march=rv64gcv_zvl256b -O3' '-march=rv64gcv -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -ftree-vectorize -O3 -mtune=generic-ooo' '-march=rv64gcv -O3 -mtune=generic-ooo' '-march=rv64gcv_zvl256b -O3 -mtune=generic-ooo'"
 # ^ All the compiler flags we're interested in
@@ -64,13 +64,13 @@ make build-qemu -j32
 Update scripts compiler.path qemu.path scripts.path with the absolute paths to each of those components.
 
 ```
-./scripts/csmith-ice.sh csmith-tmp-1 "-march=rv64gcv -mabi=lp64d -ftree-vectorize -O3"
+./scripts/fuzz-ice.sh csmith-tmp-1 "-march=rv64gcv -mabi=lp64d -ftree-vectorize -O3"
 ```
 
 ### Fuzz faster (& nicely!):
 Running a single script is good, but if you have multiple cores (you probably do!) you can use them all!
 ```
-parallel --lb "nice -n 15 ./csmith-qemu.sh csmith-tmp-{} '-march=rv64gcv -mabi=lp64d -ftree-vectorize -O3'" ::: {0..$(nproc)}
+parallel --lb "nice -n 15 ./fuzz-qemu.sh csmith-tmp-{} '-march=rv64gcv -mabi=lp64d -ftree-vectorize -O3'" ::: {0..$(nproc)}
 ```
 [gnu parallel](https://www.gnu.org/software/parallel/) makes running multiple copies of a script easy.
 
