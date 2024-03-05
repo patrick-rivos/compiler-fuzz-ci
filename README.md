@@ -1,4 +1,4 @@
-# GCC Fuzz
+# Compiler Fuzz
 
 # Fuzzing "stable" configs
 Using csmith (a random valid c program generator) we can stress the compiler with random programs.
@@ -139,50 +139,62 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 # Bug trophy case:
 ## GCC
 ### Runtime fails:
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112855
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112801
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112561
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113087
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112929
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112988
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112932
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113206
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113209
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113281
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113431
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113607
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113796
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114027
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114028
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112855
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112801
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112561
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113087
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112929
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112988
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112932
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113206
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113209
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113281
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113431
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113607
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113796
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114027
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114028
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114200
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114202
 ### ICEs:
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112481
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112535
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112554
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112552
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112733
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112773
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112813
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112852
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112851
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112871
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112854
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112872
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112469
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112971
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113001
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113210
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113228
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113603
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112481
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112535
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112554
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112552
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112733
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112773
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112813
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112852
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112851
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112871
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112854
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112872
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112469
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112971
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113001
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113210
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113228
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113603
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114195
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114196
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114198
 
 ## LLVM
 ### Runtime fails:
-https://github.com/llvm/llvm-project/issues/78783
-https://github.com/llvm/llvm-project/issues/80052
-https://github.com/llvm/llvm-project/issues/80910
-https://github.com/llvm/llvm-project/issues/82430
+1. [RISCV64 miscompile at -O1](https://github.com/llvm/llvm-project/issues/78783)
+1. [RISCV64 miscompile at -O2/-O1](https://github.com/llvm/llvm-project/issues/80052)
+1. [RISCV64 vector miscompile at -O2](https://github.com/llvm/llvm-project/issues/80910)
+1. [RISCV vector zvl256b miscompile at -O2](https://github.com/llvm/llvm-project/issues/82430)
+1. [[RISC-V] Miscompile at -O2](https://github.com/llvm/llvm-project/issues/83947)
 ### Internal errors:
-https://github.com/llvm/llvm-project/issues/78679
-https://github.com/llvm/llvm-project/issues/80744
+1. [RISCV64 backend segfault in RISC-V Merge Base Offset](https://github.com/llvm/llvm-project/issues/78679)
+1. [RISCV64 backend "Invalid size request on a scalable vector"](https://github.com/llvm/llvm-project/issues/80744)
+1. [[LSR][term-fold] Ensure the simple recurrence is reachable from the current loop](https://github.com/llvm/llvm-project/pull/83085)
+1. [[InstCombine] Infinite loop/hang](https://github.com/llvm/llvm-project/issues/83354)
+1. [[Pass Manager] Infinite loop of scheduled passes](https://github.com/llvm/llvm-project/issues/83469)
+1. [[DAGCombiner][RISC-V] DAGCombiner.cpp:8692: Assertion `Index < ByteWidth && "invalid index requested"' failed.](https://github.com/llvm/llvm-project/issues/83920)
+1. [[RISC-V] Segfault during pass 'RISC-V DAG->DAG Pattern Instruction Selection'](https://github.com/llvm/llvm-project/issues/83929)
+1. [[InstCombine][RISC-V] UNREACHABLE executed at InstCombineCompares.cpp:2788](https://github.com/llvm/llvm-project/issues/83931)
 
 # Contribute
 Have an improvement? PRs are welcome!
