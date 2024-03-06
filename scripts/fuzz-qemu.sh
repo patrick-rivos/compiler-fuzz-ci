@@ -82,7 +82,7 @@ do
   fi
 
   # Compile for native target
-  timeout 600 gcc -I$(cat $script_location/tools/csmith.path)/include -mcmodel=large -w -fpermissive -O1 -fno-strict-aliasing -fwrapv $csmith_tmp/out.c -o $csmith_tmp/native.out > $csmith_tmp/native-compile-log.txt 2>&1
+  timeout 600 gcc -I$(cat $script_location/tools/csmith.path)/include -mcmodel=large -fno-pic -w -fpermissive -O1 -fno-strict-aliasing -fwrapv $csmith_tmp/out.c -o $csmith_tmp/native.out > $csmith_tmp/native-compile-log.txt 2>&1
   echo $? > $csmith_tmp/native-compile-exit-code.txt
   if [[ $(cat $csmith_tmp/native-compile-exit-code.txt) -ne 0 ]];
   then
