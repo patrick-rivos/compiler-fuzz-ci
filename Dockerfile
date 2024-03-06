@@ -86,5 +86,7 @@ RUN add-apt-repository ppa:git-core/ppa -y
 RUN apt install python3 python3-pip -y
 RUN pip install pyelftools
 RUN apt install zip parallel -y
+# Bump host gcc
+RUN apt-get install gcc-11
 # We're ready to fuzz!
 WORKDIR /compiler-fuzz-ci
