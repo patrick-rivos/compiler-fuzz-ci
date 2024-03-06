@@ -46,6 +46,8 @@ RUN echo /riscv-gnu-toolchain-build/bin/qemu-riscv64 > /compiler-fuzz-ci/scripts
 WORKDIR /compiler-fuzz-ci/riscv-gnu-toolchain
 RUN git submodule update --depth 1 --init gcc
 RUN git submodule update --depth 1 --init binutils
+WORKDIR /compiler-fuzz-ci/riscv-gnu-toolchain/gcc
+RUN git checkout master
 WORKDIR /riscv-gnu-toolchain-build
 RUN apt install libgmp-dev texinfo bison flex -y
 RUN nice -n 15 make linux -j $(nproc)
