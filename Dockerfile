@@ -60,8 +60,6 @@ RUN git checkout main
 WORKDIR /riscv-gnu-toolchain-build
 RUN nice -n 15 make stamps/build-llvm-linux -j $(nproc)
 RUN echo /riscv-gnu-toolchain-build/bin/clang > /compiler-fuzz-ci/scripts/tools/llvm.path
-# Default to gcc
-RUN cat /compiler-fuzz-ci/scripts/tools/gcc.path > /compiler-fuzz-ci/scripts/tools/compiler.path
 
 # Release stage
 FROM ubuntu:22.04 as runner

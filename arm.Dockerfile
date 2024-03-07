@@ -54,7 +54,7 @@ RUN make ce
 RUN ./bin/ce_install --enable nightly install compilers/c++/cross/gcc/arm64/nightly trunk
 RUN /opt/compiler-explorer/arm64/gcc-trunk/aarch64-unknown-linux-gnu/bin/aarch64-unknown-linux-gnu-gcc -v
 # Default to arm gcc trunk
-RUN echo /opt/compiler-explorer/arm64/gcc-trunk/aarch64-unknown-linux-gnu/bin/aarch64-unknown-linux-gnu-gcc > /compiler-fuzz-ci/scripts/tools/compiler.path
+RUN echo /opt/compiler-explorer/arm64/gcc-trunk/aarch64-unknown-linux-gnu/bin/aarch64-unknown-linux-gnu-gcc > /compiler-fuzz-ci/scripts/tools/gcc.path
 
 # Release stage
 FROM ubuntu:22.04 as runner

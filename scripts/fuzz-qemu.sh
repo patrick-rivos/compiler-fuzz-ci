@@ -13,13 +13,11 @@ fi
 script_location=$(dirname "$0")
 invocation_location=$(pwd)
 
+# Env vars
 RANDOM_GENERATOR=${RANDOM_GENERATOR:-csmith}
+COMPILER=${COMPILER:-gcc}
 
-# Relies on compiler.path qemu.path scripts.path and csmith.path
-if [ ! -f "$(cat $script_location/tools/compiler.path)" ]; then
-  echo "compiler path: $(cat $script_location/tools/compiler.path) does not exist."
-  exit 1
-fi
+# Relies on qemu.path scripts.path and csmith.path
 if [ ! -f "$(cat $script_location/tools/qemu.path)" ]; then
   echo "qemu path: $(cat $script_location/tools/qemu.path) does not exist."
   exit 1
@@ -32,12 +30,38 @@ if [ ! -d "$(cat $script_location/tools/csmith.path)" ]; then
   echo "csmith path: $(cat $script_location/tools/csmith.path) does not exist."
   exit 1
 fi
-if [ ! -d "$(cat $script_location/tools/yarpgen.path)" ]; then
-  echo "yarpgen path: $(cat $script_location/tools/yarpgen.path) does not exist."
-  exit 1
+# Compiler
+if [ "$COMPILER" == "gcc" ]; then
+  COMPILER="gcc"
+  if [ ! -f "$(cat $script_location/tools/gcc.path)" ]; then
+    echo "gcc path: $(cat $script_location/tools/gcc.path) does not exist."
+    exit 1
+  fi
+  COMPILER_PATH="$(cat $script_location/tools/gcc.path)"
+else
+  COMPILER="llvm"
+  if [ ! -f "$(cat $script_location/tools/llvm.path)" ]; then
+    echo "llvm path: $(cat $script_location/tools/llvm.path) does not exist."
+    exit 1
+  fi
+  COMPILER_PATH="$(cat $script_location/tools/llvm.path)"
+fi
+# Random generator
+if [ "$RANDOM_GENERATOR" == "csmith" ]; then
+  RANDOM_GENERATOR="csmith"
+  if [ ! -d "$(cat $script_location/tools/csmith.path)" ]; then
+    echo "csmith path: $(cat $script_location/tools/csmith.path) does not exist."
+    exit 1
+  fi
+else
+  RANDOM_GENERATOR="yarpgen"
+  if [ ! -d "$(cat $script_location/tools/yarpgen.path)" ]; then
+    echo "yarpgen path: $(cat $script_location/tools/yarpgen.path) does not exist."
+    exit 1
+  fi
 fi
 
-echo "Fuzzing with $RANDOM_GENERATOR"
+echo "Fuzzing $COMPILER with $RANDOM_GENERATOR"
 
 mkdir -p $invocation_location/csmith-discoveries
 mkdir -p $invocation_location/csmith-discoveries/stats
@@ -108,7 +132,7 @@ do
   if [[ $(cat $csmith_tmp/native-ex.log) -eq 0 ]];
   then
     # Compile for the user's config (ignore warnings)
-    timeout -k 1 600 $(cat $script_location/tools/compiler.path) -I$(cat $script_location/tools/csmith.path)/include -mcmodel=medany -w -fpermissive -fno-strict-aliasing -fwrapv $2 $csmith_tmp/out.c -o $csmith_tmp/user-config.out -w > $csmith_tmp/user-config-compile-log.txt 2>&1
+    timeout -k 1 600 $COMPILER_PATH -I$(cat $script_location/tools/csmith.path)/include -mcmodel=medany -w -fpermissive -fno-strict-aliasing -fwrapv $2 $csmith_tmp/out.c -o $csmith_tmp/user-config.out -w > $csmith_tmp/user-config-compile-log.txt 2>&1
     echo $? > $csmith_tmp/user-config-compile-exit-code.txt
     if [[ $(cat $csmith_tmp/user-config-compile-exit-code.txt) -ne 0 ]];
     then
@@ -120,7 +144,7 @@ do
       cp $csmith_tmp/user-config-compile-exit-code.txt $invocation_location/csmith-discoveries/$1-$COUNTER/qemu-compile-exit-code.txt
       cp $csmith_tmp/user-config-compile-log.txt $invocation_location/csmith-discoveries/$1-$COUNTER/qemu-compile-log.txt
       echo "$2" > $invocation_location/csmith-discoveries/$1-$COUNTER/compiler-opts.txt
-      cat $script_location/tools/compiler.path > $invocation_location/csmith-discoveries/$1-$COUNTER/compiler.txt
+      echo $COMPILER_PATH > $invocation_location/csmith-discoveries/$1-$COUNTER/compiler.txt
       echo "user-config compiler error" > $invocation_location/csmith-discoveries/$1-$COUNTER/error-type.txt
       continue
     fi
@@ -142,7 +166,7 @@ do
         cp $csmith_tmp/user-config-qemu.log $invocation_location/csmith-discoveries/$1-$COUNTER/qemu-diff-gcv.c
         cp $csmith_tmp/native.log $invocation_location/csmith-discoveries/$1-$COUNTER/native-diff-gc.c
         echo "$2" > $invocation_location/csmith-discoveries/$1-$COUNTER/compiler-opts.txt
-        cat $script_location/tools/compiler.path > $invocation_location/csmith-discoveries/$1-$COUNTER/compiler.txt
+        echo $COMPILER_PATH > $invocation_location/csmith-discoveries/$1-$COUNTER/compiler.txt
         echo "user-config runtime diff" > $invocation_location/csmith-discoveries/$1-$COUNTER/error-type.txt
         continue
       fi
@@ -156,6 +180,7 @@ do
       let INVALID_QEMU_BINARY_COUNTER++
     else
       let INVALID_QEMU_BINARY_COUNTER++
+      echo "INVALID QEMU WITH UNKNOWN EXIT CODE: $(cat $csmith_tmp/native-ex.log)"
     fi
   elif [[ $(cat $csmith_tmp/native-ex.log) -eq 124 ]];
   then
@@ -167,7 +192,7 @@ do
     let INVALID_NATIVE_BINARY_COUNTER++
   else
     let INVALID_NATIVE_BINARY_COUNTER++
-    echo "INVALID WITH UNKNOWN EXIT CODE: $(cat $csmith_tmp/native-ex.log)"
+    echo "INVALID NATIVE WITH UNKNOWN EXIT CODE: $(cat $csmith_tmp/native-ex.log)"
   fi
 
 done
