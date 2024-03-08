@@ -180,7 +180,7 @@ do
       let INVALID_QEMU_BINARY_COUNTER++
     else
       let INVALID_QEMU_BINARY_COUNTER++
-      echo "INVALID QEMU WITH UNKNOWN EXIT CODE: $(cat $csmith_tmp/native-ex.log)"
+      echo "INVALID QEMU WITH UNKNOWN EXIT CODE: $(cat $csmith_tmp/user-config-ex.log)"
     fi
   elif [[ $(cat $csmith_tmp/native-ex.log) -eq 124 ]];
   then
