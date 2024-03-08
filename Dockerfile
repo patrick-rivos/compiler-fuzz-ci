@@ -25,8 +25,8 @@ RUN echo /compiler-fuzz-ci/csmith-build > /compiler-fuzz-ci/scripts/tools/csmith
 WORKDIR /compiler-fuzz-ci
 RUN git submodule update --depth 1 --init yarpgen
 RUN mkdir yarpgen-build
-WORKDIR /compiler-fuzz-ci/yarpgen
-RUN cmake -DCMAKE_INSTALL_PREFIX=../yarpgen-build .
+WORKDIR /compiler-fuzz-ci/yarpgen-build
+RUN cmake -DCMAKE_INSTALL_PREFIX=/compiler-fuzz-ci/yarpgen-build /compiler-fuzz-ci/yarpgen
 RUN nice -n 15 make -j $(nproc)
 RUN echo /compiler-fuzz-ci/yarpgen-build > /compiler-fuzz-ci/scripts/tools/yarpgen.path
 # Build QEMU
