@@ -49,12 +49,16 @@ fi
 # Random generator
 if [ "$RANDOM_GENERATOR" == "csmith" ]; then
   RANDOM_GENERATOR="csmith"
+  RANDOM_GENERATOR_NATIVE_FLAGS=""
+  RANDOM_GENERATOR_TARGET_FLAGS=""
   if [ ! -d "$(cat $script_location/tools/csmith.path)" ]; then
     echo "csmith path: $(cat $script_location/tools/csmith.path) does not exist."
     exit 1
   fi
 else
   RANDOM_GENERATOR="yarpgen"
+  RANDOM_GENERATOR_NATIVE_FLAGS="-mcmodel=large -fno-pic"
+  RANDOM_GENERATOR_TARGET_FLAGS="-mcmodel=medany"
   if [ ! -d "$(cat $script_location/tools/yarpgen.path)" ]; then
     echo "yarpgen path: $(cat $script_location/tools/yarpgen.path) does not exist."
     exit 1
@@ -106,7 +110,7 @@ do
   fi
 
   # Compile for native target
-  timeout 600 gcc -I$(cat $script_location/tools/csmith.path)/include -mcmodel=large -fno-pic -w -fpermissive -O1 -fno-strict-aliasing -fwrapv $csmith_tmp/out.c -o $csmith_tmp/native.out > $csmith_tmp/native-compile-log.txt 2>&1
+  timeout 600 gcc -I$(cat $script_location/tools/csmith.path)/include $RANDOM_GENERATOR_NATIVE_FLAGS -w -fpermissive -O1 -fno-strict-aliasing -fwrapv $csmith_tmp/out.c -o $csmith_tmp/native.out > $csmith_tmp/native-compile-log.txt 2>&1
   echo $? > $csmith_tmp/native-compile-exit-code.txt
   if [[ $(cat $csmith_tmp/native-compile-exit-code.txt) -ne 0 ]];
   then
@@ -132,7 +136,7 @@ do
   if [[ $(cat $csmith_tmp/native-ex.log) -eq 0 ]];
   then
     # Compile for the user's config (ignore warnings)
-    timeout -k 1 600 $COMPILER_PATH -I$(cat $script_location/tools/csmith.path)/include -mcmodel=medany -w -fpermissive -fno-strict-aliasing -fwrapv $2 $csmith_tmp/out.c -o $csmith_tmp/user-config.out -w > $csmith_tmp/user-config-compile-log.txt 2>&1
+    timeout -k 1 600 $COMPILER_PATH -I$(cat $script_location/tools/csmith.path)/include $RANDOM_GENERATOR_TARGET_FLAGS -w -fpermissive -fno-strict-aliasing -fwrapv $2 $csmith_tmp/out.c -o $csmith_tmp/user-config.out -w > $csmith_tmp/user-config-compile-log.txt 2>&1
     echo $? > $csmith_tmp/user-config-compile-exit-code.txt
     if [[ $(cat $csmith_tmp/user-config-compile-exit-code.txt) -ne 0 ]];
     then
