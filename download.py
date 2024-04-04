@@ -51,7 +51,8 @@ def search_for_artifact(
 
     artifacts = repo.get_artifacts(artifact_name).get_page(0)
     if len(artifacts) != 0:
-        return [str(artifact.id) for artifact in artifacts]
+        [print(artifact.size_in_bytes) for artifact in artifacts]
+        return [str(artifact.id) for artifact in artifacts if artifact.size_in_bytes < 2 ** 30] # filter by 1 gb
 
     return None
 
