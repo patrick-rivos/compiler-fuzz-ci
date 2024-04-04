@@ -13,11 +13,10 @@ program=${1:-red.c}
 script_location=$(dirname "$0")
 invocation_location=$(pwd)
 
-# Relies on compiler.path qemu.path scripts.path and csmith.path
-if [ ! -f "$(cat $script_location/tools/compiler.path)" ]; then
-  echo "compiler path: $(cat $script_location/tools/compiler.path) does not exist."
-  exit 1
-fi
+# Env vars
+COMPILER=${COMPILER:-gcc}
+
+# Relies on qemu.path and scripts.path
 if [ ! -f "$(cat $script_location/tools/qemu.path)" ]; then
   echo "qemu path: $(cat $script_location/tools/qemu.path) does not exist."
   exit 1
@@ -26,10 +25,24 @@ if [ ! -d "$(cat $script_location/tools/scripts.path)" ]; then
   echo "scripts path: $(cat $script_location/tools/scripts.path) does not exist."
   exit 1
 fi
-if [ ! -d "$(cat $script_location/tools/csmith.path)" ]; then
-  echo "csmith path: $(cat $script_location/tools/csmith.path) does not exist."
-  exit 1
+# Compiler
+if [ "$COMPILER" == "gcc" ]; then
+  COMPILER="gcc"
+  if [ ! -f "$(cat $script_location/tools/gcc.path)" ]; then
+    echo "gcc path: $(cat $script_location/tools/gcc.path) does not exist."
+    exit 1
+  fi
+  COMPILER_PATH="$(cat $script_location/tools/gcc.path)"
+else
+  COMPILER="llvm"
+  if [ ! -f "$(cat $script_location/tools/llvm.path)" ]; then
+    echo "llvm path: $(cat $script_location/tools/llvm.path) does not exist."
+    exit 1
+  fi
+  COMPILER_PATH="$(cat $script_location/tools/llvm.path)"
 fi
+
+echo "Reducing using compiler $COMPILER at $COMPILER_PATH"
 
 # Make sure compiler-opts.txt is set
 if [ ! -f "$invocation_location/compiler-opts.txt" ]; then
