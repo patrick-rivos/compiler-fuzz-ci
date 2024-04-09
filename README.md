@@ -156,6 +156,9 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114028
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114200
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114202
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114247
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114396
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114485
 ### ICEs:
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112481
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112535
@@ -179,6 +182,13 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114196
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114197
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114198
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114386
+### Slow Compile
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114261
+### Compiler Flags Fuzzer
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114314
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114608
+
 
 ## LLVM
 ### Runtime fails:
