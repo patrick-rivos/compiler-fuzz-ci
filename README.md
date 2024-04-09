@@ -187,6 +187,11 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. [RISCV64 vector miscompile at -O2](https://github.com/llvm/llvm-project/issues/80910)
 1. [RISCV vector zvl256b miscompile at -O2](https://github.com/llvm/llvm-project/issues/82430)
 1. [[RISC-V] Miscompile at -O2](https://github.com/llvm/llvm-project/issues/83947)
+1. [[RISC-V] Miscompile at -O2](https://github.com/llvm/llvm-project/issues/84350)
+1. [[RISC-V] Vector -flto -O2 miscompile](https://github.com/llvm/llvm-project/issues/86620)
+1. [[RISC-V][SLP] Sign extension miscompile](https://github.com/llvm/llvm-project/issues/86763)
+1. [[SLP] Missing sign extension of demoted type before zero extension](https://github.com/llvm/llvm-project/issues/87011)
+
 ### Internal errors:
 1. [RISCV64 backend segfault in RISC-V Merge Base Offset](https://github.com/llvm/llvm-project/issues/78679)
 1. [RISCV64 backend "Invalid size request on a scalable vector"](https://github.com/llvm/llvm-project/issues/80744)
@@ -196,6 +201,24 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. [[DAGCombiner][RISC-V] DAGCombiner.cpp:8692: Assertion `Index < ByteWidth && "invalid index requested"' failed.](https://github.com/llvm/llvm-project/issues/83920)
 1. [[RISC-V] Segfault during pass 'RISC-V DAG->DAG Pattern Instruction Selection'](https://github.com/llvm/llvm-project/issues/83929)
 1. [[InstCombine][RISC-V] UNREACHABLE executed at InstCombineCompares.cpp:2788](https://github.com/llvm/llvm-project/issues/83931)
+1. [[LoopVectorize] Assertion `OpType == OperationType::DisjointOp && "recipe cannot have a disjoing flag"' failed.](https://github.com/llvm/llvm-project/issues/87378)
+1. [[SLP] Attempted invalid cast from VectorType to FixedVectorType](https://github.com/llvm/llvm-project/issues/87384)
+1. [[LoopVectorize][VPlan] Unreachable executed "Unhandled opcode!"](https://github.com/llvm/llvm-project/issues/87394)
+1. [[LoopVectorize][VPlan] Assertion `MinBWs.size() == NumProcessedRecipes && "some entries in MinBWs haven't been processed"' failed.](https://github.com/llvm/llvm-project/issues/87407)
+1. [[LoopVectorize][VPlan] Assertion "Trying to access a single scalar per part but has multiple scalars per part." failed.](https://github.com/llvm/llvm-project/issues/87410)
+1. [[Inline] Assert getOperand() out of range! failed.](https://github.com/llvm/llvm-project/issues/87441)
+
+### Compiler Flags Fuzzer
+1. [[Clang] Assertion isCurrentFileAST() && "dumping non-AST?" failed. with -module-file-info](https://github.com/llvm/llvm-project/issues/87852)
+1. [[Clang][Interp] Assertion 'Offset + sizeof(T) <= Pointee->getDescriptor()->getAllocSize()' failed. with -fexperimental-new-constant-interpreter](https://github.com/llvm/llvm-project/issues/88018)
+1. [[Clang] Segfault with -fcoverage-mapping -fcs-profile-generate -fprofile-instr-generate](https://github.com/llvm/llvm-project/issues/88038)
+1. [[X86][RISC-V][AARCH64] fatal error: error in backend: Can only embed the module once with -fembed-bitcode -ffat-lto-objects -flto](https://github.com/llvm/llvm-project/issues/88041)
+1. [[RISC-V] Unhandled encodeInstruction length! at RISCVMCCodeEmitter.cpp:338 with -fglobal-isel -fstack-protector-all](https://github.com/llvm/llvm-project/issues/88046)
+1. [[RISC-V] LLVM ERROR: unable to legalize instruction with -fglobal-isel -finstrument-functions -flto -fuse-ld=lld](https://github.com/llvm/llvm-project/issues/88057)
+1. [[X86] LLVM ERROR: cannot select with -fglobal-isel -finstrument-functions -flto](https://github.com/llvm/llvm-project/issues/88058)
+1. [[LLD] Unreachable executed with -fsplit-stack](https://github.com/llvm/llvm-project/issues/88061)
+1. [[RISC-V] Unresolvable relocation with -fdirect-access-external-data -fstack-protector-all](https://github.com/llvm/llvm-project/issues/88079)
+1. [[Clang] Assertion 'Symbol' failed. with -fdebug-macro -gline-directives-only](https://github.com/llvm/llvm-project/issues/88153)
 
 # Contribute
 Have an improvement? PRs are welcome!
