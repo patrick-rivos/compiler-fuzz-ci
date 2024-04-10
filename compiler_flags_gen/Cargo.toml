@@ -1,0 +1,13 @@
+[package]
+name = "compiler_flags_gen"
+version = "0.1.0"
+edition = "2021"
+authors = ["Patrick O'Neill <patrick@rivosinc.com>"]
+
+[dependencies]
+arbitrary = { version = "1.3.2", features = ["derive"] }
+argh = "0.1.12"
+env_logger = "0.11.3"
+log = "0.4.21"
+rand = "0.8.5"
+struct_iterable = "0.1.1"
