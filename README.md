@@ -159,6 +159,11 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114247
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114396
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114485
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114665
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114666
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114668
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114733
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114734
 ### ICEs:
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112481
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112535
@@ -183,11 +188,13 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114197
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114198
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114386
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114749
 ### Slow Compile
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114261
 ### Compiler Flags Fuzzer
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114314
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114608
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114671
 
 
 ## LLVM
@@ -201,6 +208,7 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. [[RISC-V] Vector -flto -O2 miscompile](https://github.com/llvm/llvm-project/issues/86620)
 1. [[RISC-V][SLP] Sign extension miscompile](https://github.com/llvm/llvm-project/issues/86763)
 1. [[SLP] Missing sign extension of demoted type before zero extension](https://github.com/llvm/llvm-project/issues/87011)
+1. [[RISC-V][SLPVectorizer] rv64gcv miscompile](https://github.com/llvm/llvm-project/issues/88834)
 
 ### Internal errors:
 1. [RISCV64 backend segfault in RISC-V Merge Base Offset](https://github.com/llvm/llvm-project/issues/78679)
@@ -217,6 +225,11 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. [[LoopVectorize][VPlan] Assertion `MinBWs.size() == NumProcessedRecipes && "some entries in MinBWs haven't been processed"' failed.](https://github.com/llvm/llvm-project/issues/87407)
 1. [[LoopVectorize][VPlan] Assertion "Trying to access a single scalar per part but has multiple scalars per part." failed.](https://github.com/llvm/llvm-project/issues/87410)
 1. [[Inline] Assert getOperand() out of range! failed.](https://github.com/llvm/llvm-project/issues/87441)
+1. [[RISC-V] Error in backend: Invalid size request on a scalable vector.](https://github.com/llvm/llvm-project/issues/88576)
+1. [[VectorCombine] Assertion 'isa<To>(Val) && "cast<Ty>() argument of incompatible type!"' failed.](https://github.com/llvm/llvm-project/issues/88796)
+1. [[CodeGen][RISC-V] Assertion `(!MMO->getSize().hasValue() || !getSize().hasValue() || MMO->getSize() == getSize()) && "Size mismatch!"' failed.](https://github.com/llvm/llvm-project/issues/88799)
+1. [[LoopVectorize] Assertion 'VecTy.SimpleTy != MVT::INVALID_SIMPLE_VALUE_TYPE && "Simple vector VT not representable by simple integer vector VT!"' failed.](https://github.com/llvm/llvm-project/issues/88802)
+1. [[LoopVectorize][VPlan] Found non-header PHI recipe in header - Assertion `verifyVPlanIsValid(*Plan) && "VPlan is invalid"' failed.](https://github.com/llvm/llvm-project/issues/88804)
 
 ### Compiler Flags Fuzzer
 1. [[Clang] Assertion isCurrentFileAST() && "dumping non-AST?" failed. with -module-file-info](https://github.com/llvm/llvm-project/issues/87852)
@@ -229,10 +242,7 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. [[LLD] Unreachable executed with -fsplit-stack](https://github.com/llvm/llvm-project/issues/88061)
 1. [[RISC-V] Unresolvable relocation with -fdirect-access-external-data -fstack-protector-all](https://github.com/llvm/llvm-project/issues/88079)
 1. [[Clang] Assertion 'Symbol' failed. with -fdebug-macro -gline-directives-only](https://github.com/llvm/llvm-project/issues/88153)
+1. [[CodeGen] Assertion 'Offset >= Size' failed. with -mms-bitfields](https://github.com/llvm/llvm-project/issues/88208)
 
 # Contribute
 Have an improvement? PRs are welcome!
-
-# TODO:
-- Building random configs
-  - RISC-V has a large state space of extensions. Using a script similar to the linux kernel's randconfig we should be able to choose a random config and ensure it builds with tip-of-tree.
