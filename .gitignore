@@ -1,4 +1,12 @@
 csmith-build/
 csmith-tmp/
 csmith-discoveries/
+compiler_flags_gen/target
 triage-*/
+triage/
+all-finds
+
+
+# Added by cargo
+
+/target

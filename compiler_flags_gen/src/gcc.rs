@@ -249,7 +249,7 @@ pub struct GccToggles {
     fvar_tracking_assignments: ToggleOpt,
     g: GhostOpt,
     gas_loc_support: ToggleOpt,
-    gas_locview_support: ToggleOpt,
+    //     gas_locview_support: ToggleOpt, https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114671
     gbtf: GhostOpt,
     // gcodeview: GhostOpt, // Linker doesn't like this one - windows debug format
     gcolumn_info: ToggleOpt,

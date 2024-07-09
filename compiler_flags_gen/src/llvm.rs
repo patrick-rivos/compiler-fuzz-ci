@@ -423,7 +423,10 @@ pub struct LlvmFlags {
     mtls_direct_seg_refs: ToggleOpt,
     //     mtocdata: GhostOpt, // Unsupported
     //     mvevpu: GhostOpt, // Unsupported
+
+    // Manually added
     E: GhostOpt,
+    //     fpic: ToggleOpt,
 }
 
 impl LlvmFlags {
