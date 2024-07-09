@@ -154,7 +154,7 @@ do
     fi
 
     # Run the binary with a 1 second timeout
-    QEMU_CPU="$($(cat $script_location/tools/scripts.path)/march-to-cpu-opt --get-riscv-tag $csmith_tmp/user-config.out)" timeout -k 0.1 1 $(cat $script_location/tools/qemu.path) $csmith_tmp/user-config.out 1 > $csmith_tmp/user-config-qemu.log
+    QEMU_CPU="$($(cat $script_location/tools/scripts.path)/march-to-cpu-opt --elf-file-path $csmith_tmp/user-config.out --print-qemu-cpu)" timeout -k 0.1 1 $(cat $script_location/tools/qemu.path) $csmith_tmp/user-config.out 1 > $csmith_tmp/user-config-qemu.log
     echo $? > $csmith_tmp/user-config-ex.log
 
     # Ensure both finished executing successfully (no timeouts/segfaults/etc)

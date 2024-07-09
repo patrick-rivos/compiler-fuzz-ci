@@ -92,8 +92,8 @@ gcc $COMPILER_2_OPTS -w 2> compile-native.log
 cat compile-native.log
 
 echo "Running QEMU"
-echo "QEMU_CPU="$($SCRIPTS/march-to-cpu-opt --get-riscv-tag user-config.out)" timeout --verbose -k 0.1 1 $QEMU user-config.out 1"
-QEMU_CPU="$($SCRIPTS/march-to-cpu-opt --get-riscv-tag user-config.out)" timeout --verbose -k 0.1 1 $QEMU user-config.out 1 > user-config-qemu.log 2>&1
+echo "QEMU_CPU="$($SCRIPTS/march-to-cpu-opt --elf-file-path user-config.out --print-qemu-cpu)" timeout --verbose -k 0.1 4 $QEMU user-config.out 1"
+QEMU_CPU="$($SCRIPTS/march-to-cpu-opt --elf-file-path user-config.out --print-qemu-cpu)" timeout --verbose -k 0.1 4 $QEMU user-config.out 1 > user-config-qemu.log 2>&1
 echo $? > user-config-ex.log
 echo timeout --verbose -k 0.1 1 ./native.out 1
 timeout --verbose -k 0.1 1 ./native.out 1 > native.log 2>&1
