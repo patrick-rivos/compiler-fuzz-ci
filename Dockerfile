@@ -46,6 +46,10 @@ RUN echo /riscv-gnu-toolchain-build/bin/qemu-riscv64 > /compiler-fuzz-ci/scripts
 WORKDIR /compiler-fuzz-ci/riscv-gnu-toolchain
 RUN git submodule update --depth 1 --init gcc
 RUN git submodule update --depth 1 --init binutils
+RUN git submodule update --depth 1 --init glibc
+RUN git submodule update --init gdb
+WORKDIR /compiler-fuzz-ci/riscv-gnu-toolchain/gdb
+RUN git checkout e53a8e
 WORKDIR /compiler-fuzz-ci/riscv-gnu-toolchain/gcc
 RUN git checkout master
 WORKDIR /riscv-gnu-toolchain-build
