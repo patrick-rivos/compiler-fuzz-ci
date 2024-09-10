@@ -4,9 +4,6 @@ csmith-discoveries/
 compiler_flags_gen/target
 triage-*/
 triage/
-all-finds
-
-
-# Added by cargo
-
-/target
+compiler_flags_gen/target
+compiler_fuzz/target
+target/

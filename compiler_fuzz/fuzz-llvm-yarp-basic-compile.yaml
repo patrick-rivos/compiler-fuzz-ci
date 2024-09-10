@@ -1,0 +1,12 @@
+!Compile
+  action: Compile
+  compiler:
+    path: "/scratch/tc-testing/tc-compiler-fuzz-trunk/build-gcv/bin/clang"
+    architecture: Riscv
+    arguments:
+      !Generated
+        compiler: Llvm
+        flag_set: MarchAndBasicFlags
+  generator:
+    !Yarpgen
+      path: "/scratch/tc-testing/compiler-fuzz-ci/build-yarpgen/yarpgen"

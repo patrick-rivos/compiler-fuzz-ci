@@ -1,0 +1,12 @@
+!Compile
+  action: Compile
+  compiler:
+    path: "/scratch/tc-testing/tc-compiler-fuzz-trunk/build-gcv/bin/riscv64-unknown-linux-gnu-gcc"
+    architecture: Riscv
+    arguments:
+      !Generated
+        compiler: Gcc
+        flag_set: March
+  generator:
+    !Fixed
+      path: "/home/patrick/hello-world.c"

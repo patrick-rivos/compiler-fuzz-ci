@@ -2,11 +2,114 @@ use arbitrary::Arbitrary;
 use std::fmt;
 use struct_iterable::Iterable;
 
-use crate::{GhostOpt, ToggleOpt};
+use crate::{Action, GhostOpt, ToggleOpt};
+
+#[derive(Arbitrary, Debug, Iterable, Clone)]
+pub struct BasicLlvmFlags {
+    pub toggles: BasicLlvmToggles,
+    pub riscv_toggles: LlvmRiscvToggles,
+}
+
+impl BasicLlvmFlags {
+    pub fn sanitize(&mut self, action: &Action) {
+        self.toggles.sanitize(action);
+        self.riscv_toggles.sanitize(action);
+    }
+}
+
+impl fmt::Display for BasicLlvmFlags {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{} {}", self.toggles, self.riscv_toggles)
+    }
+}
 
 #[allow(non_camel_case_types, non_snake_case)]
 #[derive(Arbitrary, Debug, Iterable, Clone)]
-pub struct LlvmFlags {
+pub struct BasicLlvmToggles {
+    flto: GhostOpt,
+    lld: ToggleOpt,
+    pub static_opt: GhostOpt,
+    //     ffixed_x1: GhostOpt, // error: Return address register required, but has been reserved.
+    //     ffixed_x10: GhostOpt, // error: Argument register required, but has been reserved.
+    //     ffixed_x11: GhostOpt, // error: Argument register required, but has been reserved.
+    //     ffixed_x12: GhostOpt, // error: Argument register required, but has been reserved.
+    //     ffixed_x13: GhostOpt, // error: Argument register required, but has been reserved.
+    //     ffixed_x14: GhostOpt, // error: Argument register required, but has been reserved.
+    //     ffixed_x15: GhostOpt, // error: Argument register required, but has been reserved.
+    //     ffixed_x16: GhostOpt, // error: Argument register required, but has been reserved.
+    //     ffixed_x17: GhostOpt, // error: Argument register required, but has been reserved.
+    ffixed_x18: GhostOpt,
+    ffixed_x19: GhostOpt,
+    //     ffixed_x2: GhostOpt, // error: Stack pointer required, but has been reserved.
+    ffixed_x20: GhostOpt,
+    ffixed_x21: GhostOpt,
+    ffixed_x22: GhostOpt,
+    ffixed_x23: GhostOpt,
+    ffixed_x24: GhostOpt,
+    ffixed_x25: GhostOpt,
+    ffixed_x26: GhostOpt,
+    ffixed_x27: GhostOpt,
+    ffixed_x28: GhostOpt,
+    ffixed_x29: GhostOpt,
+    ffixed_x3: GhostOpt,
+    ffixed_x30: GhostOpt,
+    ffixed_x31: GhostOpt,
+    ffixed_x4: GhostOpt,
+    ffixed_x5: GhostOpt,
+    ffixed_x6: GhostOpt,
+    ffixed_x7: GhostOpt,
+    //     ffixed_x8: GhostOpt, // error: Frame pointer required, but has been reserved.
+}
+
+impl BasicLlvmToggles {
+    pub fn sanitize(&mut self, _action: &Action) {}
+}
+
+impl fmt::Display for BasicLlvmToggles {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let flags = self
+            .iter()
+            .map(|(field_name, field_value)| {
+                if field_value.is::<ToggleOpt>() {
+                    let value: ToggleOpt = *field_value.downcast_ref().unwrap();
+                    let arg_name = field_name.replace('_', "-");
+                    if arg_name == "lld" {
+                        match value {
+                            ToggleOpt::Hidden => "".to_string(),
+                            ToggleOpt::Off => "-fuse-ld=ld".to_string(),
+                            ToggleOpt::On => "-fuse-ld=lld".to_string(),
+                        }
+                    } else {
+                        match value {
+                            ToggleOpt::Hidden => "".to_string(),
+                            ToggleOpt::Off => format!("-{}no-{}", &arg_name[0..1], &arg_name[1..]),
+                            ToggleOpt::On => format!("-{}", arg_name),
+                        }
+                    }
+                } else if field_value.is::<GhostOpt>() {
+                    let value: GhostOpt = *field_value.downcast_ref().unwrap();
+                    let arg_name = field_name.replace('_', "-");
+                    let arg_name = if arg_name == "static-opt" {
+                        "static".to_string()
+                    } else {
+                        arg_name
+                    };
+                    match value {
+                        GhostOpt::Hidden => "".to_string(),
+                        GhostOpt::On => format!("-{}", arg_name),
+                    }
+                } else {
+                    panic!("Unknown datatype for field: {}", field_name)
+                }
+            })
+            .collect::<Vec<_>>();
+        write!(f, "{}", flags.join(" "))
+    }
+}
+
+#[allow(non_camel_case_types, non_snake_case)]
+#[derive(Arbitrary, Debug, Iterable, Clone)]
+pub struct AllLlvmFlags {
     faapcs_bitfield_width: ToggleOpt,
     faccess_control: ToggleOpt,
     faddrsig: ToggleOpt,
@@ -429,8 +532,8 @@ pub struct LlvmFlags {
     //     fpic: ToggleOpt,
 }
 
-impl LlvmFlags {
-    pub fn sanitize(&mut self) {
+impl AllLlvmFlags {
+    pub fn sanitize(&mut self, _action: &Action) {
         //clang: error: invalid argument '-fprofile-generate' not allowed with '-fprofile-instr-generate'
         self.fprofile_generate = if self.fprofile_instr_generate == ToggleOpt::On {
             ToggleOpt::Hidden
@@ -638,7 +741,7 @@ impl LlvmFlags {
     }
 }
 
-impl fmt::Display for LlvmFlags {
+impl fmt::Display for AllLlvmFlags {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut flags = self
             .iter()
@@ -681,6 +784,160 @@ impl fmt::Display for LlvmFlags {
             let mut lld = vec!["-fuse-ld=lld".to_string()];
             flags.append(&mut lld)
         }
+
+        write!(f, "{}", flags.join(" "))
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Arbitrary, Debug, Iterable, Clone)]
+pub struct LlvmRiscvToggles {
+    mrelax: ToggleOpt,
+    msave_restore: ToggleOpt,
+    mstrict_align: ToggleOpt,
+    //     pub mtune: Option<TuneOpt>,
+    //     pub mcpu: Option<CpuOpt>,
+    pub mrvv_vector_bits: Option<VectorRegisterLengths>,
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Arbitrary, Debug, Clone, Copy)]
+pub enum VectorRegisterLengths {
+    scalable,
+    zvl,
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Arbitrary, Debug, Clone, Copy)]
+pub enum TuneOpt {
+    generic_rv64,
+    rocket_rv64,
+    sifive_p450,
+    sifive_p470,
+    sifive_p670,
+    sifive_s21,
+    sifive_s51,
+    sifive_s54,
+    sifive_s76,
+    sifive_u54,
+    sifive_u74,
+    sifive_x280,
+    spacemit_x60,
+    syntacore_scr3_rv64,
+    syntacore_scr4_rv64,
+    syntacore_scr5_rv64,
+    veyron_v1,
+    xiangshan_nanhu,
+    generic,
+    rocket,
+    sifive_7_series,
+    generic_rv32,
+    rocket_rv32,
+    sifive_e20,
+    sifive_e21,
+    sifive_e24,
+    sifive_e31,
+    sifive_e34,
+    sifive_e76,
+    syntacore_scr1_base,
+    syntacore_scr1_max,
+    syntacore_scr3_rv32,
+    syntacore_scr4_rv32,
+    syntacore_scr5_rv32,
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Arbitrary, Debug, Clone, Copy)]
+pub enum CpuOpt {
+    //     generic,
+    generic_rv32,
+    generic_rv64,
+    //     rocket,
+    rocket_rv32,
+    rocket_rv64,
+    //     sifive_7_series,
+    sifive_e20,
+    sifive_e21,
+    sifive_e24,
+    sifive_e31,
+    sifive_e34,
+    sifive_e76,
+    sifive_p450,
+    sifive_p470,
+    sifive_p670,
+    sifive_s21,
+    sifive_s51,
+    sifive_s54,
+    sifive_s76,
+    sifive_u54,
+    sifive_u74,
+    sifive_x280,
+    spacemit_x60,
+    syntacore_scr1_base,
+    syntacore_scr1_max,
+    syntacore_scr3_rv32,
+    syntacore_scr3_rv64,
+    syntacore_scr4_rv32,
+    syntacore_scr4_rv64,
+    syntacore_scr5_rv32,
+    syntacore_scr5_rv64,
+    veyron_v1,
+    xiangshan_nanhu,
+}
+
+impl LlvmRiscvToggles {
+    pub fn sanitize(&mut self, _action: &Action) {}
+}
+
+impl fmt::Display for LlvmRiscvToggles {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let flags = self
+            .iter()
+            .map(|(field_name, field_value)| {
+                if field_value.is::<ToggleOpt>() {
+                    let value: ToggleOpt = *field_value.downcast_ref().unwrap();
+                    let arg_name = field_name.replace('_', "-");
+                    match value {
+                        ToggleOpt::Hidden => "".to_string(),
+                        ToggleOpt::Off => format!("-{}no-{}", &arg_name[0..1], &arg_name[1..]),
+                        ToggleOpt::On => format!("-{}", arg_name),
+                    }
+                } else if field_value.is::<GhostOpt>() {
+                    let value: GhostOpt = *field_value.downcast_ref().unwrap();
+                    let arg_name = field_name.replace('_', "-");
+                    match value {
+                        GhostOpt::Hidden => "".to_string(),
+                        GhostOpt::On => format!("-{}", arg_name),
+                    }
+                } else if field_value.is::<Option<TuneOpt>>() {
+                    let value: Option<TuneOpt> = *field_value.downcast_ref().unwrap();
+                    if let Some(value) = value {
+                        let tune = format!("{:?}", value).replace('_', "-");
+                        format!("-mtune={tune}")
+                    } else {
+                        "".to_string()
+                    }
+                } else if field_value.is::<Option<CpuOpt>>() {
+                    let value: Option<CpuOpt> = *field_value.downcast_ref().unwrap();
+                    if let Some(value) = value {
+                        let cpu = format!("{:?}", value).replace('_', "-");
+                        format!("-mcpu={cpu}")
+                    } else {
+                        "".to_string()
+                    }
+                } else if field_value.is::<Option<VectorRegisterLengths>>() {
+                    let value: Option<VectorRegisterLengths> = *field_value.downcast_ref().unwrap();
+                    if let Some(value) = value {
+                        let cpu = format!("{:?}", value).replace('_', "-");
+                        format!("-mrvv-vector-bits={cpu}")
+                    } else {
+                        "".to_string()
+                    }
+                } else {
+                    panic!("Unknown datatype for field: {}", field_name)
+                }
+            })
+            .collect::<Vec<_>>();
 
         write!(f, "{}", flags.join(" "))
     }

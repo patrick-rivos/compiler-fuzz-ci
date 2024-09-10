@@ -1,0 +1,24 @@
+!Run
+  generator:
+    !Yarpgen
+      path: "/scratch/tc-testing/compiler-fuzz-ci/build-yarpgen/yarpgen"
+  fast_compiler:
+    path: "/usr/bin/gcc"
+    architecture: X86
+    arguments:
+      !Fixed "-O1"
+    runner:
+      !Native
+  slow_compiler:
+    path: "/scratch/tc-testing/tc-compiler-fuzz-trunk/build-gcv/bin/clang"
+    architecture: Riscv
+    arguments:
+      !Generated
+        compiler: Llvm
+        flag_set: MarchAndBasicFlags
+    runner:
+      !Qemu
+        rv32path: "/scratch/tc-testing/tc-compiler-fuzz-trunk/build-gcv/bin/qemu-riscv32"
+        rv64path: "/scratch/tc-testing/tc-compiler-fuzz-trunk/build-gcv/bin/qemu-riscv64"
+        cpu_flags:
+          !Generated "/scratch/tc-testing/tc-compiler-fuzz-trunk/scripts/march-to-cpu-opt"

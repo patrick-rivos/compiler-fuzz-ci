@@ -1,9 +1,0 @@
-[package]
-name = "compiler-fuzz-ci"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-anyhow = "1.0.82"
-argh = "0.1.12"
-xshell = "0.2.6"

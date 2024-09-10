@@ -2,22 +2,87 @@ use arbitrary::Arbitrary;
 use std::fmt;
 use struct_iterable::Iterable;
 
-use crate::{GhostOpt, ToggleOpt};
+use crate::{Action, GhostOpt, ToggleOpt};
 
 #[derive(Arbitrary, Debug, Iterable, Clone)]
-pub struct GccFlags {
-    pub toggles: GccToggles,
+pub struct BasicGccFlags {
+    pub toggles: BasicGccToggles,
     pub riscv_toggles: GccRiscvToggles,
 }
 
-impl GccFlags {
-    pub fn sanitize(&mut self) {
-        self.toggles.sanitize();
-        self.riscv_toggles.sanitize();
+impl BasicGccFlags {
+    pub fn sanitize(&mut self, action: &Action) {
+        self.toggles.sanitize(action);
+        self.riscv_toggles.sanitize(action);
     }
 }
 
-impl fmt::Display for GccFlags {
+impl fmt::Display for BasicGccFlags {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{} {}", self.toggles, self.riscv_toggles)
+    }
+}
+
+#[allow(non_camel_case_types, non_snake_case)]
+#[derive(Arbitrary, Debug, Iterable, Clone)]
+pub struct BasicGccToggles {
+    flto: GhostOpt,
+    pub static_opt: GhostOpt,
+}
+
+impl BasicGccToggles {
+    pub fn sanitize(&mut self, _action: &Action) {}
+}
+
+impl fmt::Display for BasicGccToggles {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let flags = self
+            .iter()
+            .map(|(field_name, field_value)| {
+                if field_value.is::<ToggleOpt>() {
+                    let value: ToggleOpt = *field_value.downcast_ref().unwrap();
+                    let arg_name = field_name.replace('_', "-");
+                    match value {
+                        ToggleOpt::Hidden => "".to_string(),
+                        ToggleOpt::Off => format!("-{}no-{}", &arg_name[0..1], &arg_name[1..]),
+                        ToggleOpt::On => format!("-{}", arg_name),
+                    }
+                } else if field_value.is::<GhostOpt>() {
+                    let value: GhostOpt = *field_value.downcast_ref().unwrap();
+                    let arg_name = field_name.replace('_', "-");
+                    let arg_name = if arg_name == "static-opt" {
+                        "static".to_string()
+                    } else {
+                        arg_name
+                    };
+                    match value {
+                        GhostOpt::Hidden => "".to_string(),
+                        GhostOpt::On => format!("-{}", arg_name),
+                    }
+                } else {
+                    panic!("Unknown datatype for field: {}", field_name)
+                }
+            })
+            .collect::<Vec<_>>();
+
+        write!(f, "{}", flags.join(" "))
+    }
+}
+
+#[derive(Arbitrary, Debug, Iterable, Clone)]
+pub struct AllGccFlags {
+    pub toggles: AllGccToggles,
+    pub riscv_toggles: GccRiscvToggles,
+}
+
+impl AllGccFlags {
+    pub fn sanitize(&mut self, action: &Action) {
+        self.toggles.sanitize(action);
+        self.riscv_toggles.sanitize(action);
+    }
+}
+
+impl fmt::Display for AllGccFlags {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{} {}", self.toggles, self.riscv_toggles)
     }
@@ -25,7 +90,7 @@ impl fmt::Display for GccFlags {
 
 #[allow(non_camel_case_types)]
 #[derive(Arbitrary, Debug, Iterable, Clone)]
-pub struct GccToggles {
+pub struct AllGccToggles {
     // Optimization Flags
     faggressive_loop_optimizations: ToggleOpt,
     fallocation_dce: ToggleOpt,
@@ -301,8 +366,8 @@ pub struct GccToggles {
     gtoggle: ToggleOpt,
 }
 
-impl GccToggles {
-    pub fn sanitize(&mut self) {
+impl AllGccToggles {
+    pub fn sanitize(&mut self, _action: &Action) {
         self.ftoplevel_reorder = if self.funit_at_a_time == ToggleOpt::On {
             self.ftoplevel_reorder
         } else {
@@ -328,10 +393,18 @@ impl GccToggles {
         } else {
             self.gbtf
         };
+
+        // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114671
+        // if self.fvar_tracking == ToggleOpt::On
+        if self.gas_loc_support == ToggleOpt::On
+        //     && self.ggdb == GhostOpt::On
+        {
+            self.gas_loc_support = ToggleOpt::Hidden
+        }
     }
 }
 
-impl fmt::Display for GccToggles {
+impl fmt::Display for AllGccToggles {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let flags = self
             .iter()
@@ -381,10 +454,83 @@ pub struct GccRiscvToggles {
     msave_restore: ToggleOpt,
     mshorten_memrefs: ToggleOpt,
     mstrict_align: ToggleOpt,
+    mtune: Option<TuneOpt>,
+    mcpu: Option<CpuOpt>,
+    mrvv_max_lmul: Option<Lmul>,
+    mrvv_vector_bits: Option<VectorRegisterLengths>,
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Arbitrary, Debug, Clone, Copy)]
+pub enum Lmul {
+    dynamic,
+    m1,
+    m2,
+    m4,
+    m8,
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Arbitrary, Debug, Clone, Copy)]
+pub enum VectorRegisterLengths {
+    scalable,
+    zvl,
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Arbitrary, Debug, Clone, Copy)]
+pub enum TuneOpt {
+    rocket,
+    sifive_3_series,
+    sifive_5_series,
+    sifive_7_series,
+    sifive_p400_series,
+    sifive_p600_series,
+    thead_c906,
+    generic_ooo,
+    size,
+    sifive_e20,
+    sifive_e21,
+    sifive_e24,
+    sifive_e31,
+    sifive_e34,
+    sifive_e76,
+    sifive_s21,
+    sifive_s51,
+    sifive_s54,
+    sifive_s76,
+    sifive_u54,
+    sifive_u74,
+    sifive_x280,
+    sifive_p450,
+    sifive_p670,
+    //     xiangshan_nanhu, // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114442
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Arbitrary, Debug, Clone, Copy)]
+pub enum CpuOpt {
+    sifive_e20,
+    sifive_e21,
+    sifive_e24,
+    sifive_e31,
+    sifive_e34,
+    sifive_e76,
+    sifive_s21,
+    sifive_s51,
+    sifive_s54,
+    sifive_s76,
+    sifive_u54,
+    sifive_u74,
+    sifive_x280,
+    sifive_p450,
+    sifive_p670,
+    thead_c906,
+    //     xiangshan_nanhu, // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114442
 }
 
 impl GccRiscvToggles {
-    pub fn sanitize(&mut self) {}
+    pub fn sanitize(&mut self, _action: &Action) {}
 }
 
 impl fmt::Display for GccRiscvToggles {
@@ -406,6 +552,38 @@ impl fmt::Display for GccRiscvToggles {
                     match value {
                         GhostOpt::Hidden => "".to_string(),
                         GhostOpt::On => format!("-{}", arg_name),
+                    }
+                } else if field_value.is::<Option<TuneOpt>>() {
+                    let value: Option<TuneOpt> = *field_value.downcast_ref().unwrap();
+                    if let Some(value) = value {
+                        let tune = format!("{:?}", value).replace('_', "-");
+                        format!("-mtune={tune}")
+                    } else {
+                        "".to_string()
+                    }
+                } else if field_value.is::<Option<CpuOpt>>() {
+                    let value: Option<CpuOpt> = *field_value.downcast_ref().unwrap();
+                    if let Some(value) = value {
+                        let cpu = format!("{:?}", value).replace('_', "-");
+                        format!("-mcpu={cpu}")
+                    } else {
+                        "".to_string()
+                    }
+                } else if field_value.is::<Option<Lmul>>() {
+                    let value: Option<Lmul> = *field_value.downcast_ref().unwrap();
+                    if let Some(value) = value {
+                        let cpu = format!("{:?}", value).replace('_', "-");
+                        format!("-mrvv-max-lmul={cpu}")
+                    } else {
+                        "".to_string()
+                    }
+                } else if field_value.is::<Option<VectorRegisterLengths>>() {
+                    let value: Option<VectorRegisterLengths> = *field_value.downcast_ref().unwrap();
+                    if let Some(value) = value {
+                        let cpu = format!("{:?}", value).replace('_', "-");
+                        format!("-mrvv-vector-bits={cpu}")
+                    } else {
+                        "".to_string()
                     }
                 } else {
                     panic!("Unknown datatype for field: {}", field_name)
