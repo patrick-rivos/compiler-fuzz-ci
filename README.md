@@ -164,6 +164,18 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114668
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114733
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114734
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=115336
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=115669
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=115703
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116039
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116059
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116085
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116149
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116202
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116278
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116318
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116544
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116715
 ### ICEs:
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112481
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112535
@@ -187,15 +199,31 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114196
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114197
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114198
-1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114386
-1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114749
-### Slow Compile
-1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114261
-### Compiler Flags Fuzzer
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114314
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114386
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114608
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114671
-
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114749
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114916
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=115142
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=115143
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=115495
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=115959
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116033
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116035
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116036
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116131
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116134
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116240
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116280
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116282
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116283
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116296
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116351
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116655
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116720
+### Slow Compile
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114261
 
 ## LLVM
 ### Runtime fails:
