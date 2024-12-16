@@ -1,6 +1,8 @@
-# docker build .
-# docker build . -q > docker_img.txt
+# docker build . --build-arg GCC_BRANCH=releases/gcc-14
+# docker build . --build-arg GCC_BRANCH=releases/gcc-14 -q > docker_img.txt
 # docker run
+
+ARG GCC_BRANCH=master
 
 FROM ubuntu:22.04 as build
 RUN apt update
@@ -51,7 +53,7 @@ RUN git submodule update --init gdb
 WORKDIR /compiler-fuzz-ci/riscv-gnu-toolchain/gdb
 RUN git checkout e53a8e
 WORKDIR /compiler-fuzz-ci/riscv-gnu-toolchain/gcc
-RUN git checkout master
+RUN git checkout $GCC_BRANCH
 WORKDIR /riscv-gnu-toolchain-build
 RUN apt install libgmp-dev texinfo bison flex -y
 RUN nice -n 15 make linux -j $(nproc)

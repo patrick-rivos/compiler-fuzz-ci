@@ -71,4 +71,35 @@ jobs:
 
       - name: Build docker image
         run: |
-          docker buildx build . --tag ghcr.io/patrick-rivos/compiler-fuzz-ci:latest --platform linux/amd64,linux/arm64/v8 --push --no-cache
+          docker buildx build . --build-arg GCC_BRANCH=master --tag ghcr.io/patrick-rivos/compiler-fuzz-ci:latest --platform linux/amd64,linux/arm64/v8 --push --no-cache
+
+  gcc-14-csmith:
+    runs-on: [self-hosted, buildx]
+    timeout-minutes: 1440 # 24 hours
+
+    steps:
+      - name: 'Cleanup build folder'
+        working-directory: ./
+        run: |
+          ls -la ./
+          rm -rf ./* || true
+          rm -rf ./.??* || true
+          ls -la ./
+
+      - uses: actions/checkout@v3
+
+      - name: Setup env
+        uses: ./.github/actions/common/setup-env
+        with:
+          free_up_space: true
+
+      - name: Login to registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Build docker image
+        run: |
+          docker buildx build . --build-arg GCC_BRANCH=releases/gcc-14 --tag ghcr.io/patrick-rivos/compiler-fuzz-ci:latest-gcc-14 --platform linux/amd64,linux/arm64/v8 --push --no-cache
