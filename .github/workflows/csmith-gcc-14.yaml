@@ -1,4 +1,4 @@
-name: csmith-llvm
+name: csmith-gcc-14
 
 # Build a random riscv config
 
@@ -11,7 +11,7 @@ on:
       - main
 
 jobs:
-  csmith-llvm:
+  csmith-gcc:
     runs-on: [self-hosted, fuzz]
     timeout-minutes: 2880 # 48 hours
 
@@ -38,7 +38,7 @@ jobs:
 
       - name: Pull latest image
         run: |
-          docker pull ghcr.io/patrick-rivos/compiler-fuzz-ci:latest
+          docker pull ghcr.io/patrick-rivos/compiler-fuzz-ci:latest-gcc-14
 
       # 12 hr timeout 43200 seconds
       # Odd tmp-{} is rv64gcv
@@ -47,7 +47,7 @@ jobs:
         run: |
           mkdir out
           chmod -R 777 out
-          docker run -v $(pwd)/out:/compiler-fuzz-ci/csmith-discoveries ghcr.io/patrick-rivos/compiler-fuzz-ci:latest sh -c "nice -n 15 timeout 43200 parallel --ungroup --link \"COMPILER=llvm RANDOM_GENERATOR=csmith ./scripts/fuzz-qemu.sh tmp-{1} {2}\" ::: $(seq 1 $(nproc) | tr '\n' ' ') :::  \"$(./scripts/random-compiler-flags-to-fuzz.sh $(nproc)) -fuse-ld=lld\" || true && zip -r discoveries.zip ./csmith-discoveries && cp discoveries.zip out"
+          docker run -v $(pwd)/out:/compiler-fuzz-ci/csmith-discoveries ghcr.io/patrick-rivos/compiler-fuzz-ci:latest-gcc-14 sh -c "nice -n 15 timeout 43200 parallel --ungroup --link \"COMPILER=gcc RANDOM_GENERATOR=csmith ./scripts/fuzz-qemu.sh tmp-{1} {2}\" ::: $(seq 1 $(nproc) | tr '\n' ' ') :::  \"$(./scripts/random-compiler-flags-to-fuzz.sh $(nproc))\" || true && zip -r discoveries.zip ./csmith-discoveries && cp discoveries.zip out"
 
       - name: Zip results
         run: |
