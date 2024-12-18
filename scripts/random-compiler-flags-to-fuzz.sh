@@ -28,14 +28,17 @@ case $(( RANDOM % 2 )) in
 esac
 printf -- " "
 
-case $(( RANDOM % 5 )) in
-0) printf -- "" ;;
-1) printf -- "-mrvv-max-lmul=dynamic" ;;
-2) printf -- "-mrvv-max-lmul=m1" ;;
-3) printf -- "-mrvv-max-lmul=m2" ;;
-4) printf -- "-mrvv-max-lmul=m8" ;;
-esac
-printf -- " "
+if [ -z "$2" ]
+then
+  case $(( RANDOM % 5 )) in
+  0) printf -- "" ;;
+  1) printf -- "-mrvv-max-lmul=dynamic" ;;
+  2) printf -- "-mrvv-max-lmul=m1" ;;
+  3) printf -- "-mrvv-max-lmul=m2" ;;
+  4) printf -- "-mrvv-max-lmul=m8" ;;
+  esac
+  printf -- " "
+fi
 
 printf -- "-O3 "
 

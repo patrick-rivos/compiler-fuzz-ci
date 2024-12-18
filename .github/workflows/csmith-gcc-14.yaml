@@ -47,7 +47,7 @@ jobs:
         run: |
           mkdir out
           chmod -R 777 out
-          docker run -v $(pwd)/out:/compiler-fuzz-ci/csmith-discoveries ghcr.io/patrick-rivos/compiler-fuzz-ci:latest-gcc-14 sh -c "nice -n 15 timeout 43200 parallel --ungroup --link \"COMPILER=gcc RANDOM_GENERATOR=csmith ./scripts/fuzz-qemu.sh tmp-{1} {2}\" ::: $(seq 1 $(nproc) | tr '\n' ' ') :::  \"$(./scripts/random-compiler-flags-to-fuzz.sh $(nproc))\" || true && zip -r discoveries.zip ./csmith-discoveries && cp discoveries.zip out"
+          docker run -v $(pwd)/out:/compiler-fuzz-ci/csmith-discoveries ghcr.io/patrick-rivos/compiler-fuzz-ci:latest-gcc-14 sh -c "nice -n 15 timeout 43200 parallel --ungroup --link \"COMPILER=gcc RANDOM_GENERATOR=csmith ./scripts/fuzz-qemu.sh tmp-{1} {2}\" ::: $(seq 1 $(nproc) | tr '\n' ' ') :::  \"$(./scripts/random-compiler-flags-to-fuzz.sh $(nproc) gcc-14)\" || true && zip -r discoveries.zip ./csmith-discoveries && cp discoveries.zip out"
 
       - name: Zip results
         run: |
