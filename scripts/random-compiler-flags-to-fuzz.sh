@@ -2,11 +2,11 @@
 
 for i in $(seq 1 $1); do
 
-case $(( RANDOM % 3 )) in
+case $(( RANDOM % 4 )) in
 0) printf -- "-march=rv64gcv" ;;
 1) printf -- "-march=rv64gcv_zvl256b" ;;
 2) printf -- "-march=rv64gcv_zvl512b" ;;
-2) printf -- "-march=rv64gcv_zvl1024b" ;;
+3) printf -- "-march=rv64gcv_zvl1024b" ;;
 esac
 printf -- " "
 
