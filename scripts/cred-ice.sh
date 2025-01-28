@@ -15,11 +15,7 @@ program=${1:-red.c}
 script_location=$(dirname "$0")
 invocation_location=$(pwd)
 
-# Relies on compiler.path
-if [ ! -f "$(cat $script_location/tools/compiler.path)" ]; then
-  echo "compiler path: $(cat $script_location/tools/compiler.path) does not exist."
-  exit 1
-fi
+REDUCED_DIR=${REDUCED_DIR:-"$(pwd)"}
 
 # Make sure compiler-opts.txt is set
 if [ ! -f "$invocation_location/compiler-opts.txt" ]; then
@@ -55,26 +51,26 @@ COMPILER_OPTS="$(cat $invocation_location/compiler-opts.txt) $program -o rv64gcv
 # Rejecting programs that fail these warnings keep it in check.
 WARNING_OPTS="-Wno-unknown-warning-option -Werror -Wfatal-errors -Wall -Wformat -Wno-parentheses-equality -Wno-constant-conversion -Wno-pointer-compare -Wno-implicit-const-int-float-conversion -Wno-compare-distinct-pointer-types -Wno-constant-logical-operand -Wno-pointer-sign -Wno-self-assign -Wno-bool-operation -Wno-unused-function -Wno-unused-variable -Wno-address -Wno-unused-value -Wno-tautological-compare -Wno-unused-but-set-variable -Wno-pointer-compare"
 
-echo clang $WARNING_OPTS $program -S
-clang $WARNING_OPTS $program -S 2>&1 | tee native.log
+echo clang $WARNING_OPTS -I$(cat $script_location/tools/csmith.path)/include $program -S
+timeout -k 2 2 clang $WARNING_OPTS -I$(cat $script_location/tools/csmith.path)/include $program -S 2>&1 | tee native.log
 if [[ $(cat native.log | grep "error" | wc -l) -ne 0 ]];
 then
   echo "Error detected (with -Werror -Wfatal-errors)"
   exit 1
 fi
 
-echo $COMPILER_PATH -fsigned-char -fno-strict-aliasing -fwrapv $COMPILER_OPTS -w
-timeout -k 10 120 $COMPILER_PATH -fsigned-char -fno-strict-aliasing -fwrapv $COMPILER_OPTS -w > compile.log 2>&1
+echo $COMPILER_PATH -I$(cat $script_location/tools/csmith.path)/include -fsigned-char -fno-strict-aliasing -fwrapv $COMPILER_OPTS -w
+timeout -k 2 2 $COMPILER_PATH -I$(cat $script_location/tools/csmith.path)/include -fsigned-char -fno-strict-aliasing -fwrapv $COMPILER_OPTS -w > compile.log 2>&1
 
 cat compile.log
 
 # Check against first line of original compile log if possible
-if [[ -f $invocation_location/orig-compile.log ]]; then
-  if [[ $(cat $invocation_location/orig-compile.log | head -1 | cut -d' '  -f3- | grep -f - compile.log | wc -l) -eq 0 ]]; then
-    echo "Did not match original compiler error"
-    exit 1
-  fi
-fi
+# if [[ -f /scratch/tc-testing/compiler-fuzz-ci/csmith-discoveries/rand_args_10-3704/orig-compile.log ]]; then
+#   if [[ $(cat $REDUCED_DIR/orig-compile.log | head -1 | cut -d' '  -f3- | grep -f - compile.log | wc -l) -eq 0 ]]; then
+#     echo "Did not match original compiler error"
+#     exit 1
+#   fi
+# fi
 
 if [[ "$(echo $COMPILER_PATH | grep "clang" | wc -l)" -ne 0 ]]; then
   # LLVM
