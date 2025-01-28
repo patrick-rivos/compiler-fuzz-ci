@@ -55,14 +55,13 @@ EXIT_CODE_NATIVE=0
 CLANG_WARNING_CHECK=${CLANG_WARNING_CHECK:-true}
 CLANG_RUN_CHECK=${CLANG_RUN_CHECK:-true}
 SCRIPTS=$(cat $script_location/tools/scripts.path)
-COMPILER=$(cat $script_location/tools/compiler.path)
 COMPILER_1_OPTS="$(cat $invocation_location/compiler-opts.txt) $program -o user-config.out -fsigned-char -fno-strict-aliasing -fwrapv"
 COMPILER_2_OPTS="-O1 $program -o native.out -fno-strict-aliasing -fwrapv"
 # These warnings help prevent creduce from introducing undefined behavior.
 # Creduce will gladly read beyond the bounds of an array or lots of other stuff.
 # Rejecting programs that fail these warnings keep it in check.
 WARNING_OPTS="-Wno-unknown-warning-option -Werror -Wfatal-errors -Wall -Wformat -Wno-int-in-bool-context -Wno-dangling-pointer -Wno-compare-distinct-pointer-types -Wno-overflow -Wuninitialized -Warray-bounds -Wreturn-type -Wno-unused-function -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-value -Wno-address -Wno-bool-compare -Wno-pointer-sign -Wno-bool-operation -Wno-tautological-compare -Wno-self-assign -Wno-implicit-const-int-float-conversion -Wno-constant-conversion -Wno-unused-value -Wno-tautological-constant-out-of-range-compare -Wno-constant-logical-operand -Wno-parentheses-equality -Wno-pointer-sign"
-QEMU=$(cat $script_location/tools/qemu.path)
+QEMU=$(dirname $(cat $script_location/tools/qemu.path))/qemu-riscv64
 
 if [[ "$CLANG_WARNING_CHECK" = true ]];
 then
@@ -77,8 +76,8 @@ then
   fi
 fi
 
-echo $COMPILER $COMPILER_1_OPTS $WARNING_OPTS
-$COMPILER $COMPILER_1_OPTS $WARNING_OPTS 2> compile-user-opts.log
+echo $COMPILER_PATH $COMPILER_1_OPTS $WARNING_OPTS
+timeout --verbose -k 1 10 $COMPILER_PATH $COMPILER_1_OPTS $WARNING_OPTS 2> compile-user-opts.log
 cat compile-user-opts.log
 if [[ $(cat compile-user-opts.log | grep "error" | wc -l) -ne 0 ]];
 then
@@ -88,7 +87,7 @@ fi
 
 # Ignore warnings from the native compiler
 echo gcc $COMPILER_2_OPTS -w
-gcc $COMPILER_2_OPTS -w 2> compile-native.log
+timeout --verbose -k 1 10 gcc $COMPILER_2_OPTS -fsigned-char -fno-strict-aliasing  -w 2> compile-native.log
 cat compile-native.log
 
 echo "Running QEMU"
@@ -121,8 +120,8 @@ if [[ "$CLANG_RUN_CHECK" = true ]];
 then
   echo Checking for sanitizer errors with clang.
 
-  echo clang -fsanitize=undefined -fsanitize=memory $program -w -o clang-sanitize.out
-  clang -fsanitize=undefined -fsanitize=memory $program -w -o clang-sanitize.out 2> clang-compile.log
+  echo clang-17 -fsanitize=undefined $program -w -o clang-sanitize.out -fsigned-char -fno-strict-aliasing -fwrapv
+  clang -fsanitize=undefined $program -w -o clang-sanitize.out -fsigned-char -fno-strict-aliasing -fwrapv 2> clang-compile.log
   cat clang-compile.log
 
   echo timeout --verbose -k 0.1 20 ./clang-sanitize.out
@@ -131,7 +130,15 @@ then
   UBSAN_OPTIONS=suppressions=$script_location/ub-ignore.supp timeout --verbose -k 0.1 20 ./clang-sanitize.out > clang-sanitizer.log 2>&1
   if [[ "$?" -ne 0 || $(cat clang-sanitizer.log | grep "runtime error" | wc -l) -ne 0 ]];
   then
-    echo "Runtime error for sanitizer"
+    echo "Runtime error for ub sanitizer"
+    exit 1
+  fi
+
+  gcc -fsanitize=address $program -w -o gcc-sanitize.out -fsigned-char -fno-strict-aliasing -fwrapv 2> gcc-compile.log
+  UBSAN_OPTIONS=suppressions=$script_location/ub-ignore.supp timeout --verbose -k 0.1 20 ./gcc-sanitize.out > gcc-sanitizer.log 2>&1
+  if [[ $(cat gcc-sanitizer.log | grep "ERROR" | wc -l) -ne 0 ]];
+  then
+    echo "Runtime error for address sanitizer"
     exit 1
   fi
 fi
