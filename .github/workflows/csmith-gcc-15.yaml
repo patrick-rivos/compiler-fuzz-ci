@@ -4,8 +4,8 @@ name: csmith-gcc-15
 
 on:
   schedule:
-    # Run every hour every day
-    - cron: 0 * * * *
+    # Run twice every day
+    - cron: 0 0,12 * * *
   workflow_dispatch:
     branches:
       - main
