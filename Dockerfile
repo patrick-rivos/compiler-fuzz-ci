@@ -46,14 +46,15 @@ RUN echo /compiler-fuzz-ci/riscv-gnu-toolchain/scripts > /compiler-fuzz-ci/scrip
 RUN echo /riscv-gnu-toolchain-build/bin/qemu-riscv64 > /compiler-fuzz-ci/scripts/tools/qemu.path
 # Build gcc
 WORKDIR /compiler-fuzz-ci/riscv-gnu-toolchain
-RUN git submodule update --depth 1 --init gcc
+RUN git submodule update --init gcc
 RUN git submodule update --depth 1 --init binutils
 RUN git submodule update --depth 1 --init glibc
 RUN git submodule update --init gdb
 WORKDIR /compiler-fuzz-ci/riscv-gnu-toolchain/gdb
 RUN git checkout e53a8e
 WORKDIR /compiler-fuzz-ci/riscv-gnu-toolchain/gcc
-RUN git checkout $GCC_BRANCH
+RUN git fetch
+RUN git checkout origin/$GCC_BRANCH
 WORKDIR /riscv-gnu-toolchain-build
 RUN apt install libgmp-dev texinfo bison flex -y
 RUN nice -n 15 make linux -j $(nproc)
