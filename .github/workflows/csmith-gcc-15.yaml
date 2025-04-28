@@ -1,0 +1,62 @@
+name: csmith-gcc-15
+
+# Build a random riscv config
+
+on:
+  schedule:
+    # Run every hour every day
+    - cron: 0 * * * *
+  workflow_dispatch:
+    branches:
+      - main
+
+jobs:
+  csmith-gcc:
+    runs-on: [self-hosted, fuzz]
+    timeout-minutes: 2880 # 48 hours
+
+    steps:
+      - name: 'Cleanup build folder'
+        working-directory: ./
+        run: |
+          ls -la ./
+          sudo rm -rf ./* || true
+          sudo rm -rf ./.??* || true
+          ls -la ./
+
+      - uses: actions/checkout@v3
+
+      - name: Setup env
+        uses: ./.github/actions/common/setup-env
+        with:
+          free_up_space: true
+
+      # Clear docker cache so we get tip-of-tree gcc
+      - name: Clear docker cache
+        run: |
+          docker system prune -af
+
+      - name: Pull latest image
+        run: |
+          docker pull ghcr.io/patrick-rivos/compiler-fuzz-ci:latest-gcc-15
+
+      # 12 hr timeout 43200 seconds
+      # Odd tmp-{} is rv64gcv
+      # Even tmp-{} is rv64gcv_zvl256b
+      - name: Run fuzzer on rv64gcv
+        run: |
+          mkdir out
+          chmod -R 777 out
+          docker run -v $(pwd)/out:/compiler-fuzz-ci/csmith-discoveries ghcr.io/patrick-rivos/compiler-fuzz-ci:latest-gcc-15 sh -c "nice -n 15 timeout 43200 parallel --ungroup --link \"COMPILER=gcc RANDOM_GENERATOR=csmith ./scripts/fuzz-qemu.sh tmp-{1} {2}\" ::: $(seq 1 $(nproc) | tr '\n' ' ') :::  \"$(./scripts/random-compiler-flags-to-fuzz.sh $(nproc) gcc-15)\" || true && zip -r discoveries.zip ./csmith-discoveries && cp discoveries.zip out"
+
+      - name: Zip results
+        run: |
+          zip -r discoveries.zip out
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: discoveries.zip
+          path: |
+            discoveries.zip
+          retention-days: 90
