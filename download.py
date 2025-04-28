@@ -85,7 +85,7 @@ def download_artifact(artifact_name: str, artifact_id: str, token: str, repo: st
 
 def extract_artifact(
     artifact_name: str, artifact_zip: str, outdir: str,
-    artifact_id: str
+    artifact_id: str, prefix: str,
 ):
     """
     Extracts a given artifact into the outdir.
@@ -101,7 +101,7 @@ def extract_artifact(
 
     shutil.move(
         './temp/second/out',
-        f'{outdir}/{artifact_id}'
+        f'{outdir}/{prefix}-{artifact_id}'
     )
 
 
@@ -110,20 +110,30 @@ def main():
 
     existing_artifacts: Set[str] = set(os.listdir(args.outdir))
 
-    artifact_ids = search_for_artifact(args.name, args.repo, args.token)
-    if artifact_ids is None:
-        raise ValueError(f"Could not find artifact {args.name} in {args.repo}")
+    prefixes = [
+        "gcc-14",
+        "gcc-15",
+        "gcc-master",
+        "gcc-arm",
+        "llvm-main",
+    ]
 
-    new_artifact_ids = [a_id for a_id in artifact_ids if a_id not in existing_artifacts]
+    for prefix in prefixes:
+        artifact_name = f"{prefixes}-{args.name}"
+        artifact_ids = search_for_artifact(artifact_name, args.repo, args.token)
+        if artifact_ids is None:
+            raise ValueError(f"Could not find artifact {artifact_name} in {args.repo}")
 
-    if len(new_artifact_ids) == 0:
-        print(f"No new artifacts found ({len(existing_artifacts)}/{len(artifact_ids)} in {args.outdir})")
+        new_artifact_ids = [a_id for a_id in artifact_ids if a_id not in existing_artifacts]
 
-    for artifact_id in new_artifact_ids:
-        print(f"Processing {artifact_id}")
-        artifact_zip = download_artifact(args.name, artifact_id, args.token, args.repo)
-        print(os.path.getsize(artifact_zip))
-        extract_artifact(args.name, artifact_zip, args.outdir, artifact_id)
+        if len(new_artifact_ids) == 0:
+            print(f"No new artifacts found ({len(existing_artifacts)}/{len(artifact_ids)} in {args.outdir})")
+
+        for artifact_id in new_artifact_ids:
+            print(f"Processing {artifact_id}")
+            artifact_zip = download_artifact(artifact_name, artifact_id, args.token, args.repo)
+            print(os.path.getsize(artifact_zip))
+            extract_artifact(artifact_name, artifact_zip, args.outdir, artifact_id, prefix)
 
 if __name__ == "__main__":
     main()
