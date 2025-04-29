@@ -5,7 +5,7 @@ name: yarpgen-gcc
 on:
   schedule:
     # Run every day
-    - cron: 0 0,6,12,18 * * *
+    - cron: 0 0,12 * * *
   workflow_dispatch:
     branches:
       - main
