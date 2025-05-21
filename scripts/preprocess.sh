@@ -34,7 +34,7 @@ $(cat $script_location/tools/gcc.path) -I$(cat $script_location/tools/csmith.pat
 # Remove __attribute__ ((__malloc__ (* lines since clang doesn't like them https://github.com/llvm/llvm-project/issues/53152
 # cat red.c | tac | sed '/__attribute__ ((__malloc__ (/d' | tac > temp.c && mv temp.c red.c
 cat red.c | tac | sed '/__attribute__ ((__malloc__ (/,/extern/d' | tac > temp.c && mv temp.c red.c
-cat red.c | tac | sed 's/__attribute__ ((__access__ (__write_only__.*/;/g' | tac > temp.c && mv temp.c red.c
+cat red.c | tac | sed 's/__attribute__ ((__access__ ([^)]*)))//g' | tac > temp.c && mv temp.c red.c
 
 # Remove typedef double _Float64 since GCC doesn't like it
 cat red.c | sed -E '/typedef.+_Float/d' > temp.c && mv temp.c red.c
