@@ -85,7 +85,7 @@ def download_artifact(artifact_name: str, artifact_id: str, token: str, repo: st
 
 def extract_artifact(
     artifact_name: str, artifact_zip: str, outdir: str,
-    artifact_id: str, prefix: str,
+    artifact_id: str, prefix: str = "",
 ):
     """
     Extracts a given artifact into the outdir.
@@ -99,10 +99,14 @@ def extract_artifact(
     with ZipFile(f"./temp/first/{artifact_name}", "r") as zf:
         zf.extractall(path="./temp/second/")
 
-    shutil.move(
-        './temp/second/out',
-        f'{outdir}/{prefix}-{artifact_id}'
-    )
+    try:
+        shutil.move(
+            './temp/second/out',
+            f'{outdir}/{prefix}-{artifact_id}'
+        )
+    except Exception as e:
+        print(f"Error moving outfile {e}. Skipping")
+        return
 
 
 def main():
@@ -111,15 +115,15 @@ def main():
     existing_artifacts: Set[str] = set(os.listdir(args.outdir))
 
     prefixes = [
-        "gcc-14",
+        # "gcc-14",
         "gcc-15",
         "gcc-master",
-        "gcc-arm",
+        # "gcc-arm",
         "llvm-main",
     ]
 
     for prefix in prefixes:
-        artifact_name = f"{prefixes}-{args.name}"
+        artifact_name = f"{prefix}-{args.name}"
         artifact_ids = search_for_artifact(artifact_name, args.repo, args.token)
         if artifact_ids is None:
             raise ValueError(f"Could not find artifact {artifact_name} in {args.repo}")
