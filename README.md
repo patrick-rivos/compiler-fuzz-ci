@@ -176,6 +176,17 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116318
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116544
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116715
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=118931
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=118950
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=119114
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=119115
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120242
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120297
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120356
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120522
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120550
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120688
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120930
 ### ICEs:
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112481
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112535
@@ -222,6 +233,11 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116351
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116655
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=116720
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120137
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120143
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120357
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120652
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120922
 ### Slow Compile
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114261
 
@@ -237,6 +253,14 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. [[RISC-V][SLP] Sign extension miscompile](https://github.com/llvm/llvm-project/issues/86763)
 1. [[SLP] Missing sign extension of demoted type before zero extension](https://github.com/llvm/llvm-project/issues/87011)
 1. [[RISC-V][SLPVectorizer] rv64gcv miscompile](https://github.com/llvm/llvm-project/issues/88834)
+1. [[RISC-V] Miscompile using rv64gcv](https://github.com/llvm/llvm-project/issues/126974)
+1. [[RISC-V] Miscompile on rv64gcv with -O[23]](https://github.com/llvm/llvm-project/issues/132071)
+1. [[RISC-V] Miscompile on rv64gcv with -O[23]](https://github.com/llvm/llvm-project/issues/133943)
+1. [[RISC-V] Miscompile on rv64gcv with -O3](https://github.com/llvm/llvm-project/issues/134126)
+1. [[RISC-V] Miscompile in rv64gcv with -O3 -flto](https://github.com/llvm/llvm-project/issues/134705)
+1. [[RISC-V] Miscompile on rv64gcv with -O[23]](https://github.com/llvm/llvm-project/issues/138923)
+1. [[RISC-V] Miscompile on -O3 with -flto](https://github.com/llvm/llvm-project/issues/141098)
+1. [[RISC-V] Miscompile on -O[1-3]](https://github.com/llvm/llvm-project/issues/142004)
 
 ### Internal errors:
 1. [RISCV64 backend segfault in RISC-V Merge Base Offset](https://github.com/llvm/llvm-project/issues/78679)
@@ -258,6 +282,14 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. [[CodeGen][RISC-V] Assertion `(!MMO->getSize().hasValue() || !getSize().hasValue() || MMO->getSize() == getSize()) && "Size mismatch!"' failed.](https://github.com/llvm/llvm-project/issues/88799)
 1. [[LoopVectorize] Assertion 'VecTy.SimpleTy != MVT::INVALID_SIMPLE_VALUE_TYPE && "Simple vector VT not representable by simple integer vector VT!"' failed.](https://github.com/llvm/llvm-project/issues/88802)
 1. [[LoopVectorize][VPlan] Found non-header PHI recipe in header - Assertion `verifyVPlanIsValid(*Plan) && "VPlan is invalid"' failed.](https://github.com/llvm/llvm-project/issues/88804)
+1. [[RISC-V] Assertion `Idx2 != UINT_MAX && Values.contains(Idx2) && "Expected both indices to be extracted already."' failed](https://github.com/llvm/llvm-project/issues/125269)
+1. [[RISC-V] LLVM ERROR: Invalid size request on a scalable vector](https://github.com/llvm/llvm-project/issues/125306)
+1. [[SLPVectorizer] Segmentation Fault using opt "-passes=lto<O3>"](https://github.com/llvm/llvm-project/issues/126581)
+1. [[RISC-V] RegisterCoalescer: Assertion `A.valno == B.valno && "Cannot overlap different values"' failed.](https://github.com/llvm/llvm-project/issues/134424)
+1. [[LoopVectorize] Assertion `isPowerOf2_32(End.getKnownMinValue()) && "Expected End to be a power of 2"' failed.](https://github.com/llvm/llvm-project/issues/134696)
+1. [[LoopVectorizer] Assertion `hasKnownScalarFactor(RHS) && "Expected RHS to be a known factor!"' failed.](https://github.com/llvm/llvm-project/issues/137024)
+1. [[SLPVectorizer] Instruction does not dominate all uses!](https://github.com/llvm/llvm-project/issues/141265)
+1. [[InstCombine] ICmp i1 X, C not simplified as expected. with opt "-passes=lto<O3>"](https://github.com/llvm/llvm-project/issues/142447)
 
 ### Compiler Flags Fuzzer
 1. [[Clang] Assertion isCurrentFileAST() && "dumping non-AST?" failed. with -module-file-info](https://github.com/llvm/llvm-project/issues/87852)
