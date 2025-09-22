@@ -1,0 +1,58 @@
+name: Update-README
+
+on:
+  push:
+    branches: ["main"]
+  schedule:
+    - cron: 0 0 * * *
+  workflow_dispatch:
+
+jobs:
+  update-fuzzer-finds:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup env
+        uses: ./.github/actions/common/setup-env
+        with:
+          free_up_space: false
+
+      - name: Bump pyopenssl and crypto
+        run: |
+          sudo apt remove python3-pip
+          wget https://bootstrap.pypa.io/get-pip.py
+          sudo python3 get-pip.py
+          pip install -U pyopenssl cryptography
+
+      - name: Pull and plot latest fuzzer data
+        run: |
+          pip install pygithub requests
+          cd dashboard
+          python fuzzer-plot.py
+
+      - name: zip results
+        run: |
+          zip -r fuzzer-find-reports.zip dashboard/*.csv
+
+      - name: upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dataframe-intermediates.zip
+          path: fuzzer-find-reports.zip
+          retention-days: 90
+
+      - name: Update readme
+        run: |
+          python dashboard/update-readme.py
+
+      - name: Commit new data/site
+        uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: 'CI: Update README'
+          file_pattern: 'dashboard/fuzzer-find-reports.csv README.md'
+

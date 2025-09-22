@@ -1,0 +1,230 @@
+Bug ID,Product,Comp,Assignee,Status,Resolution,Summary,Opened
+121695,gcc,tree-opt,pinskia@gcc.gnu.org,RESO,FIXE,"[16 Regression] RISC-V: ICE in ifcvt tree check: expected class 'type', have 'exceptional'",2025-08-27
+121523,gcc,tree-opt,unassigned@gcc.gnu.org,RESO,FIXE,"[16 Regression] RISC-V: ICE in apply_scale, at profile-count.h:1187 since r16-3065-geee51f9a4b6",2025-08-12
+120522,gcc,target,unassigned@gcc.gnu.org,NEW,---,[16 Regression] RISC-V: Miscompile at -O3 since r16-449-gd884e9c5c74,2025-06-03
+121072,gcc,tree-opt,unassigned@gcc.gnu.org,NEW,---,[16 Regression] RISC-V/aarch64 SVE: ICE verify_gimple failed incompatible types in 'PHI' argument 0,2025-07-14
+121592,gcc,target,rguenth@gcc.gnu.org,ASSI,---,[16 Regression] RISC-V: Miscompile at -O3 since r16-2788-gdf86ac52fcc,2025-08-18
+113009,gcc,target,unassigned@gcc.gnu.org,RESO,FIXE,[14] RISC-V: gcc.c-torture/unsorted/dump-noaddr.c flakey tests,2023-12-13
+121281,gcc,target,unassigned@gcc.gnu.org,UNCO,---,[15/16 Regression] RISC-V: Miscompile at -O3 since r15-7057-gd9d0eeea93d,2025-07-28
+120688,gcc,target,unassigned@gcc.gnu.org,NEW,---,[15/16 Regression] Miscompile at -O3 since r15-579-ga9251ab3c91,2025-06-17
+121073,gcc,target,rdapp@gcc.gnu.org,RESO,FIXE,[16 Regression] RISC-V: ICE during RTL pass: avlprop insn does not satisfy its constraints,2025-07-14
+121126,gcc,target,rguenth@gcc.gnu.org,RESO,FIXE,[16 Regression] RISC-V: Miscompile at -O[23] since r16-2159-g3bf2aa834e1,2025-07-16
+120297,gcc,target,rdapp.gcc@gmail.com,RESO,FIXE,[15/16 Regression] RISC-V: Miscompile at -O3,2025-05-15
+121075,gcc,target,unassigned@gcc.gnu.org,NEW,---,[16 Regression] RISC-V: ICE during GIMPLE pass: vect segmentation fault with -flto,2025-07-14
+120356,gcc,target,merzlyakovao@gcc.gnu.org,RESO,FIXE,[15 Regression] RISC-V: Miscompile at -O[23] since r15-6881-g7b815107f40,2025-05-19
+120930,gcc,target,rdapp@gcc.gnu.org,NEW,---,[16 Regression] RISC-V: Miscompile at -O[23] with zvl256b -mrvv-vector-bits=zvl since r16-1645-g309dbcea2ca,2025-07-02
+120242,gcc,rtl-opti,law@gcc.gnu.org,RESO,FIXE,[15 regression] RISC-V: Miscompile at -O[23] since r15-9239-g4d7a634f6d4,2025-05-12
+120813,gcc,rtl-opti,unassigned@gcc.gnu.org,RESO,DUPL,[15/16 Regression] RISC-V: Miscompile at -O[23] since r15-9239,2025-06-24
+120736,gcc,rtl-opti,unassigned@gcc.gnu.org,RESO,DUPL,[15/16 Regression] RISC-V: Miscompile at -O[23] since r15-5375-gbeec291225b,2025-06-20
+120627,gcc,rtl-opti,law@gcc.gnu.org,RESO,DUPL,[15/16 regression] RISC-V: Miscompile at -O[23] since r15-2186-g9d8ef2711df,2025-06-10
+120922,gcc,tree-opt,tnfchris@gcc.gnu.org,RESO,FIXE,[16 Regression] RISC-V: ICE during GIMPLE pass: vect in verify_range with -mrvv-max-lmul=m8,2025-07-01
+116686,gcc,target,unassigned@gcc.gnu.org,RESO,WORK,[15/16 Regression] RISC-V: gcc.target/riscv/rvv/autovec/pr114734.c failing with zvl1024b lmul2,2024-09-11
+120550,gcc,target,law@gcc.gnu.org,RESO,FIXE,[15 Regression] RISC-V: Miscompile at -O3 since r16-372-g064cac730f8,2025-06-04
+118595,gcc,target,rdapp.gcc@gmail.com,RESO,FIXE,[15/16 regression] RISC-V: gfortran/c-interop test execution failures on RVV zvl > 128b since r15-3228-g771256bcb9d,2025-01-21
+120651,gcc,target,rdapp.gcc@gmail.com,RESO,DUPL,[15/16 Regression] RISC-V: Miscompile at -O3 with -flto since r15-3228-g771256bcb9d,2025-06-13
+119944,gcc,target,unassigned@gcc.gnu.org,RESO,DUPL,"[16] RISC-V: g++.dg/torture/pr119610.C ""terminate called after throwing an instance of 'int'",2025-04-25
+113238,gcc,testsuit,unassigned@gcc.gnu.org,RESO,INVA,[14] RISC-V: gcc.dg vect-tsvc flakey test timeouts when under heavy workload,2024-01-04
+113035,gcc,target,unassigned@gcc.gnu.org,RESO,WONT,RISC-V: regression testsuite errors -mtune=sifive-7-series,2023-12-15
+112531,gcc,target,unassigned@gcc.gnu.org,RESO,WORK,[14] RISC-V: gcc.dg/unroll-8.c rtl-dump scan errors with --param=riscv-autovec-preference=scalable,2023-11-14
+113249,gcc,target,unassigned@gcc.gnu.org,RESO,WONT,RISC-V: regression testsuite errors -mtune=generic-ooo,2024-01-06
+120054,gcc,target,unassigned@gcc.gnu.org,RESO,FIXE,[16 regression] RISC-V: gcc.target/riscv/predef-19.c failing since r16-299-ga992164c289,2025-05-01
+120652,gcc,target,unassigned@gcc.gnu.org,RESO,FIXE,"[16 Regression] RISC-V: ICE in require, at machmode.h:323 with rv64gcv_zvl256b",2025-06-13
+120693,gcc,ipa,unassigned@gcc.gnu.org,RESO,DUPL,ICE: during GIMPLE pass: modref,2025-06-17
+120042,gcc,target,pinskia@gcc.gnu.org,RESO,FIXE,[16 Regression] RISC-V: stage1 fails to build with error: ‘CDI_DOMINATORS’ was not declared in this scope in tree-vectorizer.h,2025-04-30
+120357,gcc,tree-opt,rguenth@gcc.gnu.org,ASSI,---,"[14 Regression] ICE in vect ""error: definition in block 9 does not dominate use in block 3"" with early break",2025-05-19
+116273,gcc,rtl-opti,unassigned@gcc.gnu.org,NEW,---,"[14/15/16 regression] RISC-V: gcc.dg/long_branch.c flakey timeout, insn scheduling is slow",2024-08-07
+120143,gcc,tree-opt,rguenth@gcc.gnu.org,RESO,FIXE,[15 Regression] ICE with -fwhole-program on undefined extern var in verify_ssa since r15-7886-g2427793af1e545,2025-05-06
+120137,gcc,target,law@gcc.gnu.org,RESO,FIXE,[16 regression] RISC-V: ICE during RTL pass: vect_permconst,2025-05-06
+118950,gcc,tree-opt,unassigned@gcc.gnu.org,RESO,FIXE,[14 regression] RISC-V: rv64gcv runtime mismatch at -O3 since r14-4038-gb975c0dc3be,2025-02-20
+119361,gcc,target,unassigned@gcc.gnu.org,UNCO,---,RISC-V: x264 satd_4x4 stack spilling with mtune=generic-ooo for vls code but not on vla code,2025-03-19
+119942,gcc,target,unassigned@gcc.gnu.org,RESO,DUPL,[16 Regression] RISC-V: Segmentation fault in pr103953.exe,2025-04-25
+119865,gcc,target,law@gcc.gnu.org,RESO,FIXE,[16 regression] RISC-V: ICE in g++.target/riscv/mv(c)-symbols[1-5].C,2025-04-18
+118601,gcc,target,majin@gcc.gnu.org,RESO,FIXE,[15] RISC-V: unrecognizable insn ICE in xtheadvector/pr114194.c on 32bit targets,2025-01-22
+119672,gcc,rtl-opti,jakub@gcc.gnu.org,RESO,FIXE,"[15 regression] RISC-V: ICE during RTL pass: cse1 in as_a, at machmode.h:391",2025-04-07
+119598,gcc,target,unassigned@gcc.gnu.org,RESO,DUPL,[15 regression] RISC-V: pr119114.c -O3 -ftree-vectorize execution test since r15-9062-g70391e3958d,2025-04-02
+119114,gcc,target,unassigned@gcc.gnu.org,RESO,FIXE,[14/15 regression] RISC-V: miscompile at -O3 since r14-4077-g86451305d8b,2025-03-04
+119559,gcc,middle-e,burnus@gcc.gnu.org,RESO,FIXE,[15 regression] GOMP: ICE in modify_call_for_omp_dispatch,2025-03-31
+113076,gcc,target,unassigned@gcc.gnu.org,RESO,FIXE,[14] RISC-V: gfortran.dg/dec_io_1.f90 runtime error after r14-4972-g8aa47713701,2023-12-19
+119115,gcc,rtl-opti,unassigned@gcc.gnu.org,RESO,FIXE,[15 regression] RISC-V: miscompile at -O3 with zvl256b -fsigned-char -fwrapv since r15-1579-g792f97b44ff,2025-03-04
+119228,gcc,target,unassigned@gcc.gnu.org,RESO,DUPL,[15 regression] RISC-V: ICE in c-c++-common/attr-nonstring-6/14.c,2025-03-11
+118931,gcc,target,unassigned@gcc.gnu.org,RESO,FIXE,[15 Regression] RISC-V: rv64gcv miscompile at -O[23] since r15-3228-g771256bcb9d,2025-02-18
+118840,gcc,target,unassigned@gcc.gnu.org,UNCO,---,RISC-V: current rv64gcv testsuite failures as of r15-7464-g30a3a557a54,2025-02-11
+117991,gcc,target,matmal01@gcc.gnu.org,RESO,FIXE,[15 regression] RISC-V: g++/template/builtin-speculation-overloads[14].C assertion error since addition in r15-6042-g9ed094a817e,2024-12-11
+118119,gcc,target,unassigned@gcc.gnu.org,RESO,FIXE,[15 regression] RISC-V: gcc.c-torture/execute/va-arg-24.c zvl256b failure,2024-12-19
+118405,gcc,tree-opt,rguenth@gcc.gnu.org,RESO,FIXE,[15 regression] RISC-V: ICE in verify_gimple during GIMPLE pass vect,2025-01-10
+118363,gcc,target,unassigned@gcc.gnu.org,RESO,FIXE,[15 regression] RISC-V: excess errors in c-c++-common/gomp/dispatch-11.c with zvls > 128b,2025-01-08
+118036,gcc,target,rdapp@gcc.gnu.org,RESO,FIXE,[15 Regression] RISC-V: gcc.dg/vect/vect-alias-check-1[12].c abort,2024-12-13
+117906,gcc,target,unassigned@gcc.gnu.org,RESO,FIXE,[15 regression] RISC-V: gfortran.dg/sizeof_6.f90 -O1 timeout since r15-5897-g31250baf814,2024-12-04
+117970,gcc,c++,unassigned@gcc.gnu.org,RESO,FIXE,[15 regression] RISC-V: xtreme-header failed to read compiled module: Bad file data,2024-12-09
+116261,gcc,fortran,pault@gcc.gnu.org,RESO,FIXE,[15 regression] gfortran.dg/sizeof_6.f90 -O1 timeout since r15-2739-g4cb07a38233,2024-08-06
+116425,gcc,target,unassigned@gcc.gnu.org,UNCO,---,RISC-V missed optimization: vector lowering along lmul boundaries,2024-08-20
+117771,gcc,target,pinskia@gcc.gnu.org,RESO,FIXE,[15 Regression] RISC-V: stage1 fails to build using gcc-9.4 since r15-5603-gb3f1b9e2aa0,2024-11-25
+114175,gcc,target,unassigned@gcc.gnu.org,RESO,FIXE,[13/14] Execution test failures on gcc.dg/c23-stdarg-6.c on multiple targets,2024-02-29
+117413,gcc,libbackt,unassigned@gcc.gnu.org,RESO,DUPL,[15 regression] RISC-V: stage2 build failure with __builtin_prefetch,2024-11-02
+116959,gcc,target,unassigned@gcc.gnu.org,RESO,FIXE,[15 regression] RISC-V: more ICEs in compute_nregs_for_mode,2024-10-03
+116822,gcc,target,unassigned@gcc.gnu.org,RESO,FIXE,"[15 regression] RISC-V: ICE in compute_nregs_for_mode, at config/riscv/riscv-vector-costs.cc",2024-09-23
+117250,gcc,testsuit,unassigned@gcc.gnu.org,RESO,INVA,[15] RISC-V: gfortran.dg/unsigned_38.f90 Error: Operand of unary numeric operator '-' at (1) is UNSIGNED(4),2024-10-21
+117140,gcc,tree-opt,tnfchris@gcc.gnu.org,RESO,FIXE,[15 regression] RISC-V: ICE in initialize_flags_in_bb for rv32gcv,2024-10-14
+117177,gcc,c,unassigned@gcc.gnu.org,RESO,FIXE,[15 regression] RISC-V: Error when building glibc from source since r15-4377-gf9bac238840,2024-10-16
+115387,gcc,tree-opt,unassigned@gcc.gnu.org,RESO,FIXE,[15 regression] ICE in iovsprintf.c since r15-1081-ge14afbe2d1c,2024-06-07
+116820,gcc,tree-opt,unassigned@gcc.gnu.org,RESO,FIXE,[15 regression] RISC-V: ICE verify_ssa failed for c-c++-common/torture/pr101636.c since r15-3768-g4150bcd205e,2024-09-23
+116685,gcc,target,unassigned@gcc.gnu.org,UNCO,---,RISC-V: missed optimization on vector dot products,2024-09-11
+116536,gcc,testsuit,unassigned@gcc.gnu.org,RESO,DUPL,[15 Regression] gcc.dg/ipa/ipa-icf-38.c: error executing dg-final since r15-3254-g3f51f0dc88e,2024-08-29
+115862,gcc,rtl-opti,unassigned@gcc.gnu.org,RESO,FIXE,[15 Regression] RISC-V: ICE during RTL combine pass in malloc.c for zvl512b and zvl1024b,2024-07-10
+116303,gcc,target,unassigned@gcc.gnu.org,RESO,INVA,RISC-V: -mcpu doesn't populate .attribute arch string when directly invoking cc1,2024-08-08
+116247,gcc,libstdc+,redi@gcc.gnu.org,RESO,FIXE,[15 regression] RISC-V: shared_ptr_atomic.h: uintptr_t not declared in scope since r15-2655-g3a817a4a5a6,2024-08-05
+116255,gcc,fortran,unassigned@gcc.gnu.org,RESO,DUPL,[15 only] RISC-V: STOP 12 execution error on gfortran.dg/class_transformational_2.f90,2024-08-06
+113913,gcc,target,unassigned@gcc.gnu.org,RESO,FIXE,[14] RISC-V: suboptimal code gen for intrinsic vcreate,2024-02-13
+115741,gcc,target,rguenth@gcc.gnu.org,RESO,FIXE,"[15 Regression] RISC-V: ICE in vectorizable_load, at tree-vect-stmts.cc:11524",2024-07-01
+114197,gcc,middle-e,rguenth@gcc.gnu.org,RESO,FIXE,[14 regression] ICE in verify_dominators,2024-03-01
+115220,gcc,tree-opt,rguenth@gcc.gnu.org,RESO,FIXE,[15 Regression] RISC-V: newlib targets ICE during sink pass triggered in verify_ssa (since r15-815-g5b9b3bae33cae7?),2024-05-24
+115166,gcc,target,unassigned@gcc.gnu.org,UNCO,---,RISC-V: flakey relocation truncated to fit: R_RISCV_GPREL_I against `.LANCHOR1' in slp_run-2.c,2024-05-20
+114122,gcc,target,unassigned@gcc.gnu.org,UNCO,---,RISC-V: poor code generation in calling convention with vlen > 4096,2024-02-26
+113248,gcc,target,unassigned@gcc.gnu.org,RESO,FIXE,RISC-V: Invalid vsetvli fusion using -mtune=generic-ooo,2024-01-06
+113073,gcc,target,rguenth@gcc.gnu.org,RESO,FIXE,[14] RISC-V: segfault from out of bounds memory access in gcc.dg/torture/pr112736.c,2023-12-18
+111545,gcc,target,unassigned@gcc.gnu.org,RESO,FIXE,[14 Regression] RISC-V gfortran.dg/host_assoc_function_7.f09 Illegal instruction error,2023-09-22
+110951,gcc,testsuit,unassigned@gcc.gnu.org,RESO,INVA,[13/14] RISCV: rv32 newlib gcc.c-torture testsuite fails with xgcc: fatal error: Cannot find suitable multilib set for '-march=rv32imafdc_zicsr_zifencei'/'-mabi=ilp32d',2023-08-08
+110892,gcc,target,unassigned@gcc.gnu.org,RESO,FIXE,[14 Regression] Risc-V rvv testsuite failures caused by conditional move costing,2023-08-03
+116296,gcc ,ipa ,hubicka@gcc.gnu.org ,ASSI ,--- ,"[13/14/15/16 Regression] internal compiler error: in merge, at ipa-modref-tree.cc:176 at -O3 since r12-4227-g44b61586d8640b ",2024-08-08
+114665,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,WORK ,[14/15 only] RISC-V rv64gcv: miscompile at -O3 ,2024-04-09
+111428,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,WORK ,RISC-V vector: Flaky segfault in {min|max}val_char_{1|2}.f90 ,2023-09-15
+111298,gcc ,testsuit ,unassigned@gcc.gnu.org ,RESO ,INVA ,time-profiler-2.c flaky on glibc RISC-V with qemu ,2023-09-05
+114261,gcc ,rtl-opti ,unassigned@gcc.gnu.org ,UNCO ,--- ,[13/14/15/16 Regression] Scheduling takes excessive time (97%) since r13-5154-g733a1b777f1 ,2024-03-07
+116039,gcc ,rtl-opti ,law@gcc.gnu.org ,RESO ,FIXE ,[15 Regression] rv64gc miscompile at -O3 with -fno-strict-aliasing since r15-1901-g98914f9eba5 ,2024-07-22
+117483,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,"[15 Regression] ICE: in merge, at config/riscv/riscv-vsetvl.cc:2106 ",2024-11-07
+116036,gcc ,target ,rdapp@gcc.gnu.org ,RESO ,FIXE ,[14/15 only] RISCV: internal compiler error: in riscv_expand_mult_with_const_int with -march=rv64idv ,2024-07-22
+116111,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,RISC-V: 'd' extension allowed with -mabi=ilp32e ,2024-07-26
+116149,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,RISC-V: Miscompile at -O3 with zvl256b -mrvv-vector-bits=zvl ,2024-07-30
+116240,gcc ,target ,law@gcc.gnu.org ,RESO ,FIXE ,RISC-V: ICE during RTL pass: combine with -fwrapv -march=rv64imv_xtheadcondmov_xventanacondops at -O2 ,2024-08-05
+117682,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[15 Regression] rv64gcv_zvl256b miscompile since r15-3228-g771256bcb9d ,2024-11-19
+118154,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[15 Regression] RISC-V: Miscompile with -march=rv64gcv -O3 since r15-5117-g0b27a7dd050 ,2024-12-20
+116256,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[15 Regression] RISC-V: testsuite failures since late-combine-pass ,2024-08-06
+113281,gcc ,tree-opt ,rsandifo@gcc.gnu.org ,RESO ,FIXE ,[11 Regression] Latent wrong code due to vectorization of shift reduction and missing promotions since r9-1590 ,2024-01-08
+116740,gcc ,c++ ,simartin@gcc.gnu.org ,RESO ,FIXE ,"[12/13/14/15 Regression] ICE: in set_identifier_type_value_with_scope, at cp/name-lookup.cc:5098 ",2024-09-16
+115703,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[15 Regression] rv64gcv_zvl256b miscompile since r15-1579-g792f97b44ff ,2024-06-28
+118140,gcc ,tree-opt ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[14/15 Regression] ifcvt miscompiles program at -O3 since r14-5076-g01c18f58d37 for riscv and aarch64 (with SVE) ,2024-12-20
+111969,gcc ,testsuit ,unassigned@gcc.gnu.org ,RESO ,WORK ,RISC-V rv32gcv: 12 grouped flaky failures ,2023-10-24
+116720,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[13/14 Regression] RISC-V: Unrecognizable insn with xtheadmemidx on rv32 ,2024-09-15
+116059,gcc ,target ,rdapp@gcc.gnu.org ,RESO ,FIXE ,[14/15 Regression] Miscompile at -O2 since r14-6420-g85c5efcffed ,2024-07-23
+116351,gcc ,tree-opt ,unassigned@gcc.gnu.org ,RESO ,FIXE ,"RISC-V ICE: in get_len_load_store_mode, at optabs-tree.cc:664 ",2024-08-12
+117506,gcc ,rtl-opti ,jakub@gcc.gnu.org ,RESO ,FIXE ,"[15 Regression] ICE: in decompose, at wide-int.h:1049 with -O3 -funroll-loops ",2024-11-08
+115123,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[15 Regression] RISCV vector scan-assembler failures ,2024-05-16
+115669,gcc ,tree-opt ,rguenth@gcc.gnu.org ,RESO ,FIXE ,[12 Regression] rv64gcv/aarch64+sve -fwrapv miscompile since r15-1006-gd93353e6423 ,2024-06-26
+115375,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[15 Regression] RISCV scan failures since 2024-05-04 ,2024-06-06
+116715,gcc ,target ,law@gcc.gnu.org ,RESO ,FIXE ,RISC-V: Miscompile at -O2 with -march=rv64id_zbs ,2024-09-14
+118075,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[15 Regression] RISC-V: Miscompile at -O3 zvl 256 since r15-4746-g30435cc2610 ,2024-12-17
+118084,gcc ,middle-e ,law@gcc.gnu.org ,RESO ,FIXE ,"[15 Regression] RISC-V: ICE in emit_move_insn, at expr.cc:4635 ",2024-12-17
+116347,gcc ,target ,cmuellner@gcc.gnu.org ,RESO ,FIXE ,[13/14/15 only] RISC-V: Duplicate entries for -mtune in --target-help ,2024-08-12
+117990,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[15 regression] RISC-V: Miscompile at -O3 zvl 256 since r15-4746-g30435cc2610 ,2024-12-10
+117594,gcc ,target ,rguenth@gcc.gnu.org ,RESO ,FIXE ,[14 regression] RISC-V: Miscompile at -O3 since r15-4012-gba7632674a2 ,2024-11-14
+115336,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[15] rv64gcv_zvl256b miscompile at -O3 ,2024-06-04
+117567,gcc ,tree-opt ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[15 Regression] ICE: segfault during GIMPLE pass: vect ,2024-11-13
+117484,gcc ,tree-opt ,rguenth@gcc.gnu.org ,RESO ,FIXE ,[15 Regression] ICE: segfault during GIMPLE pass: vect ,2024-11-07
+117486,gcc ,tree-opt ,unassigned@gcc.gnu.org ,RESO ,DUPL ,"[15 Regression] ICE: in vect_build_slp_tree_2, at tree-vect-slp.cc:2027 ",2024-11-07
+116655,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,RISC-V: ICE with -mrvv-max-lmul=dynamic in compute_nregs_for_mode ,2024-09-09
+115373,gcc ,tree-opt ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[15 Regression] RISCV slp-cond-2-big-array.c slp-cond-2.c scan-tree-dump fails since r15-859-geaaa4b88038 ,2024-06-06
+115372,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[15 Regression] RISCV pr97428.c scan-tree-dump-times after r15-812-gc71886f2ca2 ,2024-06-06
+116721,gcc ,ipa ,unassigned@gcc.gnu.org ,RESO ,DUPL ,"[15 Regression] ICE: in merge, at ipa-modref-tree.cc:176 ",2024-09-15
+116131,gcc ,target ,cmuellner@gcc.gnu.org ,RESO ,FIXE ,[14/15 Regression] RISC-V: Unrecognizable insn with xtheadmemidx on rv32 ,2024-07-29
+116152,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,RISC-V: Proposed deprecation of LP64E abi ,2024-07-30
+116278,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[15] RISC-V: Miscompile at -O2 -fwrapv -fno-strict-aliasing ,2024-08-08
+115142,gcc ,target ,law@gcc.gnu.org ,RESO ,FIXE ,"[14 Regression] Unrecognizable insn in extract_insn, at recog.cc:2812 with -ftree-ter ",2024-05-17
+116544,gcc ,rtl-opti ,law@gcc.gnu.org ,RESO ,FIXE ,[15] RISC-V: Miscompile at -O3 ,2024-08-30
+115495,gcc ,middle-e ,unassigned@gcc.gnu.org ,RESO ,FIXE ,"[15 Regression] ICE in smallest_mode_for_size, at stor-layout.cc:356 during combine on RISC-V rv64gcv_zvl256b at -O3 since r15-1042-g68b0742a49d ",2024-06-14
+116282,gcc ,target ,law@gcc.gnu.org ,RESO ,FIXE ,[15 Regression] RISC-V rv64id_zba_zbkb ICE: could not split insn ,2024-08-08
+116280,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[15 Regression] RISC-V: expected mode RVVMF8QI for operand 2 of insn pred_vwsllrvvmf4hi but got mode RVVMF2SI ,2024-08-08
+116202,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,RISC-V: Miscompile at -O3 with zvl256b ,2024-08-02
+116318,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,INVA ,RISC-V: Miscompile at -O1 with -fwhole-program ,2024-08-09
+116283,gcc ,target ,law@gcc.gnu.org ,RESO ,FIXE ,[15 Regression] RISC-V rv64id_zbs ICE: unrecognizable insn ,2024-08-08
+115959,gcc ,tree-opt ,rguenth@gcc.gnu.org ,RESO ,FIXE ,[15 Regression] rv64gcv ICE: segfault during GIMPLE pass: vect ,2024-07-16
+116033,gcc ,target ,cmuellner@gcc.gnu.org ,RESO ,FIXE ,[14 only] RISC-V: -march=rv64gv_xtheadmemidx generates illegal vse8.v insn ,2024-07-22
+116204,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,INVA ,RISC-V: rv32 miscompile at -O0 ,2024-08-03
+116197,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,INVA ,"[14/15 only] RISC-V: zvkn does not imply ""v"" extension ",2024-08-02
+116150,gcc ,target ,unassigned@gcc.gnu.org ,UNCO ,--- ,RISC-V: Differences between GCC/LLVM ,2024-07-30
+116134,gcc ,middle-e ,pinskia@gcc.gnu.org ,RESO ,FIXE ,[15 Regression] ICE: 'verify_gimple' failed since r15-2106-g44fcc1ca11e7ea ,2024-07-29
+116085,gcc ,target ,law@gcc.gnu.org ,RESO ,FIXE ,[13/14/15 Regression] RISC-V: Miscompile at -O2 with zbb ,2024-07-25
+116035,gcc ,target ,cmuellner@gcc.gnu.org ,RESO ,FIXE ,[14/15 only] RISC-V: -march=rv64g_xtheadmemidx_zba generates illegal lwu insn ,2024-07-22
+114196,gcc ,middle-e ,rdapp@gcc.gnu.org ,RESO ,FIXE ,"[13 Regression] Fixed length vector ICE: in vect_peel_nonlinear_iv_init, at tree-vect-loop.cc:9454 ",2024-03-01
+114916,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[14/15] RISC-V rv64gcv_zvl256b: miscompile at -O3 with -mrvv-vector-bits=zvl -fwhole-program ,2024-05-01
+115143,gcc ,tree-opt ,pinskia@gcc.gnu.org ,RESO ,FIXE ,"[11 Regression] tree check: expected class 'type', have 'exceptional' (error_mark) in useless_type_conversion_p, at gimple-expr.cc:85 ",2024-05-17
+114027,gcc ,tree-opt ,rguenth@gcc.gnu.org ,RESO ,FIXE ,[11 Regression] miscompile at `-O3 -fno-vect-cost-model -msse4.2` ,2024-02-21
+114734,gcc ,target ,rguenth@gcc.gnu.org ,RESO ,FIXE ,[11 regression] RISC-V rv64gcv_zvl256b miscompile with -flto -O3 -mrvv-vector-bits=zvl since r8-6047-g65dd1346027bb5 ,2024-04-16
+113603,gcc ,tree-opt ,jakub@gcc.gnu.org ,RESO ,FIXE ,[12 Regression] ICE Segfault during GIMPLE pass: strlen at -O3 since r12-145 ,2024-01-25
+115441,gcc ,c ,unassigned@gcc.gnu.org ,RESO ,DUPL ,Pointer/integer mismatch in __atomic_fetch-* not covered by -Wint-conversion ,2024-06-11
+114485,gcc ,tree-opt ,rguenth@gcc.gnu.org ,RESO ,FIXE ,[13 Regression] Wrong code with -O3 -march=rv64gcv on riscv or `-O3 -march=armv9-a` for aarch64 ,2024-03-26
+114476,gcc ,tree-opt ,unassigned@gcc.gnu.org ,RESO ,DUPL ,[13/14 Regression] wrong code with -fwrapv -O3 -fno-vect-cost-model (and -march=armv9-a+sve2 on aarch64 and -march=rv64gcv on riscv) ,2024-03-26
+115346,gcc ,middle-e ,unassigned@gcc.gnu.org ,RESO ,DUPL ,[15] Volatile load elimination with packed struct bitfields ,2024-06-04
+115195,gcc ,c++ ,unassigned@gcc.gnu.org ,RESO ,DUPL ,[12 Regression] Segfault when instantiating template ,2024-05-22
+114247,gcc ,ipa ,jamborm@gcc.gnu.org ,RESO ,FIXE ,RISC-V: miscompile at -O3 and IPA SRA ,2024-03-05
+114749,gcc ,tree-opt ,rguenth@gcc.gnu.org ,RESO ,FIXE ,"[13 Regression] RISC-V rv64gcv ICE: in vectorizable_load, at tree-vect-stmts.cc ",2024-04-16
+114733,gcc ,middle-e ,rguenth@gcc.gnu.org ,RESO ,FIXE ,[13 Regression] Miscompile with -march=rv64gcv -O3 on riscv ,2024-04-16
+114666,gcc ,tree-opt ,pinskia@gcc.gnu.org ,RESO ,FIXE ,[14 Regression] Signed single bit comparison miscompile at -O2 ,2024-04-09
+114756,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,DUPL ,[14] RISC-V rv32imc miscompile with -fdata-sections ,2024-04-17
+114668,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[14] RISC-V rv64gcv: miscompile at -O3 ,2024-04-09
+114608,gcc ,debug ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[14 Regression] Undefined reference in output asm with -fipa-reference -fipa-reference-addressable -fsection-anchors -gbtf ,2024-04-05
+114671,gcc ,target ,unassigned@gcc.gnu.org ,UNCO ,--- ,[RISC-V] -fvar-tracking -gas-locview-support -ggdb emits a non-constant .uleb128 ,2024-04-10
+114396,gcc ,tree-opt ,liuhongt@gcc.gnu.org ,RESO ,FIXE ,[13/14 Regression] Vector: Runtime mismatch at -O2 with -fwrapv since r13-7988-g82919cf4cb2321 ,2024-03-19
+114399,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,INVA ,[14] RISC-V rv32i miscompile ,2024-03-20
+113431,gcc ,tree-opt ,rguenth@gcc.gnu.org ,RESO ,FIXE ,[14 Regression] Wrong code at -O3 ,2024-01-16
+114386,gcc ,tree-opt ,pinskia@gcc.gnu.org ,RESO ,DUPL ,[11/12/13 Regression] Miscompile at -O1 ,2024-03-18
+114314,gcc ,driver ,pinskia@gcc.gnu.org ,RESO ,FIXE ,"ICE: in common_handle_option, at opts.cc:3356 with -fno-multiflags ",2024-03-11
+114198,gcc ,middle-e ,unassigned@gcc.gnu.org ,RESO ,FIXE ,"[14] RISC-V fixed-length vector -flto ICE: in vectorizable_load, at tree-vect-stmts.cc:10570 ",2024-03-01
+114195,gcc ,middle-e ,unassigned@gcc.gnu.org ,RESO ,FIXE ,"[14] RISC-V vector ICE: in vectorizable_store, at tree-vect-stmts.cc:8690 ",2024-03-01
+114200,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[14] RISC-V fixed-length vector miscompile at -O3 ,2024-03-02
+114202,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,DUPL ,[14] RISC-V rv64gcv: miscompile at -O3 ,2024-03-02
+114259,gcc ,tree-opt ,unassigned@gcc.gnu.org ,RESO ,DUPL ,"[14 Regression] ICE during GIMPLE pass: slp: internal compiler error: tree check: expected class 'type', have 'exceptional' (error_mark) in useless_type_conversion_p, at gimple-expr.cc:85 ",2024-03-06
+113001,gcc ,target ,law@gcc.gnu.org ,RESO ,FIXE ,"[14 Regression] RISCV Zicond ICE: in extract_insn, at recog.cc:2812 with -O2 rv64gcv_zicond ",2023-12-13
+112871,gcc ,target ,law@gcc.gnu.org ,RESO ,DUPL ,"[14 Regression] RISCV ICE: in extract_insn, at recog.cc:2804 (unrecognizable insn) with -01 rv32gc_zicond ",2023-12-05
+114028,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[14] RISC-V rv64gcv_zvl256b: miscompile at -O3 ,2024-02-21
+112971,gcc ,middle-e ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[14] RISC-V rv64gcv_zvl256b vector -O3: internal compiler error: Segmentation fault signal terminated program cc1 ,2023-12-11
+113796,gcc ,tree-opt ,rguenth@gcc.gnu.org ,RESO ,FIXE ,[14 Regression] ifcvt does not remove range info before folding: Runtime mismatch at -O2 ,2024-02-07
+113607,gcc ,middle-e ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[14] RISC-V rv64gcv vector: Runtime mismatch at -O3 ,2024-01-25
+112798,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,RISC-V regression testsuite errors with rv64gcv_zve32f ,2023-12-01
+112754,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,RISC-V regression testsuite errors with rv32gcv_zvl128b ,2023-11-28
+112755,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,RISC-V regression testsuite errors with rv32gcv_zvl256b ,2023-11-28
+112756,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,RISC-V regression testsuite errors with rv32gcv_zvl512b ,2023-11-28
+112757,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,RISC-V regression testsuite errors with rv32gcv_zvl1024b ,2023-11-28
+112583,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,RISC-V regression testsuite errors with rv64gcv_zvl128b ,2023-11-17
+112597,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,RISC-V regression testsuite errors with rv64gcv_zvl256b ,2023-11-17
+112598,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,RISC-V regression testsuite errors with rv64gcv_zvl512b ,2023-11-17
+112599,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,RISC-V regression testsuite errors with rv64gcv_zvl1024b ,2023-11-17
+112799,gcc ,testsuit ,unassigned@gcc.gnu.org ,RESO ,FIXE ,RISC-V regression testsuite errors with rv32gcv_zve64d ,2023-12-01
+112800,gcc ,testsuit ,unassigned@gcc.gnu.org ,RESO ,FIXE ,RISC-V regression testsuite errors with rv32gcv_zve32f ,2023-12-01
+112797,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,RISC-V regression testsuite errors with rv64gcv_zve64d ,2023-12-01
+113087,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[14] RISC-V rv64gcv vector: Runtime mismatch with rv64gc ,2023-12-19
+113210,gcc ,tree-opt ,jakub@gcc.gnu.org ,RESO ,FIXE ,"[14 Regression] ICE: tree check: expected integer_cst, have cond_expr in get_len, at tree.h:6481 ",2024-01-02
+113282,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,INVA ,RISC-V non-atomic union store/load reordering ,2024-01-08
+113228,gcc ,middle-e ,jakub@gcc.gnu.org ,RESO ,FIXE ,"[14 Regression] ICE: recalculate_side_effects, at gimplify.cc:3347 since r14-6420 ",2024-01-04
+113206,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[14] RISC-V rv64gcv vector: Runtime mismatch with rv64gc ,2024-01-02
+113209,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[14] RISC-V rv64gcv_zvl256b vector: Runtime mismatch with rv64gc ,2024-01-02
+112733,gcc ,middle-e ,jakub@gcc.gnu.org ,RESO ,FIXE ,[14 Regression] ICE: Segmentation fault in wide-int.cc during GIMPLE pass: sccp ,2023-11-27
+112773,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,"[14 Regression] RISC-V ICE: in force_align_down_and_div, at poly-int.h:1828 on rv32gcv_zvl256b ",2023-11-30
+112929,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[14] RISC-V vector: Variable clobbered at runtime ,2023-12-09
+112988,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[14] RISC-V vector: Variadic function call causes runtime failure ,2023-12-12
+112932,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[14] RISC-V rv64gcv_zvl256b vector: Incorrect behavior with nested loop array writing ,2023-12-09
+112888,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,"[14 Regression] RISCV ICE: in compute_lcm_local_properties, at config/riscv/riscv-vsetvl.cc:2695 ",2023-12-06
+112851,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,"[14 Regression] RISCV ICE: vsetvl pass: in partial_subreg_p, at rtl.h:3187 on rv32gcv_zvl256b ",2023-12-04
+112852,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,"[14 Regression] RISCV ICE: vsetvl pass: in partial_subreg_p, at rtl.h:3187 on rv64gcv_zvl512b ",2023-12-04
+112854,gcc ,middle-e ,unassigned@gcc.gnu.org ,RESO ,FIXE ,"[14] RISCV ICE: expand: in store_integral_bit_field, at expmed.cc:1049 on rv32gcv_zvl1024b --param=riscv-autovec-preference=fixed-vlmax ",2023-12-05
+112872,gcc ,middle-e ,unassigned@gcc.gnu.org ,RESO ,FIXE ,"[14 Regression] RISCV ICE: in store_integral_bit_field, at expmed.cc:1049 with -03 rv64gcv_zvl1024b --param=riscv-autovec-preference=fixed-vlmax ",2023-12-05
+112855,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[14] RISC-V vector: vsetivli clobbers variable value ,2023-12-05
+112813,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[14 Regression] RISCV ICE: vsetvl pass: in merge at config/riscv/riscv-vsetvl.cc:1968 on rv32gcv_zvl256b ,2023-12-01
+112801,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[14] RISC-V vector: failure to mask top bits during type conversion ,2023-12-01
+112661,gcc ,tree-opt ,rsandifo@gcc.gnu.org ,RESO ,FIXE ,"[14] RISC-V ICE: in duplicate_and_interleave, at tree-vect-slp.cc:8025 with maxval_char_3.f90 vlen256b since r14-5101-g60034ecf25597b ",2023-11-21
+112552,gcc ,middle-e ,unassigned@gcc.gnu.org ,RESO ,FIXE ,"[14 Regression] ICE: in expand_insn, at optabs.cc:8305 ",2023-11-15
+112561,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[14 Regression] Segfault only on RISC-V vector ,2023-11-16
+112554,gcc ,middle-e ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[14 Regression] RISC-V ICE: verify_ssa failed with -O3 --param riscv-autovec-preference=fixed-vlmax ,2023-11-15
+112535,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[14 regression] RISC-V ICE: error: unable to find a register to spill during RTL pass: reload ,2023-11-15
+112481,gcc ,target ,ams@gcc.gnu.org ,RESO ,FIXE ,[14 Regression] RISCV: ICE: Segmentation fault when compiling pr110817-3.c ,2023-11-10
+112469,gcc ,tree-opt ,rguenth@gcc.gnu.org ,RESO ,FIXE ,"[14 Regression] ICE: eliminate_stmt, at tree-ssa-sccvn.cc:6944 ",2023-11-09
+111947,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,"RISC-V vector: RTL Check: expected code 'reg', have 'const_int' in rhs_regno, at rtl.h:1934 ",2023-10-23
+111941,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,"RISC-V ICE: in merge, at config/riscv/riscv-vsetvl.cc:1996 ",2023-10-23
+111634,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,"RISC-V vector: ICE RTL check: expected code 'reg', have 'lo_sum' in rhs_regno, at rtl.h:1934 ",2023-09-28
+111649,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[14 Regression] Bootstrap failure in stage 1 on riscv*-*-* since r14-4348-g9d249b7e31e ,2023-09-30
+104831,gcc ,target ,patrick@rivosinc.com ,RESO ,FIXE ,RISCV libatomic LR.aq/SC.rl pair insufficient for SEQ_CST ,2022-03-07
+111533,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,"[14 Regression] ICE: RTL check: expected code 'reg', have 'const_int' in rhs_regno, at rtl.h:1934 ",2023-09-22
+111546,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,"[14 Regression] ICE: gfortran.dg/overload_5.f90:53:2: internal compiler error: in emit_move_insn, at expr.cc:4219 since r14-4163-gbea89f78f2f ",2023-09-22
+111461,gcc ,target ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[14.0 Regression] RISC-V rv32gc bootstrap ICEs with --enable-checking=rtl ,2023-09-18
+110864,gcc ,rtl-opti ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[14 Regression] ICE in combine.cc causes stage2 build failure on RISCV ,2023-07-31
+110849,gcc ,tree-opt ,unassigned@gcc.gnu.org ,RESO ,FIXE ,[14 Regression] XPASS in gcc.dg/unroll-7.c ,2023-07-28
+110759,gcc ,libfortr ,pinskia@gcc.gnu.org ,RESO ,FIXE ,[14 Regression] IEEE Fortran change broke RISC-V linux build ,2023-07-20
