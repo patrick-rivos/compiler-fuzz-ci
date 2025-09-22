@@ -140,13 +140,13 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 """
 
 if __name__ == "__main__":
-    with open("miscompiled-bugzilla-reports.md", "r") as f:
+    with open("dashboard/miscompiled-bugzilla-reports.md", "r") as f:
         miscompiled_reports = f.read()
 
-    with open("ice-bugzilla-reports.md", "r") as f:
+    with open("dashboard/ice-bugzilla-reports.md", "r") as f:
         ice_reports = f.read()
 
-    with open("other-bugzilla-reports.md", "r") as f:
+    with open("dashboard/other-bugzilla-reports.md", "r") as f:
         other_reports = f.read()
 
     gcc_text = """## GCC
