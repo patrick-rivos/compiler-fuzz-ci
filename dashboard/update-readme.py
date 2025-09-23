@@ -141,13 +141,13 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 
 if __name__ == "__main__":
     with open("dashboard/miscompiled-bugzilla-reports.md", "r") as f:
-        miscompiled_reports = f.read()
+        gcc_miscompiles = f.read()
 
     with open("dashboard/ice-bugzilla-reports.md", "r") as f:
-        ice_reports = f.read()
+        gcc_ices = f.read()
 
     with open("dashboard/other-bugzilla-reports.md", "r") as f:
-        other_reports = f.read()
+        gcc_other = f.read()
 
     gcc_text = """## GCC
 ### Runtime fails:
@@ -161,71 +161,24 @@ if __name__ == "__main__":
 ![Bugs filed over time](./dashboard/cumulative_bugzilla_reports.png)
 """
 
-    gcc_text = gcc_text.format(miscompiled_reports, ice_reports, other_reports)
+    gcc_text = gcc_text.format(gcc_miscompiles, gcc_ices, gcc_other)
+
+    with open("dashboard/llvm-miscompile-issues.md", "r") as f:
+        llvm_miscompiles = f.read()
+
+    with open("dashboard/llvm-ice-issues.md", "r") as f:
+        llvm_ices = f.read()
+
     llvm_text = """## LLVM
 ### Runtime fails:
-1. [RISCV64 miscompile at -O1](https://github.com/llvm/llvm-project/issues/78783)
-1. [RISCV64 miscompile at -O2/-O1](https://github.com/llvm/llvm-project/issues/80052)
-1. [RISCV64 vector miscompile at -O2](https://github.com/llvm/llvm-project/issues/80910)
-1. [RISCV vector zvl256b miscompile at -O2](https://github.com/llvm/llvm-project/issues/82430)
-1. [[RISC-V] Miscompile at -O2](https://github.com/llvm/llvm-project/issues/83947)
-1. [[RISC-V] Miscompile at -O2](https://github.com/llvm/llvm-project/issues/84350)
-1. [[RISC-V] Vector -flto -O2 miscompile](https://github.com/llvm/llvm-project/issues/86620)
-1. [[RISC-V][SLP] Sign extension miscompile](https://github.com/llvm/llvm-project/issues/86763)
-1. [[SLP] Missing sign extension of demoted type before zero extension](https://github.com/llvm/llvm-project/issues/87011)
-1. [[RISC-V][SLPVectorizer] rv64gcv miscompile](https://github.com/llvm/llvm-project/issues/88834)
-1. [[RISC-V] Miscompile using rv64gcv](https://github.com/llvm/llvm-project/issues/126974)
-1. [[RISC-V] Miscompile on rv64gcv with -O[23]](https://github.com/llvm/llvm-project/issues/132071)
-1. [[RISC-V] Miscompile on rv64gcv with -O[23]](https://github.com/llvm/llvm-project/issues/133943)
-1. [[RISC-V] Miscompile on rv64gcv with -O3](https://github.com/llvm/llvm-project/issues/134126)
-1. [[RISC-V] Miscompile in rv64gcv with -O3 -flto](https://github.com/llvm/llvm-project/issues/134705)
-1. [[RISC-V] Miscompile on rv64gcv with -O[23]](https://github.com/llvm/llvm-project/issues/138923)
-1. [[RISC-V] Miscompile on -O3 with -flto](https://github.com/llvm/llvm-project/issues/141098)
-1. [[RISC-V] Miscompile on -O[1-3]](https://github.com/llvm/llvm-project/issues/142004)
+{}
+### ICEs:
+{}
 
-### Internal errors:
-1. [RISCV64 backend segfault in RISC-V Merge Base Offset](https://github.com/llvm/llvm-project/issues/78679)
-1. [RISCV64 backend "Invalid size request on a scalable vector"](https://github.com/llvm/llvm-project/issues/80744)
-1. [[LSR][term-fold] Ensure the simple recurrence is reachable from the current loop](https://github.com/llvm/llvm-project/pull/83085)
-1. [[InstCombine] Infinite loop/hang](https://github.com/llvm/llvm-project/issues/83354)
-1. [[Pass Manager] Infinite loop of scheduled passes](https://github.com/llvm/llvm-project/issues/83469)
-1. [[DAGCombiner][RISC-V] DAGCombiner.cpp:8692: Assertion `Index < ByteWidth && "invalid index requested"' failed.](https://github.com/llvm/llvm-project/issues/83920)
-1. [[RISC-V] Segfault during pass 'RISC-V DAG->DAG Pattern Instruction Selection'](https://github.com/llvm/llvm-project/issues/83929)
-1. [[InstCombine][RISC-V] UNREACHABLE executed at InstCombineCompares.cpp:2788](https://github.com/llvm/llvm-project/issues/83931)
-1. [[LoopVectorize] Assertion `OpType == OperationType::DisjointOp && "recipe cannot have a disjoing flag"' failed.](https://github.com/llvm/llvm-project/issues/87378)
-1. [[SLP] Attempted invalid cast from VectorType to FixedVectorType](https://github.com/llvm/llvm-project/issues/87384)
-1. [[LoopVectorize][VPlan] Unreachable executed "Unhandled opcode!"](https://github.com/llvm/llvm-project/issues/87394)
-1. [[LoopVectorize][VPlan] Assertion `MinBWs.size() == NumProcessedRecipes && "some entries in MinBWs haven't been processed"' failed.](https://github.com/llvm/llvm-project/issues/87407)
-1. [[LoopVectorize][VPlan] Assertion "Trying to access a single scalar per part but has multiple scalars per part." failed.](https://github.com/llvm/llvm-project/issues/87410)
-1. [[Inline] Assert getOperand() out of range! failed.](https://github.com/llvm/llvm-project/issues/87441)
-1. [[RISC-V] Error in backend: Invalid size request on a scalable vector.](https://github.com/llvm/llvm-project/issues/88576)
-1. [[VectorCombine] Assertion 'isa<To>(Val) && "cast<Ty>() argument of incompatible type!"' failed.](https://github.com/llvm/llvm-project/issues/88796)
-1. [[CodeGen][RISC-V] Assertion `(!MMO->getSize().hasValue() || !getSize().hasValue() || MMO->getSize() == getSize()) && "Size mismatch!"' failed.](https://github.com/llvm/llvm-project/issues/88799)
-1. [[LoopVectorize] Assertion 'VecTy.SimpleTy != MVT::INVALID_SIMPLE_VALUE_TYPE && "Simple vector VT not representable by simple integer vector VT!"' failed.](https://github.com/llvm/llvm-project/issues/88802)
-1. [[LoopVectorize][VPlan] Found non-header PHI recipe in header - Assertion `verifyVPlanIsValid(*Plan) && "VPlan is invalid"' failed.](https://github.com/llvm/llvm-project/issues/88804)
-1. [[RISC-V] Assertion `Idx2 != UINT_MAX && Values.contains(Idx2) && "Expected both indices to be extracted already."' failed](https://github.com/llvm/llvm-project/issues/125269)
-1. [[RISC-V] LLVM ERROR: Invalid size request on a scalable vector](https://github.com/llvm/llvm-project/issues/125306)
-1. [[SLPVectorizer] Segmentation Fault using opt "-passes=lto<O3>"](https://github.com/llvm/llvm-project/issues/126581)
-1. [[RISC-V] RegisterCoalescer: Assertion `A.valno == B.valno && "Cannot overlap different values"' failed.](https://github.com/llvm/llvm-project/issues/134424)
-1. [[LoopVectorize] Assertion `isPowerOf2_32(End.getKnownMinValue()) && "Expected End to be a power of 2"' failed.](https://github.com/llvm/llvm-project/issues/134696)
-1. [[LoopVectorizer] Assertion `hasKnownScalarFactor(RHS) && "Expected RHS to be a known factor!"' failed.](https://github.com/llvm/llvm-project/issues/137024)
-1. [[SLPVectorizer] Instruction does not dominate all uses!](https://github.com/llvm/llvm-project/issues/141265)
-1. [[InstCombine] ICmp i1 X, C not simplified as expected. with opt "-passes=lto<O3>"](https://github.com/llvm/llvm-project/issues/142447)
-
-### Compiler Flags Fuzzer
-1. [[Clang] Assertion isCurrentFileAST() && "dumping non-AST?" failed. with -module-file-info](https://github.com/llvm/llvm-project/issues/87852)
-1. [[Clang][Interp] Assertion 'Offset + sizeof(T) <= Pointee->getDescriptor()->getAllocSize()' failed. with -fexperimental-new-constant-interpreter](https://github.com/llvm/llvm-project/issues/88018)
-1. [[Clang] Segfault with -fcoverage-mapping -fcs-profile-generate -fprofile-instr-generate](https://github.com/llvm/llvm-project/issues/88038)
-1. [[X86][RISC-V][AARCH64] fatal error: error in backend: Can only embed the module once with -fembed-bitcode -ffat-lto-objects -flto](https://github.com/llvm/llvm-project/issues/88041)
-1. [[RISC-V] Unhandled encodeInstruction length! at RISCVMCCodeEmitter.cpp:338 with -fglobal-isel -fstack-protector-all](https://github.com/llvm/llvm-project/issues/88046)
-1. [[RISC-V] LLVM ERROR: unable to legalize instruction with -fglobal-isel -finstrument-functions -flto -fuse-ld=lld](https://github.com/llvm/llvm-project/issues/88057)
-1. [[X86] LLVM ERROR: cannot select with -fglobal-isel -finstrument-functions -flto](https://github.com/llvm/llvm-project/issues/88058)
-1. [[LLD] Unreachable executed with -fsplit-stack](https://github.com/llvm/llvm-project/issues/88061)
-1. [[RISC-V] Unresolvable relocation with -fdirect-access-external-data -fstack-protector-all](https://github.com/llvm/llvm-project/issues/88079)
-1. [[Clang] Assertion 'Symbol' failed. with -fdebug-macro -gline-directives-only](https://github.com/llvm/llvm-project/issues/88153)
-1. [[CodeGen] Assertion 'Offset >= Size' failed. with -mms-bitfields](https://github.com/llvm/llvm-project/issues/88208)
+### Bugs filed over time:
+![Bugs filed over time](./dashboard/cumulative_llvm_github_issues.png)
 """
-    # Fill in the readme text
+    llvm_text = llvm_text.format(llvm_miscompiles, llvm_ices)
 
     ending_text = """
 # Contribute

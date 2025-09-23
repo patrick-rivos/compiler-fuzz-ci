@@ -33,7 +33,7 @@ jobs:
         run: |
           pip install pygithub requests pandas matplotlib
           cd dashboard
-          python fuzzer-plot.py
+          python fuzzer-plot.py -token ${{ github.token }}
 
       - name: zip results
         run: |
@@ -54,5 +54,5 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v6
         with:
           commit_message: 'CI: Update README'
-          file_pattern: 'dashboard/fuzzer-find-reports.csv README.md'
+          file_pattern: 'dashboard/fuzzer-find-reports.csv dashboard/*.png README.md'
 

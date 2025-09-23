@@ -3,6 +3,18 @@ import matplotlib.pyplot as plt
 import requests
 import re
 import json
+import argparse
+
+def parse_arguments():
+    """parse command line arguments"""
+    parser = argparse.ArgumentParser(description="Plot fuzzer found bugs")
+    parser.add_argument(
+        "-token",
+        required=True,
+        type=str,
+        help="Github access token",
+    )
+    return parser.parse_args()
 
 def pull_data():
     url = 'https://gcc.gnu.org/bugzilla/buglist.cgi?bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=SUSPENDED&bug_status=WAITING&bug_status=REOPENED&bug_status=RESOLVED&bug_status=VERIFIED&bug_status=CLOSED&cf_known_to_fail_type=allwords&cf_known_to_work_type=allwords&f1=longdesc&list_id=489840&o1=substring&query_format=advanced&resolution=---&resolution=FIXED&resolution=INVALID&resolution=WONTFIX&resolution=DUPLICATE&resolution=WORKSFORME&resolution=MOVED&v1=found%20via%20fuzzer&ctype=csv&human=1'
@@ -29,7 +41,7 @@ def write_links(df, filename):
         for bug_id in df['Bug ID'].sort_values().tolist():
             f.write(f"1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id={bug_id}\n")
 
-def main():
+def plot_gcc():
     # Read the CSV file into a DataFrame
     df = pd.read_csv('fuzzer-find-reports.csv', sep=',').applymap(lambda x: x.strip() if isinstance(x, str) else x)
     temp_df = pull_data()
@@ -135,6 +147,82 @@ def main():
     plt.grid(True)
     plt.tight_layout()
     plt.savefig('cumulative_bugzilla_reports.png')
+
+
+def pull_llvm_data(token: str):
+    url = "https://api.github.com/search/issues?q=repo:llvm/llvm-project+in:body+%22found%20via%20fuzzer%22&per_page=100&page={}"
+    all_items = []
+    params = {
+        "Accept": "application/vnd.github+json",
+        "Authorization": f"token {token}",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
+    page = 1
+    while True:
+        response = requests.get(url.format(page), headers=params)
+        if response.status_code != 200:
+            raise Exception(f"Failed to fetch data: {response.status_code}")
+        data = json.loads(response.text)
+        total_issues = data["total_count"]
+        all_items += data["items"]
+        if len(all_items) >= total_issues:
+            break
+        page += 1
+    assert len(all_items) == total_issues
+    return [item for item in all_items
+                if "pull_request" not in item.keys()
+                and "found via fuzzer" in str.lower(item["body"])] # necessary since query somehow got "found via a fuzzer"
+
+def write_llvm_links(df, filename):
+    with open(filename, 'w') as f:
+        for _, row in df.sort_values('Issue ID').iterrows():
+            f.write(f"1. [{row['Issue ID']}: {row['Title']}]({row['URL']})\n")
+
+def plot_llvm(token: str):
+    items = pull_llvm_data(token)
+    print(f"Total issues found: {len(items)}")
+    data = {
+        "Issue ID": [item["number"] for item in items],
+        "Title": [item["title"] for item in items],
+        "URL": [item["html_url"] for item in items],
+        "Type": ["ICE" if "backtrace" in str.lower(item["body"]) else "Miscompile" for item in items],
+        "Created At": [item["created_at"] for item in items],
+    }
+    df = pd.DataFrame(data)
+    df['timestamp'] = pd.to_datetime(df['Created At'])
+    df.set_index('timestamp', inplace=True)
+    df.sort_values('Issue ID').to_csv("llvm-fuzzer-issues.csv")
+    print(df)
+
+    miscompiled_df = df[df['Type'] == 'Miscompile']
+    miscompiled_df.sort_values('Issue ID').to_csv("llvm-miscompile-issues.csv")
+    write_llvm_links(miscompiled_df, "llvm-miscompile-issues.md")
+    print(f"size of miscompiled df: {len(miscompiled_df)}")
+
+    ice_df = df[df['Type'] == 'ICE']
+    ice_df.sort_values('Issue ID').to_csv("llvm-ice-issues.csv")
+    write_llvm_links(ice_df, "llvm-ice-issues.md")
+    print(f"size of ice df: {len(ice_df)}")
+
+    daily_counts = df.resample('D').size()
+    print(daily_counts)
+    cumulative_counts = daily_counts.cumsum()
+    print(cumulative_counts)
+    plt.figure(figsize=(10, 6))
+    plt.plot(cumulative_counts.index, cumulative_counts.values, linestyle='-')
+    plt.title('Cumulative Number of LLVM GitHub Issues Over Time')
+    plt.xlabel('Date')
+    plt.ylabel('Cumulative Count of Issues')
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig('cumulative_llvm_github_issues.png')
+
+
+def main():
+    args = parse_arguments()
+    # plot_gcc()
+    plot_llvm(args.token)
+
 
 if __name__ == "__main__":
     main()
