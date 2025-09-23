@@ -31,7 +31,7 @@ jobs:
 
       - name: Pull and plot latest fuzzer data
         run: |
-          pip install pygithub requests
+          pip install pygithub requests pandas matplotlib
           cd dashboard
           python fuzzer-plot.py
 
