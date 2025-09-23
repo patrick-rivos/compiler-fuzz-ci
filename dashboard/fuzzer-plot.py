@@ -220,7 +220,7 @@ def plot_llvm(token: str):
 
 def main():
     args = parse_arguments()
-    # plot_gcc()
+    plot_gcc()
     plot_llvm(args.token)
 
 
