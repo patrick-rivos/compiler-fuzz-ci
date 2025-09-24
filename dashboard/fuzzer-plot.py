@@ -149,6 +149,12 @@ def plot_gcc():
     plt.savefig('cumulative_bugzilla_reports.png')
 
 
+def is_duplicate(item):
+    for label in item['labels']:
+        if label['name'] == 'duplicate':
+            return True
+    return False
+
 def pull_llvm_data(token: str):
     url = "https://api.github.com/search/issues?q=repo:llvm/llvm-project+in:body+%22found%20via%20fuzzer%22&per_page=100&page={}"
     all_items = []
@@ -171,7 +177,8 @@ def pull_llvm_data(token: str):
     assert len(all_items) == total_issues
     return [item for item in all_items
                 if "pull_request" not in item.keys()
-                and "found via fuzzer" in str.lower(item["body"])] # necessary since query somehow got "found via a fuzzer"
+                and "found via fuzzer" in str.lower(item["body"]) # necessary since query somehow got "found via a fuzzer"
+                and not is_duplicate(item)]
 
 def write_llvm_links(df, filename):
     with open(filename, 'w') as f:
