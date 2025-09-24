@@ -364,6 +364,8 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. [155512: [SLPVectorizer] Assertion `(I->use_empty() || all_of(I->uses(), [&](Use &U) { return isDeleted( cast<Instruction>(U.getUser())); })) && "trying to erase instruction with users."' failed.](https://github.com/llvm/llvm-project/issues/155512)
 1. [157177: [RISC-V] Assertion `isSimple() && "Expected a SimpleValueType!"' failed.](https://github.com/llvm/llvm-project/issues/157177)
 1. [157184: Assertion `OldMaskParam && "no mask param to fold the vl param into"' failed](https://github.com/llvm/llvm-project/issues/157184)
+1. [160393: [RISC-V] Assertion `VT.getVectorElementType() == N1VT.getVectorElementType() && "Extract subvector VTs must have the same element type!"' failed.](https://github.com/llvm/llvm-project/issues/160393)
+1. [160396: [LoopVectorize] Assertion `OpType == Other.OpType && "OpType must match"' failed.](https://github.com/llvm/llvm-project/issues/160396)
 
 
 ### Bugs filed over time:
