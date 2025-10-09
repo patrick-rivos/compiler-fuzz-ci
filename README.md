@@ -196,7 +196,6 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=121126
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=121281
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=121592
-1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=122102
 
 ### ICEs:
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112469
@@ -288,6 +287,7 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. [142004: [RISC-V] Miscompile on -O[1-3]](https://github.com/llvm/llvm-project/issues/142004)
 1. [149335: [RISC-V] Miscompile at -O[23]](https://github.com/llvm/llvm-project/issues/149335)
 1. [159152: [RISC-V] Miscompile at -O3 with -flto](https://github.com/llvm/llvm-project/issues/159152)
+1. [162512: [RISC-V][LV] Miscompile at -O3](https://github.com/llvm/llvm-project/issues/162512)
 
 ### ICEs:
 1. [83920: [DAGCombiner][RISC-V] DAGCombiner.cpp:8692: Assertion `Index < ByteWidth && "invalid index requested"' failed.](https://github.com/llvm/llvm-project/issues/83920)
