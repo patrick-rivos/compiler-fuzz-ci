@@ -366,6 +366,7 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. [160393: [RISC-V] Assertion `VT.getVectorElementType() == N1VT.getVectorElementType() && "Extract subvector VTs must have the same element type!"' failed.](https://github.com/llvm/llvm-project/issues/160393)
 1. [160396: [LoopVectorize] Assertion `OpType == Other.OpType && "OpType must match"' failed.](https://github.com/llvm/llvm-project/issues/160396)
 1. [162374: [LoopVectorize] Assertion `OpType == Other.OpType && "OpType must match"' failed.](https://github.com/llvm/llvm-project/issues/162374)
+1. [162688: [LoopVectorize]  Assertion `(BestFactor.Width == LegacyVF.Width || BestPlan.hasEarlyExit() || ... && " VPlan cost model and legacy cost model disagreed"' failed.](https://github.com/llvm/llvm-project/issues/162688)
 
 
 ### Bugs filed over time:
