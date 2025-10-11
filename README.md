@@ -367,6 +367,8 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. [160396: [LoopVectorize] Assertion `OpType == Other.OpType && "OpType must match"' failed.](https://github.com/llvm/llvm-project/issues/160396)
 1. [162374: [LoopVectorize] Assertion `OpType == Other.OpType && "OpType must match"' failed.](https://github.com/llvm/llvm-project/issues/162374)
 1. [162688: [LoopVectorize]  Assertion `(BestFactor.Width == LegacyVF.Width || BestPlan.hasEarlyExit() || ... && " VPlan cost model and legacy cost model disagreed"' failed.](https://github.com/llvm/llvm-project/issues/162688)
+1. [162922: [RISC-V][LoopVectorize] Assertion `hasUseList()' failed.](https://github.com/llvm/llvm-project/issues/162922)
+1. [162925: [RISC-V][SLPVectorizer] Assertion `all_of(Bundles, [](const ScheduleBundle *Bundle) { return Bundle->isScheduled(); }) && "must be scheduled at this point"' failed.](https://github.com/llvm/llvm-project/issues/162925)
 
 
 ### Bugs filed over time:
