@@ -250,6 +250,8 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=121073
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=121075
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=121695
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=122474
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=122475
 
 ### Other:
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114261
