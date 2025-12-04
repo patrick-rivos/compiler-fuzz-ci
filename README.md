@@ -196,7 +196,9 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=121126
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=121281
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=121592
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=121985
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=122844
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=122971
 
 ### ICEs:
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112469
@@ -250,6 +252,7 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=121072
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=121073
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=121075
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=121659
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=121695
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=122474
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=122475
