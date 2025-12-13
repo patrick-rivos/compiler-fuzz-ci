@@ -297,6 +297,7 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. [154103: [riscv64] [LoopVectorize] Assertion Failure in computeBestVF with VPlan Cost Model](https://github.com/llvm/llvm-project/issues/154103)
 1. [159152: [RISC-V] Miscompile at -O3 with -flto](https://github.com/llvm/llvm-project/issues/159152)
 1. [162512: [RISC-V][LV] Miscompile at -O3](https://github.com/llvm/llvm-project/issues/162512)
+1. [171994: [LLVM] [RISC-V] [ICE] Assertion Failure at llvm/lib/CodeGen/LiveInterval.cpp:391: bool llvm::LiveRange::overlapsFrom(...)](https://github.com/llvm/llvm-project/issues/171994)
 
 ### ICEs:
 1. [83920: [DAGCombiner][RISC-V] DAGCombiner.cpp:8692: Assertion `Index < ByteWidth && "invalid index requested"' failed.](https://github.com/llvm/llvm-project/issues/83920)
