@@ -202,6 +202,7 @@ More info can be found in [/cvise-passes](/cvise-passes/README)
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=123022
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=123097
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=123168
+1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=123444
 
 ### ICEs:
 1. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=112469
